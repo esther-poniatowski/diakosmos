@@ -1,0 +1,29 @@
+%% common/preambles/user.tex
+%% Common preamble for all documents in this workspace.
+%%
+%% Loads external packages, then the scholia educational formatting package.
+%% Scholia auto-detects the document class (article or beamer).
+%%
+%% PREREQUISITE: \RootPath must be defined in the calling document,
+%% pointing to the workspace root relative to the document's location.
+%%
+%% USAGE:
+%%   \documentclass{article}          % or \documentclass{beamer}
+%%   \newcommand{\RootPath}{../../..}  % adjust depth as needed
+%%   \input{\RootPath/common/preambles/user}
+%%   \graphicspath{{figures/}}         % document-specific figure paths
+%%   \begin{document}...
+%%
+%% ==================================================================================================
+
+\makeatletter
+
+% --- External Dependencies ---
+\input{\RootPath/common/preambles/packages}
+
+% --- Scholia Package ---
+% Educational document formatting (callouts, exercises, etc.)
+% Beamer class is auto-detected by scholia.
+\usepackage[english]{\RootPath/vendor/scholia/scholia}
+
+\makeatother

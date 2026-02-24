@@ -1,0 +1,46 @@
+%% common/preambles/packages.tex
+%% Shared external LaTeX package declarations for all documents in this workspace.
+%%
+%% Loaded by common/preambles/user.tex — not intended for direct use.
+%% ==================================================================================================
+
+% --- Encoding and Language ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{microtype}
+
+% --- Mathematics ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{bm}
+
+% --- Graphics and Diagrams ---
+\@ifpackageloaded{graphicx}{}{\usepackage{graphicx}}
+\@ifpackageloaded{tikz}{}{\usepackage{tikz}}
+\usetikzlibrary{
+    positioning,
+    calc,
+    shapes.geometric,
+    decorations.pathreplacing,
+    decorations.pathmorphing,
+    arrows.meta,
+    fit,
+    backgrounds
+}
+\@ifpackageloaded{pgfplots}{}{\usepackage{pgfplots}}
+\pgfplotsset{compat=1.18}
+
+% --- Tables ---
+\usepackage{array}
+\usepackage{booktabs}
+
+% --- Colored Boxes ---
+\@ifpackageloaded{xcolor}{}{\usepackage{xcolor}}
+\@ifpackageloaded{tcolorbox}{%
+  \tcbuselibrary{skins,breakable,xparse}%
+}{%
+  \usepackage[most]{tcolorbox}
+  \tcbuselibrary{skins,breakable,xparse}%
+}
