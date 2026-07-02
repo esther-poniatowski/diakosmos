@@ -1,0 +1,45 @@
+% FILE: 3-poster/parts/fonts.tex
+% ==================================================================================================
+% Typography (LuaLaTeX + fontspec). Two families realise the plan's hierarchy:
+%   - Raleway          : display geometric sans -> title (Black) and headings (SemiBold/Bold)
+%   - Source Sans Pro  : neutral sans          -> body, captions, labels, tables
+% Fonts are resolved by name from the TeX Live tree (raleway, sourcesanspro packages).
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+
+% --- Body / default family: Source Sans Pro (sans) ---
+% The ROMAN font is Latin Modern (serif) so that math alphabets (\mathrm, \mathbf) and the
+% math "operators" font are serif, consistent with the serif math symbols. The document default
+% is still sans (familydefault = sfdefault), so body text is Source Sans Pro.
+\setmainfont{Latin Modern Roman}
+\setsansfont{Source Sans Pro}
+\renewcommand{\familydefault}{\sfdefault}
+
+% --- Display family: Raleway (weights addressed explicitly) ---
+% Title uses a lighter Medium weight (Black reads too heavy at poster scale).
+\newfontfamily\titlefont{Raleway Medium}
+\newfontfamily\headingfont{Raleway SemiBold}[
+  BoldFont       = {Raleway Bold},
+  ItalicFont     = {Raleway SemiBold Italic},
+  BoldItalicFont = {Raleway Bold Italic}
+]
+\newfontfamily\headingbold{Raleway ExtraBold}
+
+% --- Supporting body weights ---
+\newfontfamily\bodylight{Source Sans Pro Light}
+\newfontfamily\bodysemibold{Source Sans Pro Semibold}
+
+% --- Mono family for section-heading kickers / metadata (per tests/claude-design-layout.tex) ---
+\newfontfamily\kickerfont{Source Code Pro}
+
+% --- Math text font: the body sans (Source Sans Pro), so descriptive words inside formulas
+% (amplification, projection, in span, ...) match the body prose. Math symbols, the m/n vectors,
+% matrices, and the "mix" indices keep their math font. Used via \mlab (see macros.tex). ---
+\newfontfamily\mathtextfont{Source Sans Pro}
+
+% --- Inline-math size correction. The body is Source Sans Pro but math symbols are Latin Modern
+% (serif), whose smaller x-height makes inline states/matrices look smaller than the surrounding
+% sans text. Enlarge the math size at the body text size (40 pt) so they visually match. The dense
+% supporting-details band resets this locally (block-supporting.tex) to keep its equations compact.
+\DeclareMathSizes{40}{45}{32}{23}

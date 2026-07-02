@@ -1,0 +1,212 @@
+% FILE: 3-poster/parts/macros.tex
+% ==================================================================================================
+% Reusable toolkit: type sizes, math macros, layout grid, coordinate helpers,
+% card / heading / icon / citation commands, and TikZ arrow styles.
+% Requires colors.tex and fonts.tex to be loaded first.
+
+% ===== Type-size hierarchy (absolute points; poster is at true CCN scale) =========================
+% Readability floor = the Approach body size (30 pt): no text, INCLUDING inside figures, is set
+% below \labelsize. Leading is generous to aerate the page.
+% Leading = 140% of the font size (UX default), applied uniformly.
+\newcommand{\titlesize}{\fontsize{104}{146}\selectfont}
+\newcommand{\authorsize}{\fontsize{54}{76}\selectfont}
+\newcommand{\affilsize}{\fontsize{42}{59}\selectfont}
+\newcommand{\contactsize}{\fontsize{42}{59}\selectfont}
+\newcommand{\headinglabelsize}{\fontsize{62}{87}\selectfont}
+\newcommand{\headingdescsize}{\fontsize{48}{67}\selectfont}
+\newcommand{\resultsize}{\fontsize{64}{90}\selectfont}
+\newcommand{\takeawaysize}{\fontsize{54}{76}\selectfont}
+\newcommand{\bodysize}{\fontsize{40}{56}\selectfont}
+\newcommand{\bodybigsize}{\fontsize{52}{70}\selectfont}   % prominent formulas
+\newcommand{\smallsize}{\fontsize{40}{56}\selectfont}     % floor (40 pt)
+\newcommand{\labelsize}{\fontsize{40}{56}\selectfont}     % floor, used inside figures
+\newcommand{\fooLabelsize}{\fontsize{42}{59}\selectfont}
+\newcommand{\minorlabelsize}{\fontsize{24}{28}\selectfont} % minor in-figure labels (axis ticks)
+
+% ===== Math macros ================================================================================
+% Vectors use \vec{} (arrow); bold is reserved for matrices (J, I, Sigma).
+\newcommand{\vk}{\vec{\kappa}}
+\newcommand{\vu}{\vec{u}}
+\newcommand{\vxi}{\vec{\xi}}
+\newcommand{\veta}{\vec{\eta}}
+\newcommand{\vv}{\vec{v}}
+\newcommand{\mI}{\mathbf{I}}
+\newcommand{\mJ}{\mathbf{J}}
+\newcommand{\vm}{\vec{m}}
+\newcommand{\vn}{\vec{n}}
+\newcommand{\Sig}{\boldsymbol{\Sigma}}
+% In-math text label rendered in the math (serif) text font, so words match the symbols.
+\newcommand{\mlab}[1]{\text{{\mathtextfont #1}}}
+% Inline math sized to visually match 40 pt sans body text, for use INSIDE TikZ nodes (where neither
+% \DeclareMathSizes nor a local \fontsize reaches the math size). \scalebox enlarges the rendered
+% symbols physically about the baseline, so serif states/matrices read at the surrounding prose size.
+\newcommand{\tmath}[1]{\scalebox{1.4}{\ensuremath{#1}}}
+\newcommand{\RR}{\mathbb{R}}
+% multi-letter "mix" index set one math style smaller, to read like the 1/2 indices
+\newcommand{\kmix}{\vk_{\scriptscriptstyle\mathrm{mix}}}
+\newcommand{\umix}{\vu_{\scriptscriptstyle\mathrm{mix}}}
+\newcommand{\kref}{\vk_{\scriptscriptstyle\mathrm{ref}}}
+\newcommand{\Reff}{R_{\mathrm{eff}}}
+\newcommand{\Cspan}{\mathcal{C}_{12}}
+
+% ===== Layout grid (cm; origin at the page's south-west corner) ===================================
+% Page (true CCN 2026 portrait size).
+\def\PW{147.32}\def\PH{172.72}
+% Outer margins.
+\def\Mside{5}\def\Mtop{4}\def\Mbot{3}
+% Columns (x). The two content columns stack their blocks INDEPENDENTLY (no rigid 2x2),
+% which lets each side flow to fit its content.
+\def\gXl{5}            % left content edge
+\def\gXr{142.32}       % right content edge (PW - Mside)
+\def\gWl{65}           % left column width
+\def\gWr{68.32}        % right column width
+\def\gXrcL{74}         % right column, left edge
+\def\gWfull{137.32}    % full content width (footer / supporting)
+
+% Region map (cm; y = NORTH edge of each block, h = height). Single source of truth.
+%   LEFT column : header -> starting -> question -> approach
+\def\yHead{168.72}
+\def\yStart{149}\def\hStart{54}              % 149 .. 95  (taller: blank below the insight line)
+\def\yQuest{93}\def\hQuest{6}                % 93 .. 87 (tighter box; wider gap to the approach card)
+\def\yAppr{84.5}\def\hAppr{41}               % 84.5 .. 43.5 (raised to clear the taller support band with the condition columns)
+%   RIGHT column : takeaway -> graphical abstract (decision tree) -> consequences
+\def\yTake{168.72}\def\hTake{25}             % 168.72 .. 143.7 (extended to encompass the formula)
+\def\yAbst{141}\def\hAbst{57}                % selection title box top (below the results box)
+\def\ySelTree{133}                           % decision tree top (just below the title box)
+\def\yConseq{83}\def\hConseq{37}             % 83 .. 46
+%   FULL width : supporting -> footer
+% The supporting box is anchored by its BOTTOM-LEFT corner just above the footer (\ySupBot),
+% so it keeps a fixed gap to the footer and grows upward with its content.
+\def\hSup{33}\def\ySupBot{7.4}                % bottom-anchored just above the footer divider (y=7.3)
+\def\yFoot{12}\def\hFoot{9}                   % 12 .. 3
+
+% Coordinate helper: \xy{x}{y} -> point at (x cm, y cm) from the page corner (O).
+\newcommand{\xy}[2]{($(O)+(#1 cm,#2 cm)$)}
+
+% ===== Card (panel) styles ========================================================================
+% UX-inspired cards: subtle surface contrast + soft shadow, no loud frame.
+\tcbset{
+  % shadow-free base: surface, rounded corners, padding.
+  cardbase/.style={
+    enhanced, arc=15mm, outer arc=15mm,
+    colback=surface, colframe=bordersubtle, boxrule=0.8pt,
+    boxsep=0pt, left=12mm, right=12mm, top=11mm, bottom=11mm,
+    fontupper=\color{textprimary}\bodysize,
+  },
+  % homogeneous soft shadow across ALL cards: light from the front-left corner, so a single
+  % tight blur is cast down and to the right (reduced spread, one direction everywhere).
+  softshadow/.style={fuzzy shadow={2.5mm}{-3mm}{-0.5mm}{3.5mm}{cardshadow}},
+  % normal card and emphasised card share the identical shadow (emphasis comes from fill/gradient).
+  card/.style={cardbase, softshadow},
+  emphcard/.style={cardbase, softshadow},
+  plaincard/.style={
+    enhanced, arc=15mm, outer arc=15mm,
+    colback=posterbg, colframe=posterbg, boxrule=0pt,
+    boxsep=0pt, left=10mm, right=10mm, top=8mm, bottom=8mm,
+    fontupper=\color{textprimary}\bodysize,
+  },
+  accentcard/.style={card, colback=accentturqsoft, colframe=accentturq!45},
+  coralcard/.style={card, colback=accentcoralsoft, colframe=accentcoral!45},
+  % raised sub-panel (mixture input / response): a clean surface card with the shared soft shadow
+  % (aesthetic per the decision-tree cards), replacing the earlier recessed inset look.
+  panelbox/.style={enhanced, colback=surface, colframe=bordersubtle, boxrule=0.8pt, arc=10mm,
+    outer arc=10mm, boxsep=0pt, left=8mm, right=8mm, top=7mm, bottom=7mm,
+    % soft, tight drop shadow like the decision-tree cards (straight down, hugging), tinted coral
+    fuzzy shadow={0mm}{-1.4mm}{-0.7mm}{1mm}{accentcoral!55}},
+  % transparent panel: same padding/alignment as a card, but no fill, frame or shadow
+  % (content lies directly over the page background)
+  ghostcard/.style={
+    enhanced, frame hidden, interior hidden,
+    boxsep=0pt, left=12mm, right=12mm, top=11mm, bottom=11mm,
+    fontupper=\color{textprimary}\bodysize,
+  },
+  % dashed outline box (no fill, no shadow): frames the two self-consistent-gain items
+  dashbox/.style={enhanced, interior hidden, frame hidden,
+    arc=5mm, outer arc=5mm, boxsep=0pt, left=4mm, right=4mm, top=5mm, bottom=5mm,
+    borderline={1.1pt}{0pt}{texttertiary!55, dashed}},
+  % compact dashed box for the condition-consequence columns: tight padding + 35pt leading,
+  % so the stacked one-per-line elements stay shallow.
+  condbox/.style={dashbox, top=1.5mm, bottom=1.5mm,
+    fontupper=\fontsize{32}{35}\selectfont\color{texttertiary}},
+}
+
+% A tcolorbox typeset directly inside a TikZ \node triggers an infinite NFSS
+% font-selection loop under tikzposter + fontspec/LuaLaTeX. The fix is two-step:
+% build the card into a savebox at document top level (OUTSIDE any tikzpicture),
+% then place that box with \node{\usebox} inside the overlay picture.
+%
+% Build card CONTENT into <savebox> (call at document top level):
+%   \buildcard{<\savebox>}{<width cm>}{<height cm>}{<tcb style>}{<content>}
+\newcommand{\buildcard}[5]{%
+  \sbox#1{\begin{tcolorbox}[#4, width=#2 cm, height=#3 cm]#5\end{tcolorbox}}%
+}
+% Build arbitrary (card-free) content into <savebox> at document top level:
+%   \buildbox{<\savebox>}{<content>}
+\newcommand{\buildbox}[2]{\sbox#1{#2}}
+% Build a fixed-width text column (minipage) into <savebox>:
+%   \buildcol{<\savebox>}{<width cm>}{<content>}
+\newcommand{\buildcol}[3]{\sbox#1{\begin{minipage}[t]{#2 cm}#3\end{minipage}}}
+
+% Drop a pre-built box with its NORTH-WEST corner at (x,y) cm (call INSIDE the picture):
+%   \dropbox{<\savebox>}{<x>}{<y>}
+\newcommand{\dropbox}[3]{%
+  \node[anchor=north west, inner sep=0pt] at \xy{#2}{#3} {\usebox#1};%
+}
+% As \dropbox but with an explicit anchor (default north west):
+%   \dropboxa[<anchor>]{<\savebox>}{<x>}{<y>}
+\newcommand{\dropboxa}[4][north west]{%
+  \node[anchor=#1, inner sep=0pt] at \xy{#3}{#4} {\usebox#2};%
+}
+
+% ===== Icon badge + block heading =================================================================
+% Circular accent badge holding a FontAwesome glyph (or any content).
+%   #1 fill color  #2 glyph color  #3 glyph
+\newcommand{\iconbadge}[3]{%
+  \tikz[baseline=-0.42ex]{%
+    \node[circle, fill=#1, text=#2, minimum size=20mm, inner sep=0pt,
+          font=\fontsize{34}{34}\selectfont]{#3};}%
+}
+
+% Functional block heading (style from tests/claude-design-layout.tex): a soft rounded-square
+% icon (light accent tint, dark accent glyph) + a small MONO accent kicker + a title-font
+% descriptive sentence (here reduced in size).
+%   [#1 sentence font, optional]  #2 accent  #3 glyph  #4 KICKER label  #5 descriptive sentence
+\newcommand{\blockheading}[5][\fontsize{52}{60}\selectfont]{%
+  \noindent
+  \raisebox{-0.5\height}{\tikz\node[fill=#2!16, rounded corners=9mm, minimum size=37mm,
+     inner sep=0pt, text=#2, font=\fontsize{57}{57}\selectfont]{#3};}%
+  \hspace{9mm}%
+  \begin{minipage}[c]{\dimexpr0.9\linewidth-50mm}
+    {\kickerfont\fontsize{30}{34}\selectfont\color{#2}\MakeUppercase{#4}}\par
+    \vspace{1.5mm}
+    {\headingfont#1\color{textprimary}#5}\par
+  \end{minipage}%
+  \vspace{12mm}\par
+}
+
+% Shared spacing between consecutive bullets (highlights, predictions, interpretations, ...).
+\newcommand{\bulletgap}{18mm}
+
+% ===== Inline citation + supporting-detail reference tag ==========================================
+% Literature citation embedded at point of use (coral accent), small.
+\newcommand{\litcite}[1]{{\color{accentcoral}\fontsize{32}{36}\selectfont (#1)}}
+% Small numbered badge reusing the \suptag style of the Supporting-details band. The badge is placed
+% with \raisebox (a LaTeX box lift) around a picture whose baseline is pinned to the node CENTRE via
+% a node anchor -- neither depends on the surrounding picture's axes, so the badge aligns identically
+% in ordinary text and inside a flipped-axis timeline node (e.g. the Approach, x=1cm y=-1cm).
+\newcommand{\refnum}[1]{\raisebox{3.2mm}{\tikz[baseline=(rn.center)]{\node(rn)[fill=accentturq,
+  text=white, rounded corners=3mm, minimum size=12mm, inner sep=0pt,
+  font=\headingfont\fontsize{34}{34}\selectfont]{#1};}}}
+% Pointer(s) to numbered item(s) in the "Supporting details" band: a small turquoise inline note.
+\newcommand{\seebottom}[1]{{\color{accentturq}\fontsize{32}{36}\selectfont \mbox{(supp.\ \faArrowDown\;\refnum{#1})}}}
+\newcommand{\seebottomtwo}[2]{{\color{accentturq}\fontsize{32}{36}\selectfont \mbox{(supp.\ \faArrowDown\;\refnum{#1}\,\refnum{#2})}}}
+
+% ===== TikZ arrow / connector styles ==============================================================
+\tikzset{
+  flowarrow/.style={-{Stealth[length=19pt,width=15pt]}, line width=2.2pt,
+    rounded corners=8pt},
+  softarrow/.style={-{Stealth[length=15pt,width=11pt]}, line width=1.6pt},
+  thinarrow/.style={-{Stealth[length=11pt,width=8pt]}, line width=1.0pt},
+  guideflow/.style={-{Stealth[length=22pt,width=16pt]}, line width=3pt,
+    accentturq!55, rounded corners=14pt},
+}
