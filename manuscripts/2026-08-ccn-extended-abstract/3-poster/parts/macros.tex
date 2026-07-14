@@ -4,24 +4,58 @@
 % card / heading / icon / citation commands, and TikZ arrow styles.
 % Requires colors.tex and fonts.tex to be loaded first.
 
-% ===== Type-size hierarchy (absolute points; poster is at true CCN scale) =========================
-% Readability floor = the Approach body size (30 pt): no text, INCLUDING inside figures, is set
-% below \labelsize. Leading is generous to aerate the page.
-% Leading = 140% of the font size (UX default), applied uniformly.
-\newcommand{\titlesize}{\fontsize{104}{146}\selectfont}
-\newcommand{\authorsize}{\fontsize{54}{76}\selectfont}
-\newcommand{\affilsize}{\fontsize{42}{59}\selectfont}
-\newcommand{\contactsize}{\fontsize{42}{59}\selectfont}
-\newcommand{\headinglabelsize}{\fontsize{62}{87}\selectfont}
-\newcommand{\headingdescsize}{\fontsize{48}{67}\selectfont}
-\newcommand{\resultsize}{\fontsize{64}{90}\selectfont}
-\newcommand{\takeawaysize}{\fontsize{54}{76}\selectfont}
-\newcommand{\bodysize}{\fontsize{40}{56}\selectfont}
-\newcommand{\bodybigsize}{\fontsize{52}{70}\selectfont}   % prominent formulas
-\newcommand{\smallsize}{\fontsize{40}{56}\selectfont}     % floor (40 pt)
-\newcommand{\labelsize}{\fontsize{40}{56}\selectfont}     % floor, used inside figures
-\newcommand{\fooLabelsize}{\fontsize{42}{59}\selectfont}
-\newcommand{\minorlabelsize}{\fontsize{24}{28}\selectfont} % minor in-figure labels (axis ticks)
+% ===== THE TYPE SYSTEM ============================================================================
+% The poster is 147.32 x 172.72 cm at TRUE SCALE: 1 pt = 0.351 mm, so a point size IS a physical
+% size. 40 pt = a 14.1 mm em; 24 pt = 8.4 mm. Read every number below as a millimetre statement.
+%
+% THIS FILE IS THE ONLY PLACE A POINT SIZE MAY BE CHOSEN. Do not write \fontsize{..}{..} anywhere
+% else -- not in a block, not in a figure, not inside a TikZ node. The previous system declared a
+% hierarchy that nothing used (seven of its fifteen macros were never called) while ~90 call sites
+% hard-coded 29 different sizes and 20 different leadings between them. If a role needs a size that
+% is not here, add a NAMED macro here; do not inline it there.
+%
+% ----- Two readability floors -------------------------------------------------------------------
+% TEXT (anything a visitor reads as language: prose, headings, captions, tags, notes, references,
+%   card content -- INCLUDING text drawn inside a TikZ card):        floor = 36 pt  (12.7 mm em)
+% FIGURE (annotations inside a diagram or plot: axis ticks, vector
+%   names, coefficient marks, symbol labels):                        floor = 24 pt  ( 8.4 mm em)
+% The two floors differ because they are read at different distances: prose is read across the aisle,
+% a figure annotation is read while standing at the poster. Nothing may be set below its own floor.
+%
+% ----- Font size is ABSOLUTE inside figures, and that is deliberate ------------------------------
+% Figures scale their COORDINATES (`scale=1.4') and never their fonts: no `transform shape', no
+% \scalebox around a picture. A figure may therefore be resized freely -- to fit a column, to fill a
+% gap -- WITHOUT its labels shrinking below the floor. Keep it that way: the moment fonts scale with
+% the drawing, legibility becomes a function of layout accident.
+%
+% ----- Three leadings, not one ------------------------------------------------------------------
+%   PROSE    1.40x -- running text that wraps for several lines. Aerated, for reading at distance.
+%   COMPACT  1.15x -- headings, captions, labels, notes: text that wraps to two or three lines and
+%                     must stay a visual unit. A 1.4 leading pulls such a block apart.
+%   FLAT     1.00x -- single-line nodes and icon glyphs, where leading is inert. Set = size so the
+%                     value is predictable rather than accidental.
+%
+% ----- The scale: 8 point sizes ------------------------------------------------------------------
+% TEXT (floor 36)
+\newcommand{\titlesize}{\fontsize{94}{108}\selectfont}      % poster title
+\newcommand{\subtitlesize}{\fontsize{78}{90}\selectfont}    % title continuation
+\newcommand{\headingsize}{\fontsize{52}{60}\selectfont}     % block headings, authors, display formulae
+\newcommand{\cardtitlesize}{\fontsize{44}{50}\selectfont}   % card banner titles, heading kickers
+\newcommand{\bodysize}{\fontsize{40}{56}\selectfont}        % prose that wraps            (PROSE 1.40)
+\newcommand{\bodycompact}{\fontsize{40}{46}\selectfont}     % body size, tight            (COMPACT)
+\newcommand{\notesize}{\fontsize{36}{42}\selectfont}        % citations, metadata, tags, notes -- FLOOR
+% FIGURE (floor 24). \figcapsize is \notesize's point size: a caption inside a figure and a note
+% outside one are the same kind of small text, and one value keeps them from drifting apart.
+\newcommand{\figcapsize}{\fontsize{36}{42}\selectfont}      % axis captions, colour keys
+\newcommand{\figannotsize}{\fontsize{30}{35}\selectfont}    % secondary in-figure annotations
+\newcommand{\figticksize}{\fontsize{24}{28}\selectfont}     % ticks, minor symbols -- FLOOR
+% ICON GLYPHS -- FontAwesome in a disc. Not text: not read as language, exempt from both floors, and
+% sized to the disc that holds them, never to the type scale. Named so they cannot drift either.
+\newcommand{\iconsm}{\fontsize{20}{20}\selectfont}          % 11 mm disc  (\checkring)
+\newcommand{\iconmd}{\fontsize{32}{32}\selectfont}          % 28 mm disc  (card banners, bullet marks)
+\newcommand{\iconlg}{\fontsize{40}{40}\selectfont}          % 22-24 mm disc (step numbers, question mark)
+\newcommand{\iconxl}{\fontsize{48}{48}\selectfont}          % QR legend glyph
+\newcommand{\iconxxl}{\fontsize{57}{57}\selectfont}         % block-heading number disc
 
 % ===== Math macros ================================================================================
 % Vectors use \vec{} (arrow); bold is reserved for matrices (J, I, Sigma).
@@ -41,11 +75,16 @@
 % the surrounding math size, so enlarging a formula for emphasis would enlarge its gloss with it -- and
 % the gloss is not part of the statement: it is the words that read the statement, and it must stay
 % quiet. Use \brlab (not \mlab) under a brace whenever the formula is set above body size.
-\newcommand{\brlab}[1]{\text{{\mathtextfont\fontsize{32}{36}\selectfont #1}}}
-% Inline math sized to visually match 40 pt sans body text, for use INSIDE TikZ nodes (where neither
-% \DeclareMathSizes nor a local \fontsize reaches the math size). \scalebox enlarges the rendered
-% symbols physically about the baseline, so serif states/matrices read at the surrounding prose size.
-\newcommand{\tmath}[1]{\scalebox{1.4}{\ensuremath{#1}}}
+\newcommand{\brlab}[1]{\text{{\mathtextfont\notesize #1}}}
+% Inline math inside a TikZ node. It used to be \scalebox{1.4}{\ensuremath{#1}}, and the comment here
+% claimed \DeclareMathSizes "does not reach the math size inside a TikZ node". That was never the
+% problem. The problem was that the Computer Modern math shapes stopped at 24.88 pt and every larger
+% size was silently substituted down to it (see parts/preamble.tex), so ALL math on the poster came
+% out at 24.88 pt -- and the \scalebox was a hand-applied 1.4x correction, for the few symbols someone
+% happened to notice. With lmodern loaded, \DeclareMathSizes works exactly as documented, inside TikZ
+% nodes too, and the \scalebox would now enlarge a second time. It is gone. \tmath survives as a NAME
+% -- its call sites mark "math that must read at prose size" -- but it no longer transforms anything.
+\newcommand{\tmath}[1]{\ensuremath{#1}}
 \newcommand{\RR}{\mathbb{R}}
 % multi-letter "mix" index set one math style smaller, to read like the 1/2 indices
 \newcommand{\kmix}{\vk_{\scriptscriptstyle\mathrm{mix}}}
@@ -85,23 +124,32 @@
 % frame with NO overfull-vbox warning, so an undersized height is invisible in the log.
 % THE LEFT COLUMN IS FULL, to within ~3 mm. Restoring the cards' 56 pt body leading (see the
 % `fontupper' note in block-starting.tex) cost ~10 cm, paid for by tightening the section gaps, the
-% modality images, the badges, and the archetype plots (\archscale). ANY growth in either card must
+% modality images, the labels, and the archetype plots (\archscale). ANY growth in either card must
 % now be funded by an explicit cut in the other.
 \def\yStart{158.6}\def\hStart{62.0}          % 158.6 .. 96.6 (content 59.7 + 2.2 padding, 0.1 spare).
                                              % The Question is EMBEDDED at the bottom of this card;
                                              % \yQuest / \hQuest are retired.
                                              % GREW 61.5 -> 62.0 for the FOURTH archetype: the row
-                                             % gained a citation line under each badge (+2.6 cm) and a
+                                             % gained a citation line under each caption (+2.6 cm) and a
                                              % two-line x-label (+1.2 cm), while narrowing the plots
                                              % four-across returned 2.4 cm. Net +0.4, funded below.
-\def\yAppr{95.6}\def\hAppr{87.6}             % 95.6 .. 8.0 (1 cm gap above; ~0.7 cm above the footer divider at y=7.3). Content measures 82.9 -> ~4.7 cm of slack (was 5.2: the Starting card's fourth archetype spent 0.5 of it, per the "any growth must be funded" rule above). Still the room the move (b) restructure has to spend.
+\def\yAppr{95.6}\def\hAppr{87.6}             % 95.6 .. 8.0 (1 cm gap above; ~0.7 cm above the footer
+                                             % divider at y=7.3). Read the logged "[layout] approach
+                                             % content height" for the current fill; the card is the
+                                             % one on this poster with room left, and it is where any
+                                             % growth in the left column has to be funded from.
 %   RIGHT column : takeaway (NOW INCLUDING the 2x2 matrix) -> consequences -> model
 % The matrix is no longer a separate box: it is the third movement INSIDE the Key-results card
 % (block-takeaway.tex), so that card now holds highlights + mechanism cards + matrix. Its height is
 % DERIVED from the logged "[layout] takeaway content height" (78.8 cm) + 22 mm of card padding.
 % Bottom = 158.6 - 81.0 = 77.6, i.e. 5.7 cm above the Predictions row at \yConseq -- that clearance is
 % the whole budget the card has to grow into. Re-read the log line after ANY edit to the card.
-\def\yTake{158.6}\def\hTake{81.0}            % 158.6 .. 77.6 (highlights + mechanism cards + matrix)
+\def\yTake{158.6}\def\hTake{84.0}            % 158.6 .. 74.6 (highlights + mechanism cards + matrix)
+                                             % GREW 81.0 -> 84.0 when the mechanism cards' prose moved
+                                             % to the 36 pt TEXT FLOOR: the projection card's "Controls"
+                                             % sentence wraps to three lines there, and the card grew
+                                             % 29 -> 32 cm to hold it (figures/results-matrix.tex).
+                                             % Bottom is now 2.7 cm above the Predictions row (was 5.7).
 % RETIRED with the merge: the matrix's own north edge / vertical budget.
 % \def\yAbst{108.4}\def\hAbst{34}            % 2x2 matrix, when it was placed separately below the card
 \def\yConseq{71.9}\def\hConseq{37}           % predictions | interpretations row
@@ -119,33 +167,55 @@
 % UX-inspired cards: subtle surface contrast + soft shadow, no loud frame.
 \tcbset{
   % shadow-free base: surface, rounded corners, padding.
+  % CORNER RADIUS IS A RATIO, NOT A NUMBER. 24 mm on a 65 cm card is ~3.7% of its width; the reference
+  % UI cards this style follows sit at 4-6%. The old 15 mm was 2.3%, and at poster scale a 2% arc is a
+  % chamfer, not a radius -- the cards read square. The nested cards (mechanism, model comparison) carry
+  % 14 mm on their ~30 cm width, i.e. the same ~4.6%: SCALE THE RADIUS WITH THE CARD, do not copy the
+  % number across. See `stagecard' in figures/results-matrix.tex and \modelcard in block-consequences.
   cardbase/.style={
-    enhanced, arc=15mm, outer arc=15mm,
+    enhanced, arc=24mm, outer arc=24mm,
     colback=surface, colframe=bordersubtle, boxrule=0.8pt,
     boxsep=0pt, left=12mm, right=12mm, top=11mm, bottom=11mm,
     fontupper=\color{textprimary}\bodysize,
   },
-  % homogeneous soft shadow across ALL cards: light from the front-left corner, so a single
-  % tight blur is cast down and to the right (reduced spread, one direction everywhere).
-  softshadow/.style={fuzzy shadow={2.5mm}{-3mm}{-0.5mm}{3.5mm}{cardshadow}},
-  % deeper cast of the SAME light, for the two emphasis boxes (see emphcard).
-  strongshadow/.style={fuzzy shadow={3.5mm}{-4.5mm}{-0.5mm}{5.5mm}{cardshadow}},
-  card/.style={cardbase, softshadow},
-  % Emphasis card (Open Question, Key results). Emphasis used to be a turquoise->white GRADIENT fill;
-  % the gradient is retired. A card now earns emphasis by RELIEF, not by tint: a pronounced accent
-  % ring + a deeper shadow lift it off the page while its interior stays white, so the text on it
-  % reads exactly like the text on every other card.
-  % TO RESTORE A GRADIENT: the two call sites keep the old fill commented out --
-  % \yQuest's box in block-starting.tex (`interior style`) and the title band in block-takeaway.tex
-  % (`underlay`). Uncomment there; do not put a gradient back into this style.
-  emphcard/.style={cardbase, strongshadow, colback=surface, colframe=accentturq, boxrule=3pt},
-  % Same emphasis card, but the shadow is TINTED BY THE RING instead of neutral grey: the box then
-  % reads as glowing in its own accent rather than merely floating. Used by the Open Question, the one
-  % box the reader must not miss. (Do not spread it: if every card glows, none does.)
-  emphcardglow/.style={cardbase, colback=surface, colframe=accentturq, boxrule=3pt,
-    fuzzy shadow={3.5mm}{-4.5mm}{-0.5mm}{6mm}{accentturq!45}},
+  % ===== ONE SHADOW FOR EVERY CARD ON THE POSTER ==================================================
+  % EVERY card now GLOWS in its own colour, and every card uses the SAME BLUR -- the same primitive,
+  % the same cast, the same spread. Only the TINT changes.
+  %
+  % THE PRIMITIVE MATTERS AS MUCH AS THE NUMBERS, and this is the trap that cost a round: tcolorbox's
+  % `fuzzy shadow' is a STACK OF OFFSET ROUNDED RECTANGLES, whereas TikZ's `blur shadow' (shadows.blur)
+  % is a TRUE GAUSSIAN BLUR. Giving a fuzzy shadow the blur shadow's NUMBERS changes nothing -- the box
+  % still renders with the stepped halo. So the blur is attached to the tcolorbox's FRAME PATH, which is
+  % the outermost path and is drawn beneath the interior: the shadow lands behind the whole card.
+  % The numbers are \mechanismcards' verbatim (figures/results-matrix.tex > projglow/ampglow):
+  % yshift -2.6mm, radius 6mm, 12 steps, opacity 40. CHANGE THEM IN ONE PLACE, HERE, OR NOWHERE.
+  %
+  % THE TINT GOES THROUGH `every shadow'. A `fill=' inside `blur shadow={...}' LEAKS onto the path it is
+  % attached to -- here the frame -- and the card comes out flooded with the tint colour.
+  %   #1 = the ring colour (the frame path must keep filling itself with it)
+  %   #2 = the tint of the glow
+  cardglow/.style 2 args={
+    frame style={fill=#1,
+      blur shadow={shadow xshift=0pt, shadow yshift=-2.6mm, shadow blur radius=6mm,
+        shadow blur steps=12, shadow opacity=40},
+      every shadow/.style={fill=#2, draw=none}}},
+  % THE SECTION CARDS GLOW TURQUOISE, NOT GREY -- and NOT in their own ring, which is `bordersubtle', a
+  % near-white hairline whose glow would be invisible. Their IDENTITY is the chrome turquoise (heading,
+  % number disc, icon), so that is what they cast. To go back to a neutral shadow: `cardglow={bordersubtle}{cardshadow}'.
+  card/.style={cardbase, cardglow={bordersubtle}{accentturq}},
+  % Emphasis card (Key results, Open Question). Emphasis is RELIEF, not tint: a pronounced accent ring
+  % (3 pt, the heaviest on the poster) over a white interior, so the text on it reads exactly like the
+  % text on every other card. It glows in the same turquoise as the section cards -- what separates it
+  % is the RING WEIGHT, not the shadow, now that every card glows.
+  % TO RESTORE THE OLD GRADIENT FILL: the two call sites keep it commented out -- \yQuest's box in
+  % block-starting.tex (`interior style`) and the title band in block-takeaway.tex (`underlay`).
+  emphcard/.style={cardbase, colback=surface, colframe=accentturq, boxrule=3pt,
+    cardglow={accentturq}{accentturq}},
+  % Kept as a NAME so the Open Question's call site still reads as "the box that must not be missed",
+  % but it is now the same card: every card glows, so the glow no longer distinguishes it. Its ring does.
+  emphcardglow/.style={emphcard},
   plaincard/.style={
-    enhanced, arc=15mm, outer arc=15mm,
+    enhanced, arc=24mm, outer arc=24mm,
     colback=posterbg, colframe=posterbg, boxrule=0pt,
     boxsep=0pt, left=10mm, right=10mm, top=8mm, bottom=8mm,
     fontupper=\color{textprimary}\bodysize,
@@ -197,7 +267,7 @@
 \newcommand{\iconbadge}[3]{%
   \tikz[baseline=-0.42ex]{%
     \node[circle, fill=#1, text=#2, minimum size=20mm, inner sep=0pt,
-          font=\fontsize{34}{34}\selectfont]{#3};}%
+          font=\iconmd]{#3};}%
 }
 
 % Functional block heading: a soft rounded-square icon (light accent tint, dark accent glyph) wearing
@@ -209,17 +279,17 @@
 % beside it, so the pair reads as one mark -- and so a card's identity is still one object, not two.
 % Numbering is 1..6 in reading order: objectives, approach, key results, predictions, interpretations,
 % model comparison. Renumbering means editing all six call sites; there is no central list.
-\newcommand{\blockheading}[6][\fontsize{52}{60}\selectfont]{%
+\newcommand{\blockheading}[6][\headingsize]{%
   \noindent
   \raisebox{-0.5\height}{%
     \tikz{%
       \node[fill=#2!16, rounded corners=9mm, minimum size=37mm, inner sep=0pt, text=#2,
-        font=\fontsize{57}{57}\selectfont] (bh) {#3};
+        font=\iconxxl] (bh) {#3};
       \node[circle, fill=#2, text=white, minimum size=17mm, inner sep=0pt,
-        font=\headingfont\bfseries\fontsize{30}{30}\selectfont] at (bh.north east) {#4};}}%
+        font=\headingfont\bfseries\iconmd] at (bh.north east) {#4};}}%
   \hspace{9mm}%
   \begin{minipage}[c]{\dimexpr0.9\linewidth-50mm}
-    {\kickerfont\fontsize{46}{52}\selectfont\color{#2}\MakeUppercase{#5}}\par
+    {\kickerfont\cardtitlesize\color{#2}\MakeUppercase{#5}}\par
     \vspace{1.5mm}
     {\headingfont#1\color{textprimary}#6}\par
   \end{minipage}%
@@ -241,7 +311,7 @@
 % colour as the \seebottom supporting-detail tags below -- because the two are the same kind of mark:
 % a pointer AWAY from the poster (to the literature, to the supplement). They are deliberately not
 % two colours. The former semantic coral (citecoral) is retired in colors.tex.
-\newcommand{\litcite}[1]{{\color{accentturq}\fontsize{32}{36}\selectfont (#1)}}
+\newcommand{\litcite}[1]{{\color{accentturq}\notesize (#1)}}
 % Small numbered badge (turquoise rounded square) matching the numbered points in supplement.tex.
 % The badge is placed
 % with \raisebox (a LaTeX box lift) around a picture whose baseline is pinned to the node CENTRE via
@@ -249,11 +319,11 @@
 % in ordinary text and inside a flipped-axis timeline node (e.g. the Approach, x=1cm y=-1cm).
 \newcommand{\refnum}[1]{\raisebox{3.2mm}{\tikz[baseline=(rn.center)]{\node(rn)[fill=accentturq,
   text=white, rounded corners=3mm, minimum size=12mm, inner sep=0pt,
-  font=\headingfont\fontsize{34}{34}\selectfont]{#1};}}}
+  font=\headingfont\notesize]{#1};}}}
 % Pointer(s) to numbered item(s) in the standalone supplement: a small QR-code glyph + the item
 % number(s), signalling "scan the header QR to reach supplemental item N". The number badges are kept.
-\newcommand{\seebottom}[1]{{\color{accentturq}\fontsize{32}{36}\selectfont \mbox{\icQR\;\refnum{#1}}}}
-\newcommand{\seebottomtwo}[2]{{\color{accentturq}\fontsize{32}{36}\selectfont \mbox{\icQR\;\refnum{#1}\,\refnum{#2}}}}
+\newcommand{\seebottom}[1]{{\color{accentturq}\notesize \mbox{\icQR\;\refnum{#1}}}}
+\newcommand{\seebottomtwo}[2]{{\color{accentturq}\notesize \mbox{\icQR\;\refnum{#1}\,\refnum{#2}}}}
 
 % ===== TikZ arrow / connector styles ==============================================================
 \tikzset{
