@@ -40,6 +40,11 @@
 
 % --- Inline-math size correction. The body is Source Sans Pro but math symbols are Latin Modern
 % (serif), whose smaller x-height makes inline states/matrices look smaller than the surrounding
-% sans text. Enlarge the math size at the body text size (40 pt) so they visually match. The dense
-% supporting-details band resets this locally (block-supporting.tex) to keep its equations compact.
+% sans text. Enlarge the math size at the body text size (40 pt) so they visually match. (This only
+% fires at 40 pt text, so the standalone supplement, which reuses this file at 11 pt, is unaffected.)
 \DeclareMathSizes{40}{45}{32}{23}
+% The same correction at the DISPLAY size used for the Approach's two headline formulae (the input and
+% output vectors, block-approach move (a)). Without this line LaTeX has no math sizes for 54 pt text,
+% falls back to defaults, and warns about missing font shapes. The brace readings under those formulae
+% do NOT follow these sizes -- they are pinned by \brlab (macros.tex).
+\DeclareMathSizes{54}{60}{40}{30}

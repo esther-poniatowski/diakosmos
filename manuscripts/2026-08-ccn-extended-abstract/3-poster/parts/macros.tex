@@ -37,6 +37,11 @@
 \newcommand{\Sig}{\boldsymbol{\Sigma}}
 % In-math text label rendered in the math (serif) text font, so words match the symbols.
 \newcommand{\mlab}[1]{\text{{\mathtextfont #1}}}
+% An \underbracket's READING, pinned to 32 pt INDEPENDENTLY of the formula's size. \mlab would follow
+% the surrounding math size, so enlarging a formula for emphasis would enlarge its gloss with it -- and
+% the gloss is not part of the statement: it is the words that read the statement, and it must stay
+% quiet. Use \brlab (not \mlab) under a brace whenever the formula is set above body size.
+\newcommand{\brlab}[1]{\text{{\mathtextfont\fontsize{32}{36}\selectfont #1}}}
 % Inline math sized to visually match 40 pt sans body text, for use INSIDE TikZ nodes (where neither
 % \DeclareMathSizes nor a local \fontsize reaches the math size). \scalebox enlarges the rendered
 % symbols physically about the baseline, so serif states/matrices read at the surrounding prose size.
@@ -58,26 +63,53 @@
 % which lets each side flow to fit its content.
 \def\gXl{5}            % left content edge
 \def\gXr{142.32}       % right content edge (PW - Mside)
-\def\gWl{65}           % left column width
+\def\gWl{65}           % left column width (shared by ALL left-column cards; NOT to be changed for lens-figure sizing -- size the lens plots via \lensscale in block-starting.tex instead)
 \def\gWr{68.32}        % right column width
 \def\gXrcL{74}         % right column, left edge
 \def\gWfull{137.32}    % full content width (footer / supporting)
 
 % Region map (cm; y = NORTH edge of each block, h = height). Single source of truth.
-%   LEFT column : header -> starting -> question -> approach
-\def\yHead{168.72}
-\def\yStart{149}\def\hStart{54}              % 149 .. 95  (taller: blank below the insight line)
-\def\yQuest{93}\def\hQuest{6}                % 93 .. 87 (tighter box; wider gap to the approach card)
-\def\yAppr{84.5}\def\hAppr{41}               % 84.5 .. 43.5 (raised to clear the taller support band with the condition columns)
-%   RIGHT column : takeaway -> graphical abstract (decision tree) -> consequences
-\def\yTake{168.72}\def\hTake{25}             % 168.72 .. 143.7 (extended to encompass the formula)
-\def\yAbst{141}\def\hAbst{57}                % selection title box top (below the results box)
-\def\ySelTree{133}                           % decision tree top (just below the title box)
-\def\yConseq{83}\def\hConseq{37}             % 83 .. 46
-%   FULL width : supporting -> footer
-% The supporting box is anchored by its BOTTOM-LEFT corner just above the footer (\ySupBot),
-% so it keeps a fixed gap to the footer and grows upward with its content.
-\def\hSup{33}\def\ySupBot{7.4}                % bottom-anchored just above the footer divider (y=7.3)
+%   FULL width : header banner (spans \gWfull, like the footer) -- BOTH columns start below it.
+\def\yHead{168.72}                           % 168.72 .. 159.63 (banner is 9.09 cm tall; the build
+                                             % logs its measured height as "[layout] header banner
+                                             % height" -- re-read it after any header edit)
+% BOTH columns hang from the SAME top edge, 157 -- a ~2.6 cm gap below the banner (the columns'
+% internal card gaps are ~1 cm, so this reads as a section break, not as dead space). Changing that
+% top edge means re-deriving BOTH chains below: each is rigid (a card's y is its predecessor's bottom
+% minus the gap), and each is pinned at the far end (the left column must still bottom out at 8.5,
+% just above the footer divider at y=7.3).
+%   LEFT column : starting (now INCLUDING the open question) -> approach
+% Both card heights are DERIVED, not guessed: each block boxes its content and logs it as
+% "[layout] <block> content height"; the card needs that + 22 mm (the cardbase top+bottom padding).
+% Re-read those log lines after editing either card -- a tcolorbox with valign=top spills BELOW its
+% frame with NO overfull-vbox warning, so an undersized height is invisible in the log.
+% THE LEFT COLUMN IS FULL, to within ~3 mm. Restoring the cards' 56 pt body leading (see the
+% `fontupper' note in block-starting.tex) cost ~10 cm, paid for by tightening the section gaps, the
+% modality images, the badges, and the archetype plots (\archscale). ANY growth in either card must
+% now be funded by an explicit cut in the other.
+\def\yStart{158.6}\def\hStart{62.0}          % 158.6 .. 96.6 (content 59.7 + 2.2 padding, 0.1 spare).
+                                             % The Question is EMBEDDED at the bottom of this card;
+                                             % \yQuest / \hQuest are retired.
+                                             % GREW 61.5 -> 62.0 for the FOURTH archetype: the row
+                                             % gained a citation line under each badge (+2.6 cm) and a
+                                             % two-line x-label (+1.2 cm), while narrowing the plots
+                                             % four-across returned 2.4 cm. Net +0.4, funded below.
+\def\yAppr{95.6}\def\hAppr{87.6}             % 95.6 .. 8.0 (1 cm gap above; ~0.7 cm above the footer divider at y=7.3). Content measures 82.9 -> ~4.7 cm of slack (was 5.2: the Starting card's fourth archetype spent 0.5 of it, per the "any growth must be funded" rule above). Still the room the move (b) restructure has to spend.
+%   RIGHT column : takeaway (NOW INCLUDING the 2x2 matrix) -> consequences -> model
+% The matrix is no longer a separate box: it is the third movement INSIDE the Key-results card
+% (block-takeaway.tex), so that card now holds highlights + mechanism cards + matrix. Its height is
+% DERIVED from the logged "[layout] takeaway content height" (78.8 cm) + 22 mm of card padding.
+% Bottom = 158.6 - 81.0 = 77.6, i.e. 5.7 cm above the Predictions row at \yConseq -- that clearance is
+% the whole budget the card has to grow into. Re-read the log line after ANY edit to the card.
+\def\yTake{158.6}\def\hTake{81.0}            % 158.6 .. 77.6 (highlights + mechanism cards + matrix)
+% RETIRED with the merge: the matrix's own north edge / vertical budget.
+% \def\yAbst{108.4}\def\hAbst{34}            % 2x2 matrix, when it was placed separately below the card
+\def\yConseq{71.9}\def\hConseq{37}           % predictions | interpretations row
+\def\yModel{50.4}                            % model-comparison card (content-sized; bottom ~20,
+                                             % i.e. ~13 cm above the footer divider)
+%   FULL width : footer
+% (The former "Supporting details" band now lives in the standalone supplement.tex; the poster
+%  points to it via the QR tag \seebottom. See HANDOFF.md.)
 \def\yFoot{12}\def\hFoot{9}                   % 12 .. 3
 
 % Coordinate helper: \xy{x}{y} -> point at (x cm, y cm) from the page corner (O).
@@ -96,23 +128,28 @@
   % homogeneous soft shadow across ALL cards: light from the front-left corner, so a single
   % tight blur is cast down and to the right (reduced spread, one direction everywhere).
   softshadow/.style={fuzzy shadow={2.5mm}{-3mm}{-0.5mm}{3.5mm}{cardshadow}},
-  % normal card and emphasised card share the identical shadow (emphasis comes from fill/gradient).
+  % deeper cast of the SAME light, for the two emphasis boxes (see emphcard).
+  strongshadow/.style={fuzzy shadow={3.5mm}{-4.5mm}{-0.5mm}{5.5mm}{cardshadow}},
   card/.style={cardbase, softshadow},
-  emphcard/.style={cardbase, softshadow},
+  % Emphasis card (Open Question, Key results). Emphasis used to be a turquoise->white GRADIENT fill;
+  % the gradient is retired. A card now earns emphasis by RELIEF, not by tint: a pronounced accent
+  % ring + a deeper shadow lift it off the page while its interior stays white, so the text on it
+  % reads exactly like the text on every other card.
+  % TO RESTORE A GRADIENT: the two call sites keep the old fill commented out --
+  % \yQuest's box in block-starting.tex (`interior style`) and the title band in block-takeaway.tex
+  % (`underlay`). Uncomment there; do not put a gradient back into this style.
+  emphcard/.style={cardbase, strongshadow, colback=surface, colframe=accentturq, boxrule=3pt},
+  % Same emphasis card, but the shadow is TINTED BY THE RING instead of neutral grey: the box then
+  % reads as glowing in its own accent rather than merely floating. Used by the Open Question, the one
+  % box the reader must not miss. (Do not spread it: if every card glows, none does.)
+  emphcardglow/.style={cardbase, colback=surface, colframe=accentturq, boxrule=3pt,
+    fuzzy shadow={3.5mm}{-4.5mm}{-0.5mm}{6mm}{accentturq!45}},
   plaincard/.style={
     enhanced, arc=15mm, outer arc=15mm,
     colback=posterbg, colframe=posterbg, boxrule=0pt,
     boxsep=0pt, left=10mm, right=10mm, top=8mm, bottom=8mm,
     fontupper=\color{textprimary}\bodysize,
   },
-  accentcard/.style={card, colback=accentturqsoft, colframe=accentturq!45},
-  coralcard/.style={card, colback=accentcoralsoft, colframe=accentcoral!45},
-  % raised sub-panel (mixture input / response): a clean surface card with the shared soft shadow
-  % (aesthetic per the decision-tree cards), replacing the earlier recessed inset look.
-  panelbox/.style={enhanced, colback=surface, colframe=bordersubtle, boxrule=0.8pt, arc=10mm,
-    outer arc=10mm, boxsep=0pt, left=8mm, right=8mm, top=7mm, bottom=7mm,
-    % soft, tight drop shadow like the decision-tree cards (straight down, hugging), tinted coral
-    fuzzy shadow={0mm}{-1.4mm}{-0.7mm}{1mm}{accentcoral!55}},
   % transparent panel: same padding/alignment as a card, but no fill, frame or shadow
   % (content lies directly over the page background)
   ghostcard/.style={
@@ -124,10 +161,6 @@
   dashbox/.style={enhanced, interior hidden, frame hidden,
     arc=5mm, outer arc=5mm, boxsep=0pt, left=4mm, right=4mm, top=5mm, bottom=5mm,
     borderline={1.1pt}{0pt}{texttertiary!55, dashed}},
-  % compact dashed box for the condition-consequence columns: tight padding + 35pt leading,
-  % so the stacked one-per-line elements stay shallow.
-  condbox/.style={dashbox, top=1.5mm, bottom=1.5mm,
-    fontupper=\fontsize{32}{35}\selectfont\color{texttertiary}},
 }
 
 % A tcolorbox typeset directly inside a TikZ \node triggers an infinite NFSS
@@ -167,19 +200,28 @@
           font=\fontsize{34}{34}\selectfont]{#3};}%
 }
 
-% Functional block heading (style from tests/claude-design-layout.tex): a soft rounded-square
-% icon (light accent tint, dark accent glyph) + a small MONO accent kicker + a title-font
-% descriptive sentence (here reduced in size).
-%   [#1 sentence font, optional]  #2 accent  #3 glyph  #4 KICKER label  #5 descriptive sentence
-\newcommand{\blockheading}[5][\fontsize{52}{60}\selectfont]{%
+% Functional block heading: a soft rounded-square icon (light accent tint, dark accent glyph) wearing
+% its SECTION NUMBER on a small solid disc at the top-right corner, + a MONO accent kicker + a
+% title-font descriptive sentence.
+%   [#1 sentence font, optional]  #2 accent  #3 glyph  #4 SECTION NUMBER  #5 KICKER  #6 sentence
+% The number is a reading ORDER, not a decoration: a poster is read out of order unless it says
+% otherwise. It rides ON the icon's corner (a disc centred on `bh.north east') rather than sitting
+% beside it, so the pair reads as one mark -- and so a card's identity is still one object, not two.
+% Numbering is 1..6 in reading order: objectives, approach, key results, predictions, interpretations,
+% model comparison. Renumbering means editing all six call sites; there is no central list.
+\newcommand{\blockheading}[6][\fontsize{52}{60}\selectfont]{%
   \noindent
-  \raisebox{-0.5\height}{\tikz\node[fill=#2!16, rounded corners=9mm, minimum size=37mm,
-     inner sep=0pt, text=#2, font=\fontsize{57}{57}\selectfont]{#3};}%
+  \raisebox{-0.5\height}{%
+    \tikz{%
+      \node[fill=#2!16, rounded corners=9mm, minimum size=37mm, inner sep=0pt, text=#2,
+        font=\fontsize{57}{57}\selectfont] (bh) {#3};
+      \node[circle, fill=#2, text=white, minimum size=17mm, inner sep=0pt,
+        font=\headingfont\bfseries\fontsize{30}{30}\selectfont] at (bh.north east) {#4};}}%
   \hspace{9mm}%
   \begin{minipage}[c]{\dimexpr0.9\linewidth-50mm}
-    {\kickerfont\fontsize{30}{34}\selectfont\color{#2}\MakeUppercase{#4}}\par
+    {\kickerfont\fontsize{46}{52}\selectfont\color{#2}\MakeUppercase{#5}}\par
     \vspace{1.5mm}
-    {\headingfont#1\color{textprimary}#5}\par
+    {\headingfont#1\color{textprimary}#6}\par
   \end{minipage}%
   \vspace{12mm}\par
 }
@@ -187,19 +229,31 @@
 % Shared spacing between consecutive bullets (highlights, predictions, interpretations, ...).
 \newcommand{\bulletgap}{18mm}
 
+% Shared white space AFTER a body paragraph, before the figure row it introduces. One convention for
+% every panel: a paragraph must not sit tight against the figure it announces.
+% NOTE: the space after a block heading is NOT set here -- it is \blockheading's own trailing
+% \vspace, and no panel may add to it (that is the convention the Predictions / Interpretations cards
+% set: heading, then content, nothing in between).
+\newcommand{\paragap}{12mm}
+
 % ===== Inline citation + supporting-detail reference tag ==========================================
-% Literature citation embedded at point of use (coral accent), small.
-\newcommand{\litcite}[1]{{\color{accentcoral}\fontsize{32}{36}\selectfont (#1)}}
-% Small numbered badge reusing the \suptag style of the Supporting-details band. The badge is placed
+% Literature citation embedded at point of use, small. It takes the CHROME turquoise -- the SAME
+% colour as the \seebottom supporting-detail tags below -- because the two are the same kind of mark:
+% a pointer AWAY from the poster (to the literature, to the supplement). They are deliberately not
+% two colours. The former semantic coral (citecoral) is retired in colors.tex.
+\newcommand{\litcite}[1]{{\color{accentturq}\fontsize{32}{36}\selectfont (#1)}}
+% Small numbered badge (turquoise rounded square) matching the numbered points in supplement.tex.
+% The badge is placed
 % with \raisebox (a LaTeX box lift) around a picture whose baseline is pinned to the node CENTRE via
 % a node anchor -- neither depends on the surrounding picture's axes, so the badge aligns identically
 % in ordinary text and inside a flipped-axis timeline node (e.g. the Approach, x=1cm y=-1cm).
 \newcommand{\refnum}[1]{\raisebox{3.2mm}{\tikz[baseline=(rn.center)]{\node(rn)[fill=accentturq,
   text=white, rounded corners=3mm, minimum size=12mm, inner sep=0pt,
   font=\headingfont\fontsize{34}{34}\selectfont]{#1};}}}
-% Pointer(s) to numbered item(s) in the "Supporting details" band: a small turquoise inline note.
-\newcommand{\seebottom}[1]{{\color{accentturq}\fontsize{32}{36}\selectfont \mbox{(supp.\ \faArrowDown\;\refnum{#1})}}}
-\newcommand{\seebottomtwo}[2]{{\color{accentturq}\fontsize{32}{36}\selectfont \mbox{(supp.\ \faArrowDown\;\refnum{#1}\,\refnum{#2})}}}
+% Pointer(s) to numbered item(s) in the standalone supplement: a small QR-code glyph + the item
+% number(s), signalling "scan the header QR to reach supplemental item N". The number badges are kept.
+\newcommand{\seebottom}[1]{{\color{accentturq}\fontsize{32}{36}\selectfont \mbox{\icQR\;\refnum{#1}}}}
+\newcommand{\seebottomtwo}[2]{{\color{accentturq}\fontsize{32}{36}\selectfont \mbox{\icQR\;\refnum{#1}\,\refnum{#2}}}}
 
 % ===== TikZ arrow / connector styles ==============================================================
 \tikzset{
@@ -209,4 +263,11 @@
   thinarrow/.style={-{Stealth[length=11pt,width=8pt]}, line width=1.0pt},
   guideflow/.style={-{Stealth[length=22pt,width=16pt]}, line width=3pt,
     accentturq!55, rounded corners=14pt},
+  % A COORDINATE MARK: the point on a vector at which a coefficient is read off (alpha_k u_k, beta_k k_k,
+  % kappa_k m_k). It sits ON the vector's shaft, so a plain \fill of the same colour disappears into it --
+  % the WHITE RING is what makes it a mark rather than a thicker piece of the arrow. The ring's line width
+  % is absolute (TikZ does not scale line widths), so the mark keeps the same rim in every figure; the
+  % RADIUS, however, IS scaled by the picture's `scale', so each figure passes a radius that lands at
+  % ~4.4pt on the page (2.4pt at scale 1.85, 4pt at scale 1.1, ...). Use as: \draw[coordmark, fill=compred].
+  coordmark/.style={draw=white, line width=1.2pt},
 }

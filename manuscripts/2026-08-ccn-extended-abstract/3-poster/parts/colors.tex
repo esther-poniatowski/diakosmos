@@ -1,13 +1,23 @@
 % FILE: 3-poster/parts/colors.tex
 % ==================================================================================================
-% Poster palette, partitioned into three layers (cf. poster-plan.md > Style > Colors):
-%   1. Neutral ramp   — background, surfaces, borders, text levels (tonal ladder in L*).
-%   2. Accent         — turquoise + coral (complementary) with desaturated companions.
-%   3. Semantic       — fixed visual grammar reused across every figure.
+% Poster palette, three INDEPENDENT palettes (cf. poster-plan.md > Style > Colors). Each colour token
+% belongs to exactly ONE palette, so any palette can be retuned without shifting the other two:
+%   1. Neutral foundation — the achromatic substrate: page background, surfaces, borders, text levels,
+%                           and the neutral structure of plots (axes, reference rules). Shared by
+%                           chrome AND figures, but it is NEVER an accent and NEVER encodes a concept,
+%                           and no design/semantic hue is derived from it.
+%   2. Design chrome      — turquoise, plus a RESERVED complementary coral (accentcoral): headings,
+%                           boxes, navigation, QR tags, badges, the Approach timeline, AND the two
+%                           kinds of POINTER AWAY from the poster (literature citations \litcite;
+%                           supporting-detail tags \seebottom) -- one colour, because they are one
+%                           kind of mark. NEVER used to encode a concept inside a figure.
+%   3. Semantic grammar   — one concept -> one colour, used ONLY inside figures/representations. The
+%                           semantic coral (dncoral) is a SEPARATE token from the design coral above
+%                           -- same value, independently tunable. NEVER for chrome.
 % Values are sRGB approximations of the OKLCH specification; the perceptual ladder
 % (relative lightness ordering) is what matters, not exact colorimetry.
 
-% ----- 1. Neutral ramp (cool / faint-turquoise bias, pulled inside {0,1}) -----
+% ----- 1. Neutral foundation (achromatic substrate; independent of both accent palettes) -----
 \definecolor{posterbg}{HTML}{F1F3F3}      % L=0.970  background
 \definecolor{surface}{HTML}{FBFCFC}       % L=0.995  elevated panels (shadow separates from bg)
 \definecolor{bordersubtle}{HTML}{DBDFDF}  % L=0.900  decorative outlines, dividers, table lines
@@ -16,21 +26,19 @@
 \definecolor{textsecondary}{HTML}{586366} % L=0.450  subtitles, supporting text
 \definecolor{textprimary}{HTML}{1B2224}   % L=0.150  titles, labels, body, key values
 
-% ----- 2. Accent (complementary turquoise + coral, with monochromatic companions) -----
-\definecolor{accentturq}{HTML}{12A89E}    % primary accent, H_acc ~ 185
-\definecolor{accentturqdk}{HTML}{0C7A72}
-\definecolor{accentturqsoft}{HTML}{DDF0EE} % low-chroma tinted surface
-\definecolor{accentcoral}{HTML}{F26B5B}   % complementary accent, H ~ 28
-\definecolor{accentcoraldk}{HTML}{C8483A}
-\definecolor{accentcoralsoft}{HTML}{FBE3DE}
+% ----- 2. Design-chrome accent (headings, boxes, navigation) -- NEVER used inside a figure -----
+% Primary = turquoise (all section headings/boxes, QR tags, citations, the Approach timeline, badges).
+% A complementary coral is RESERVED for design emphasis (currently unused). It is a DESIGN token,
+% deliberately distinct from the semantic coral (dncoral) even though it shares the value today --
+% so chrome and figures remain independently tunable.
+\definecolor{accentturq}{HTML}{12A89E}    % primary design accent, H_acc ~ 185; also \litcite + \seebottom
+\definecolor{accentturqdk}{HTML}{0C7A72}   % darker turquoise: sub-headers, contact line, badges
+\definecolor{accentcoral}{HTML}{F26B5B}   % complementary DESIGN accent -- RESERVED (chrome only; != dncoral)
 
-% ----- 3. Semantic grammar (one concept -> one color, reused in every figure) -----
+% ----- 3. Semantic / concept grammar (one concept -> one colour) -- used ONLY inside figures -----
 \definecolor{netturq}{HTML}{2BB3A6}       % concrete network with neurons
 \definecolor{inputpurple}{HTML}{8358C6}   % external input  AND  linear-projection stage
-\definecolor{inputpurplesoft}{HTML}{EADFF8}
 \definecolor{recurjade}{HTML}{1F8E7E}     % recurrent circuit / amplification stage / circuit prediction
-\definecolor{recurjadesoft}{HTML}{D6ECE7}
-\definecolor{prairiegreen}{HTML}{93B87A}  % pastel prairie green: 2nd interaction pattern (m_2, n_2)
 % --- Approach-figure palette, matching the low-rank-model-introduction deck -----------------------
 \definecolor{inputorange}{RGB}{255,127,14}    % input  (Rate model)
 \definecolor{orangeA}{RGB}{230,90,20}         % input pattern 1  I^(1)
@@ -42,24 +50,27 @@
 \definecolor{recpoolcyan}{RGB}{23,190,207}    % recurrent pooling Sigma^(mm)  (cold)
 \definecolor{inpoolwarm}{RGB}{214,118,52}     % input pooling Sigma^(II)  (warm)
 \definecolor{gainblue}{HTML}{2E6FC4}      % gain g(Delta), total-input variance
-\definecolor{gainbluesoft}{HTML}{DCE7F8}
 \definecolor{compred}{HTML}{D6453C}       % component response 1 (kappa_1)
 \definecolor{compgreen}{HTML}{4F9A3F}     % component response 2 (kappa_2)
 \definecolor{mixamber}{HTML}{F2A30C}      % collective / mixture response (kappa_mix)
 \definecolor{spangray}{HTML}{B7BFC1}      % component span plane / proportional reference
-\definecolor{emergentgray}{HTML}{566063}  % emergent axis / out-of-span departure
-\definecolor{dncoral}{HTML}{F26B5B}       % divisive normalization (contrast vs circuit jade)
+\definecolor{emergentgray}{HTML}{566063}  % emergent-axis annotations (bias arc, in-plane foot marker)
+\definecolor{emergentbrown}{HTML}{8A5524} % orthogonal component (eta_perp) -- solid brown, all figures
+\definecolor{dncoral}{HTML}{F26B5B}       % divisive-normalization rival model (DN card + competition curve)
+% RETIRED: citations (\litcite) now take the CHROME turquoise (accentturq), the same colour as the
+% \seebottom supporting-detail tags -- both are pointers away from the poster. Kept, commented, in
+% case the coral citation is wanted back (restore this token AND \litcite's colour in macros.tex).
+% \definecolor{citecoral}{HTML}{F26B5B}   % bibliographic citations / references (\litcite)
 
 % ----- convenience aliases -----
 \colorlet{cardborder}{bordersubtle}
 \colorlet{cardshadow}{black!38}   % gray drop shadow (darker / stronger depth)
 \colorlet{cardshadowdk}{black!52} % deeper shadow for the emphasised question / results boxes
-% Two-stage map colours form a square on the wheel with the two accents: chosen on the axis
-% orthogonal to the turquoise--coral line -> chartreuse (projection) + violet (amplification),
-% both clearly distinct from the turquoise accent.
-\definecolor{stagechartreuse}{HTML}{5E7610} % projection stage (linear / feedforward)
-\definecolor{stageviolet}{HTML}{8A3FD0}     % amplification stage (non-linear / recurrent)
-% Homogenized with the approach figures: projection = input/feedforward (orange),
-% amplification = recurrence (green). (stagechartreuse/stageviolet kept above, now unused.)
+% Two-stage grammar (SEMANTIC): projection = input / feedforward (orange), amplification =
+% recurrence (green); homogenized with the approach figures.
 \colorlet{projstage}{inputorange}         % projection stage = input / feedforward (orange)
 \colorlet{ampstage}{greenA}               % amplification stage = recurrence (green)
+% Muted, less-intense stage shades for solid card chrome (banners, icon discs, badges); dark enough
+% for white banner titles. The vivid projstage/ampstage stay for sketches and thin labels.
+\definecolor{projbanner}{HTML}{BC5E33}    % muted burnt-orange (feedforward card chrome)
+\definecolor{ampbanner}{HTML}{2F8676}     % muted teal-green   (recurrent card chrome)
