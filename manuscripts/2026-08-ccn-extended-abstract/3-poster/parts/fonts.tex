@@ -31,26 +31,23 @@
 % --- Mono family for section-heading kickers / metadata (per tests/claude-design-layout.tex) ---
 \newfontfamily\kickerfont{Source Code Pro}
 
-% --- Math text font: the body sans (Source Sans Pro), so descriptive words inside formulas
-% (amplification, projection, in span, ...) match the body prose. Math symbols, the m/n vectors,
-% matrices, and the "mix" indices keep their math font. Used via \mlab (see macros.tex). ---
+% --- Math text font: the body sans, so descriptive WORDS inside a formula (amplification, projection,
+% comp. plane, ...) match the body prose. Symbols, vectors, matrices and the "mix" indices keep the
+% math font. Used via \mlab (macros.tex). ---
 \newfontfamily\mathtextfont{Source Sans Pro}
 
 % --- MATH SIZES, ONE DECLARATION PER STEP OF THE TYPE SCALE ---------------------------------------
-% \DeclareMathSizes{<text size>}{<math>}{<script>}{<scriptscript>}. It fires when the TEXT size is set
-% -- including inside a TikZ node, once the size is one of these -- so there must be a line here for
-% EVERY step of the scale in macros.tex that can carry math. A step with no line falls back to LaTeX's
-% defaults and drifts out of the system silently.
+% \DeclareMathSizes{<text>}{<math>}{<script>}{<scriptscript>} fires when the TEXT size is selected --
+% inside a TikZ node too. EVERY step of the scale in macros.tex that can carry math needs a line here;
+% a step without one falls back to LaTeX's defaults and drifts out of the system SILENTLY.
 %
-% MATH = 1.125 x TEXT. The body is Source Sans Pro; math is Latin Modern (serif), whose smaller
-% x-height makes a symbol look smaller than the sans text beside it at the same nominal size. The
-% 12.5% bump matches the x-heights, so an inline state or matrix reads level with the prose.
+% MATH = 1.125 x TEXT. The body is Source Sans Pro, the math Latin Modern (serif): its smaller x-height
+% makes a symbol read small beside the sans at the same nominal size, and the 12.5% bump levels them.
 %
-% SCRIPT / SCRIPTSCRIPT are the conventional 0.7 / 0.5 of the math size (a deliberate choice: the
-% floors in macros.tex govern TEXT, not indices). Consequence to know about: at body size the "mix"
-% index of u_mix / kappa_mix lands at 23 pt -- under the 24 pt figure floor, and the smallest mark on
-% the poster. If it proves unreadable at viewing distance, raise the last two numbers here; nothing
-% else needs to change.
+% SCRIPT / SCRIPTSCRIPT keep the conventional 0.7 / 0.5 -- deliberate, since the floors in macros.tex
+% govern TEXT, not indices. KNOWN CONSEQUENCE: at body size the "mix" index lands at 23 pt, just under
+% the 24 pt figure floor and the smallest mark on the poster. If it fails at viewing distance, raise
+% the last two numbers here; nothing else changes.
 \DeclareMathSizes{24}{27}{19}{14}      % \figticksize  -- figure floor
 \DeclareMathSizes{30}{34}{24}{17}      % \figannotsize
 \DeclareMathSizes{36}{40}{28}{20}      % \notesize / \figcapsize -- text floor

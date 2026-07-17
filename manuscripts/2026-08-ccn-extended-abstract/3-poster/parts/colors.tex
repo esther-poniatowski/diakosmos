@@ -1,28 +1,28 @@
 % FILE: 3-poster/parts/colors.tex
 % ==================================================================================================
-% Poster palette. THIS FILE IS THE ONLY PLACE A COLOUR MAY BE DEFINED. No call site may write an
-% \definecolor, an HTML value, or a hand-mixed shade; a call site names a token and nothing else.
+% THE ONLY PLACE A COLOUR MAY BE DEFINED. A call site names a token; it never writes a \definecolor,
+% an HTML value, or a hand-mixed shade.
 %
-% THREE INDEPENDENT PALETTES. Each token belongs to exactly ONE of them, so any palette can be
-% retuned without shifting the other two:
-%   1. Neutral foundation — the achromatic substrate: background, surfaces, borders, text levels, and
-%                           the neutral structure of plots (axes, reference rules). Shared by chrome
-%                           AND figures, but never an accent and never a concept.
-%   2. Design chrome      — turquoise (+ a reserved complementary coral): headings, boxes, navigation,
-%                           QR tags, badges, and the two kinds of POINTER AWAY from the poster
-%                           (\litcite, \seebottom) -- one colour, because they are one kind of mark.
-%   3. Semantic grammar   — one concept -> one colour, used ONLY inside figures.
+% THREE INDEPENDENT PALETTES. Each token belongs to exactly one, so any palette can be retuned alone:
+%   1. Neutral foundation -- achromatic substrate: background, surfaces, borders, text, plot axes.
+%                            Shared by chrome and figures; never an accent, never a concept.
+%   2. Design chrome      -- turquoise (+ a reserved coral): headings, boxes, navigation, QR tags,
+%                            badges, and both kinds of pointer AWAY from the poster (\litcite,
+%                            \seebottom -- one colour, because they are one kind of mark).
+%   3. Semantic grammar   -- one concept, one colour. Figures only.
+% ONE LICENSED EXCEPTION: `netchrome' encodes a concept (the poster's own model) in the chrome
+% turquoise, in the model-comparison band only. See 3c. Nowhere else may chrome mean something.
 %
-% >>> THE ONE LICENSED EXCEPTION TO THE CHROME RULE <<<
-% The chrome turquoise used to be "NEVER used to encode a concept inside a figure". It now has exactly
-% one concept: `netchrome' marks THE POSTER'S OWN ACCOUNT (the recurrent network model) in the
-% model-comparison band. That is deliberate -- see "TWO MODELS" below -- and it is the only exception.
-% The rule holds everywhere else.
-%
-% Values are sRGB approximations of an OKLCH specification. The perceptual ladder (relative lightness
-% ordering within a hue) is what matters, not exact colorimetry.
+% ADDING OR RETUNING A TOKEN -- the acceptance test, in this order:
+%   (a) dE >= 0.15 in OKLab against every token a reader must tell it apart from. Below ~0.15 two
+%       colours are not distinct CATEGORIES, whatever they look like side by side.
+%   (b) >= 3:1 contrast on `posterbg' if it is a graphical mark. Fills and washes are exempt and must
+%       carry a saturated stroke instead.
+%   (c) the ladder limit (3a) if it belongs to a pole.
+% Values are sRGB approximations of an OKLCH specification: the lightness ORDER within a hue is what
+% matters, not exact colorimetry.
 
-% ----- 1. Neutral foundation (achromatic substrate; independent of both accent palettes) -----------
+% ----- 1. Neutral foundation ----------------------------------------------------------------------
 \definecolor{posterbg}{HTML}{F1F3F3}      % L=0.970  background
 \definecolor{surface}{HTML}{FBFCFC}       % L=0.995  elevated panels (shadow separates from bg)
 \definecolor{bordersubtle}{HTML}{DBDFDF}  % L=0.900  decorative outlines, dividers, table lines
@@ -31,120 +31,89 @@
 \definecolor{textsecondary}{HTML}{586366} % L=0.450  subtitles, supporting text
 \definecolor{textprimary}{HTML}{1B2224}   % L=0.150  titles, labels, body, key values
 
-% ----- 2. Design-chrome accent (headings, boxes, navigation) ---------------------------------------
-\definecolor{accentturq}{HTML}{12A89E}    % primary design accent (H ~ 187); also \litcite + \seebottom
-\definecolor{accentturqdk}{HTML}{0C7A72}  % darker turquoise: sub-headers, contact line, badges
-\definecolor{accentcoral}{HTML}{F26B5B}   % complementary DESIGN accent -- RESERVED (chrome only)
+% ----- 2. Design chrome ---------------------------------------------------------------------------
+\definecolor{accentturq}{HTML}{12A89E}    % primary accent (H 187); also \litcite + \seebottom
+\definecolor{accentturqdk}{HTML}{0C7A72}  % sub-headers, contact line, badges
+\definecolor{accentcoral}{HTML}{F26B5B}   % complementary accent -- RESERVED, chrome only
 
 % ==================================================================================================
-% 3. SEMANTIC GRAMMAR — one concept, one colour. Used ONLY inside figures.
+% 3. SEMANTIC GRAMMAR -- one concept, one colour. Figures only.
 % ==================================================================================================
 %
-% ----- 3a. THE TWO TRANSFORMATIONS: a blue pole and a magenta pole ---------------------------------
-% WHY THEY ARE NOT ORANGE AND GREEN ANY MORE, which is the defect this palette exists to correct.
-% The two components are red and green (compred / compgreen). The two transformations used to be
-% orange and green -- and MEASURED IN OKLab the amplification colour sat at dE 0.107 from component 2,
-% below the ~0.15 a reader needs to tell two categories apart. The projection sat at 0.156 from
-% component 1, i.e. exactly on the threshold. The reader was being asked to hold "green = the second
-% component" and "green = the recurrent amplification" at once, in figures where both appear.
-% The components name WHAT IS COMBINED; the transformations name HOW THE NETWORK ACTS. Two concepts of
-% different kinds must occupy different hue REGIONS, not adjacent ones. Blue/magenta vacates the
-% red/green region entirely. Blue reads as exogenous, informational, directional; magenta as
-% endogenous, energetic, self-reinforcing -- which is the model: the input arrives from outside, the
-% recurrence feeds back on itself. (H 258 and H 330 sit 72 deg apart: a strong contrast, NOT an
-% opponent complement. The pairing carries its meaning through warm/cool and hue distance.)
+% ----- 3a. The two transformations: a blue pole (H 258) and a magenta pole (H 330) -----------------
+% THE COMPONENTS OWN RED/GREEN; THE TRANSFORMATIONS OWN BLUE/MAGENTA. Keep them in different hue
+% REGIONS: the components name WHAT IS COMBINED, the transformations name HOW THE NETWORK ACTS, and
+% two concepts of different kinds must not sit in adjacent hues. (An earlier palette put the
+% amplification at dE 0.107 from component 2 -- indistinguishable as categories, in figures where
+% both appear. That failure is why the regions are now disjoint; do not move either back.)
+% Blue reads exogenous and directional, magenta endogenous and self-reinforcing, which is the model:
+% the input arrives from outside, the recurrence feeds back on itself.
 %
-% ONE LIGHTNESS LADDER, SHARED BY BOTH POLES. Each transformation is a constant-hue tint of its own
-% SOURCE concept, so "projection" is visibly the input's operation and "amplification" is visibly the
-% recurrence's operation.
+% ONE LADDER PER POLE, and each transformation is a constant-hue tint of its own SOURCE, so the
+% projection is visibly the input's operation and the amplification the recurrence's:
+%   deep    card chrome (carries white text)   core    the source concept (input I; connectivity J)
+%   bright  the TRANSFORMATION (xi_k ; A_k)    light   a second pattern within the pole
+%   pale    fills and washes
 %
-%   level   role                                   blue (H 258)   magenta (H 330)
-%   deep    card chrome / banners (white text)     #0F4EA3        #7D2A79
-%   core    the SOURCE concept (input I; conn. J)  #2368C9        #9E4098
-%   bright  the TRANSFORMATION (xi_k ; A_k)        #3483F3        #C154BA
-%   light   a second pattern within a pole         #74A6EF        #CF88C8
-%   pale    fills and washes (needs a stroke)      #D7E6FC        #F3DDF0
+% >>> THE LADDER LIMIT -- IT BINDS <<<
+%   (1) Adjacent rungs sit at dE ~0.09: NOT distinct. Within one figure use at most THREE levels of a
+%       hue and SKIP a rung between them (deep, bright, pale). Never two adjacent rungs together.
+%   (2) The two pale fills are dE 0.041 apart, so PALE CANNOT ENCODE THE POLE: always pair a pale fill
+%       with a saturated stroke of its own family.
+%   (3) A fourth distinction goes to a NON-COLOUR channel. A pattern's index (first or second) is an
+%       index, not a concept: it belongs in a subscript or a line style, never a fourth tint.
+% figures/approach-steps.tex is the figure this limit was written for, and it still strains it.
 %
-% >>> THE LADDER LIMIT, AND IT BINDS <<<
-% ADJACENT RUNGS OF ONE HUE SIT AT dE ~ 0.09 -- BELOW the categorical threshold. Only NON-ADJACENT
-% rungs are reliably distinct (deep vs bright: dE 0.186). Two rules follow:
-%   (1) Within ONE figure, use at most THREE levels of one hue and SKIP A RUNG between them
-%       (deep, bright, pale). NEVER place two adjacent rungs in the same figure.
-%   (2) The two pale fills sit at dE 0.041 from EACH OTHER, so PALE CANNOT ENCODE THE POLE. A pale
-%       fill must ALWAYS be paired with a saturated stroke of its own family.
-% If a figure needs a fourth distinction, move it to a NON-COLOUR channel. The index of a pattern
-% (first or second) is an INDEX, not a concept: it belongs to a subscript or a line style, never to a
-% fourth tint. See figures/approach-steps.tex, which is the figure this rule was written for.
-%
-% --- blue pole: the external input and what it does (the feedforward projection) ---
-\definecolor{inputbluedk}{HTML}{0F4EA3}   % deep   -- input pattern 1 (I^(1)); also the projection card chrome
+% --- blue pole: the external input, and what it does ---
+\definecolor{inputbluedk}{HTML}{0F4EA3}   % deep   -- input pattern 1 (I^(1)); projection card chrome
 \definecolor{inputblue}{HTML}{2368C9}     % core   -- the external input itself (I, u)
 \definecolor{projblue}{HTML}{3483F3}      % bright -- THE FEEDFORWARD PROJECTION (xi_k, Sigma^(nI))
 \definecolor{inputbluelt}{HTML}{74A6EF}   % light  -- input pattern 2 (I^(2))
-\definecolor{inpoolblue}{HTML}{D7E6FC}    % pale   -- input pooling Sigma^(II)  [FILL ONLY: needs a stroke]
-% --- magenta pole: the recurrence and what it does (the recurrent amplification) ---
-\definecolor{recurmagdk}{HTML}{7D2A79}    % deep   -- recurrent pattern 1 (m_1); the gain; the amp. card chrome
+\definecolor{inpoolblue}{HTML}{D7E6FC}    % pale   -- input pooling Sigma^(II)   [FILL: needs a stroke]
+% --- magenta pole: the recurrence, and what it does ---
+\definecolor{recurmagdk}{HTML}{7D2A79}    % deep   -- recurrent pattern 1 (m_1); amplification chrome
 \definecolor{recurmag}{HTML}{9E4098}      % core   -- the recurrent connectivity itself (J, Sigma^(nm))
 \definecolor{ampmag}{HTML}{C154BA}        % bright -- THE RECURRENT AMPLIFICATION (A_k)
 \definecolor{recurmaglt}{HTML}{CF88C8}    % light  -- recurrent pattern 2 (m_2)
-\definecolor{recpoolmag}{HTML}{F3DDF0}    % pale   -- recurrent pooling Sigma^(mm)  [FILL ONLY: needs a stroke]
-% THE GAIN IS MAGENTA, and this is a claim, not a convenience. g(Delta) parameterises A_k(g): it is
-% part of the ACTUATOR. Left in its old blue (#2E6FC4 -- which is now, exactly, the input hue) it would
-% read as an exogenous quantity, which is the opposite of what it is. It takes the DEEP magenta so it
-% stays distinct from the BRIGHT magenta of A_k in figures where both appear (amplification-curves).
+\definecolor{recpoolmag}{HTML}{F3DDF0}    % pale   -- recurrent pooling Sigma^(mm) [FILL: needs a stroke]
+% The gain is MAGENTA because g parameterises A_k(g): it is part of the actuator, not an exogenous
+% quantity. DEEP, so it stays distinct from A_k's bright where both appear (amplification-curves).
 \colorlet{gainmag}{recurmagdk}
-% THE POOLING PAIR IS INVERTED RELATIVE TO THE OLD PALETTE. The INPUT pooling used to be warm and the
-% RECURRENT pooling cold -- the exact opposite of the metaphor. Sigma^(II) pools the input: blue.
-% Sigma^(mm) pools the recurrence: magenta.
 
-% ----- 3b. The components, the mixture, and the geometry -------------------------------------------
-% Untouched by the migration, and the reason for it: the red/green region is now theirs alone.
-\definecolor{compred}{HTML}{D6453C}       % component response 1 (kappa_1)          H ~ 28
-\definecolor{compgreen}{HTML}{4F9A3F}     % component response 2 (kappa_2)          H ~ 140
-\definecolor{mixamber}{HTML}{F2A30C}      % THE RESPONSE: mixture response kappa_mix, network state x,
-                                          % reduced state kappa -- ONE concept, ONE token.  H ~ 74
+% ----- 3b. The components, the response, the geometry ----------------------------------------------
+\definecolor{compred}{HTML}{D6453C}       % component response 1 (kappa_1)   H 28
+\definecolor{compgreen}{HTML}{4F9A3F}     % component response 2 (kappa_2)   H 140
+\definecolor{mixamber}{HTML}{F2A30C}      % THE RESPONSE (H 74) -- mixture kappa_mix, network state x,
+                                          % reduced state kappa: ONE concept, ONE token. Do not split
+                                          % it again; a second token for the same object would land
+                                          % between the two poles and read as a blend of them.
 \definecolor{spangray}{HTML}{B7BFC1}      % components plane / proportional reference
 \definecolor{emergentgray}{HTML}{566063}  % out-of-plane annotations (bias arc, in-plane foot marker)
 \definecolor{emergentbrown}{HTML}{8A5524} % orthogonal component (eta_perp) -- solid brown, all figures
-% THE RESPONSE LEFT PURPLE. `collectivepurple' (H 307) fell BETWEEN the two new poles, so the response
-% vector would have read as a blend of the projection and the amplification rather than as their
-% output. It is unified onto mixamber -- which already carried the mixture response in the geometry
-% figures, so the merge also retires a duplicate encoding of one concept and vacates the hue slot.
 
-% ----- 3c. THE TWO MODELS: a chromatic/achromatic split, not a third hue pair ----------------------
-% NO HUE REMAINS ON THE CIRCLE, and that is measurable rather than a matter of taste. After the
-% migration the chromatic tokens sit at H = 28 (component 1), 60 (eta_perp), 74 (the response),
-% 140 (component 2), 187 (chrome), 258 (feedforward), 330 (amplification). The widest gap left spans
-% 72 deg, leaving +/-36 deg of clearance -- under the ~45 deg a categorical hue needs at this chroma.
-% A violet forced into that gap lands at dE 0.13 from BOTH transformations: it would read as a blend
-% of the projection and the amplification, which is the exact defect that retired collectivepurple.
-% The neutral lane holds only ONE model: an even-handed achromatic PAIR fails too, because its light
-% member sits dE 0.034 from borderfunc (the axis colour) and reaches only 2.4:1 on the background,
-% under the 3:1 minimum for a graphical mark.
-% So the two models split on the CHROMATIC/ACHROMATIC axis, reinforced by LINE STYLE:
-\definecolor{netchrome}{HTML}{00948B}     % THE RECURRENT NETWORK MODEL (this work): solid, filled
-                                          % markers. It carries the poster's OWN identity colour --
-                                          % the licensed exception to the chrome rule at the top of
-                                          % this file. Model-comparison band only.
-\definecolor{dnslate}{HTML}{474E51}       % DIVISIVE NORMALIZATION (the rival): dashed, hollow markers.
-                                          % A mechanism earns a semantic hue; a descriptive fit does
-                                          % not. The two differ at dE 0.206 and spend no new hue.
-% This retires three colliding tokens at once: `dncoral' (dE 0.096 from compred -- and byte-identical
-% to accentcoral, so a reader met red-ish marks meaning two unrelated things), `recurjade' (dE 0.079
-% from the chrome turquoise) and `netturq' (dE 0.034 -- effectively the chrome already).
-% KNOWN, AND RECORDED SO A LATER EDIT DOES NOT REINTRODUCE IT: dnslate falls in the same neighbourhood
-% as emergentgray, which annotates the geometry sketches. THE TWO NEVER APPEAR IN ONE FIGURE. If either
-% token moves, re-check that.
+% ----- 3c. The two models: chromatic vs achromatic, not a third hue pair ---------------------------
+% THE HUE CIRCLE IS FULL -- do not spend a new semantic hue here. Occupied: H 28 (component 1),
+% 60 (eta_perp), 74 (the response), 140 (component 2), 187 (chrome), 258 (feedforward),
+% 330 (amplification). The widest remaining gap spans 72 deg, i.e. +/-36 deg of clearance, under the
+% ~45 deg a categorical hue needs at this chroma; anything forced in lands ~dE 0.13 from BOTH
+% transformations and reads as a blend of them. An achromatic PAIR fails too: its light member would
+% sit dE 0.034 from borderfunc (the axis colour) at 2.4:1 on the background, under the 3:1 mark floor.
+% So the split is chromatic/achromatic, doubled in LINE STYLE so it survives a grayscale print.
+\definecolor{netchrome}{HTML}{00948B}     % THE NETWORK MODEL (this work): SOLID, filled markers. The
+                                          % licensed chrome exception; model-comparison band only.
+\definecolor{dnslate}{HTML}{474E51}       % DIVISIVE NORMALIZATION (rival): DASHED, hollow markers.
+                                          % A mechanism earns a hue; a descriptive fit does not.
+% dnslate sits dE 0.063 from emergentgray. THEY NEVER APPEAR IN ONE FIGURE -- re-check if either moves.
 
-% ----- convenience aliases -------------------------------------------------------------------------
+% ----- convenience aliases ------------------------------------------------------------------------
 \colorlet{cardborder}{bordersubtle}
 \colorlet{cardshadow}{black!38}   % grey drop shadow
 \colorlet{cardshadowdk}{black!52} % deeper shadow for the emphasised question / results boxes
-% CARD CHROME for the two transformation cards: the DEEP rung of each pole (dark enough to carry white
-% text). The vivid `projblue' / `ampmag' stay for the sketches and the thin labels.
+% Card chrome = the DEEP rung of each pole (dark enough to carry white text); the bright rungs stay
+% for sketches and thin labels.
 \colorlet{projbanner}{inputbluedk}   % feedforward card: ring, glow, disc, classifier pill
 \colorlet{ampbanner}{recurmagdk}     % amplification card: ring, glow, disc, classifier pill
-% The transformations, named by their ROLE rather than by their rung, for call sites that mean
-% "the projection" / "the amplification" rather than "this particular blue".
+% The transformations named by ROLE, for call sites that mean "the projection" / "the amplification"
+% rather than a particular rung.
 \colorlet{projstage}{projblue}
 \colorlet{ampstage}{ampmag}
