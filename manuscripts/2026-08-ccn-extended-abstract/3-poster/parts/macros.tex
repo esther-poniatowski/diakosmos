@@ -105,38 +105,19 @@
 % which lets each side flow to fit its content.
 \def\gXl{5}            % left content edge
 \def\gXr{142.32}       % right content edge (PW - Mside)
-\def\gWl{65}           % left column width. SHARED BY EVERY LEFT-COLUMN CARD: never widen it to fit a
-                       % figure -- size the figure by its own `scale' knob instead.
-\def\gWr{68.32}        % right column width
-\def\gXrcL{74}         % right column, left edge
+\def\gWl{65}           % left column width. Now used ONLY to build the GLOBAL move boxes at the retired
+                       % Approach card's inner width (block-approach.tex, \sbApprBody \linewidth).
 \def\gWfull{137.32}    % full content width (footer / supporting)
 
 % ===== REGION MAP (cm; y = NORTH edge of a block, h = its height) =================================
-% THE SINGLE SOURCE OF TRUTH FOR LAYOUT. To move or resize a block, edit here, never the block file.
-%
-% A CARD'S HEIGHT IS DERIVED, NOT GUESSED. Each big block boxes its content and logs it as
-% "[layout] <block> content height"; the card must be that + 22 mm (cardbase's top+bottom padding).
-% THIS IS NOT OPTIONAL: a tcolorbox with `valign=top' spills BELOW its frame with NO overfull-vbox
-% warning, so an undersized card is invisible in the log and hangs into whatever sits beneath it.
-% Re-read the log line and re-derive this map after ANY edit to a card, then render its bottom edge.
-%
-% BOTH CHAINS ARE RIGID AND PINNED AT BOTH ENDS: a card's y is its predecessor's bottom minus a ~1 cm
-% gap, the columns hang from the banner, and the left column must bottom out just above the footer
-% divider (y=7.3). Moving one card means re-deriving the rest of its chain.
-% BOTH COLUMNS ARE FULL: growth in either must be funded by an explicit cut in the same column.
+% The two-question layout's map -- the motivation band and the two question columns -- lives in
+% mixture-geometry-poster.tex (\yPhen / \hPhen, \yCol / \hCol, \gXcolL / \gXcolR / \gGutC), because it
+% is specific to that layout. The three-section column chains (\yStart / \hStart, \yAppr / \hAppr,
+% \yTake / \hTake, \yConseq / \hConseq, \yModel) that used to live here were retired with the old
+% layout and have been removed. Only the two full-width anchors shared with the block files stay here:
 \def\yHead{168.72}                           % header banner, full width. Its height is measured, not
                                              % set: read "[layout] header banner height" after any
                                              % header edit and re-derive the column tops.
-%   LEFT column : starting (INCLUDES the embedded Question) -> approach
-\def\yStart{158.6}\def\hStart{62.0}          % 158.6 .. 96.6
-\def\yAppr{95.6}\def\hAppr{87.6}             % 95.6 .. 8.0  -- reaches the footer. The only card in the
-                                             % left column with slack (~3 cm), so it funds any growth.
-%   RIGHT column : takeaway (INCLUDES the 2x2 matrix) -> consequences -> model
-\def\yTake{158.6}\def\hTake{84.0}            % 158.6 .. 74.6 (highlights + mechanism cards + matrix)
-                                             % ZERO SLACK. Anything added here spills into the
-                                             % Predictions row below, silently.
-\def\yConseq{71.9}\def\hConseq{37}           % predictions | interpretations row
-\def\yModel{50.4}                            % model comparison (content-sized; bottom ~20)
 \def\yFoot{12}\def\hFoot{9}                  % footer, full width
 
 % Coordinate helper: \xy{x}{y} -> point at (x cm, y cm) from the page corner (O).
