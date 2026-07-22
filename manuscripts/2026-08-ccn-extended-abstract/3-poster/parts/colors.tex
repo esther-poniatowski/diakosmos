@@ -11,7 +11,7 @@
 %                            \seebottom -- one colour, because they are one kind of mark).
 %   3. Semantic grammar   -- one concept, one colour. Figures only.
 % ONE LICENSED EXCEPTION: `netchrome' encodes a concept (the poster's own model) in the chrome
-% turquoise, in the model-comparison band only. See 3c. Nowhere else may chrome mean something.
+% turquoise, in the model comparison only (see 3c). Nowhere else may chrome mean something.
 %
 % ADDING OR RETUNING A TOKEN -- the acceptance test, in this order:
 %   (a) dE >= 0.15 in OKLab against every token a reader must tell it apart from. Below ~0.15 two
@@ -41,16 +41,16 @@
 % ==================================================================================================
 %
 % ----- 3a. The two transformations: a blue pole (H 258) and a magenta pole (H 330) -----------------
-% THE COMPONENTS OWN RED/GREEN; THE TRANSFORMATIONS OWN BLUE/MAGENTA. Keep them in different hue
-% REGIONS: the components name WHAT IS COMBINED, the transformations name HOW THE NETWORK ACTS, and
-% two concepts of different kinds must not sit in adjacent hues. (An earlier palette put the
-% amplification at dE 0.107 from component 2 -- indistinguishable as categories, in figures where
-% both appear. That failure is why the regions are now disjoint; do not move either back.)
+% THE COMPONENTS OWN RED/GREEN; THE TRANSFORMATIONS OWN BLUE/MAGENTA. Keep the two in DISJOINT hue
+% regions: the components name WHAT IS COMBINED, the transformations name HOW THE NETWORK ACTS, and two
+% concepts of different kinds must not sit in adjacent hues. Measured constraint -- an amplification
+% hue near component 2 lands at dE 0.107 from it, i.e. indistinguishable as categories in the figures
+% where both appear. Do not move either pole toward the other.
 % Blue reads exogenous and directional, magenta endogenous and self-reinforcing, which is the model:
 % the input arrives from outside, the recurrence feeds back on itself.
 %
-% ONE LADDER PER POLE, and each transformation is a constant-hue tint of its own SOURCE, so the
-% projection is visibly the input's operation and the amplification the recurrence's:
+% ONE LADDER PER POLE: each transformation is a constant-hue tint of its own SOURCE, so the projection
+% is visibly the input's operation and the amplification the recurrence's.
 %   deep    card chrome (carries white text)   core    the source concept (input I; connectivity J)
 %   bright  the TRANSFORMATION (xi_k ; A_k)    light   a second pattern within the pole
 %   pale    fills and washes
@@ -85,8 +85,8 @@
 \definecolor{compgreen}{HTML}{4F9A3F}     % component response 2 (kappa_2)   H 140
 \definecolor{mixamber}{HTML}{F2A30C}      % THE RESPONSE (H 74) -- mixture kappa_mix, network state x,
                                           % reduced state kappa: ONE concept, ONE token. Do not split
-                                          % it again; a second token for the same object would land
-                                          % between the two poles and read as a blend of them.
+                                          % it; a second token for the same object would land between
+                                          % the two poles and read as a blend of them.
 \definecolor{spangray}{HTML}{B7BFC1}      % components plane / proportional reference
 \definecolor{emergentgray}{HTML}{566063}  % out-of-plane annotations (bias arc, in-plane foot marker)
 \definecolor{emergentbrown}{HTML}{8A5524} % orthogonal component (eta_perp) -- solid brown, all figures
@@ -94,11 +94,11 @@
 % ----- 3c. The two models: chromatic vs achromatic, not a third hue pair ---------------------------
 % THE HUE CIRCLE IS FULL -- do not spend a new semantic hue here. Occupied: H 28 (component 1),
 % 60 (eta_perp), 74 (the response), 140 (component 2), 187 (chrome), 258 (feedforward),
-% 330 (amplification). The widest remaining gap spans 72 deg, i.e. +/-36 deg of clearance, under the
-% ~45 deg a categorical hue needs at this chroma; anything forced in lands ~dE 0.13 from BOTH
-% transformations and reads as a blend of them. An achromatic PAIR fails too: its light member would
-% sit dE 0.034 from borderfunc (the axis colour) at 2.4:1 on the background, under the 3:1 mark floor.
-% So the split is chromatic/achromatic, doubled in LINE STYLE so it survives a grayscale print.
+% 330 (amplification). The widest remaining gap spans 72 deg (+/-36 deg of clearance) against the
+% ~45 deg a categorical hue needs at this chroma, so anything forced in lands ~dE 0.13 from BOTH
+% transformations. An achromatic PAIR fails too: its light member sits dE 0.034 from borderfunc at
+% 2.4:1 on the background, under the 3:1 mark floor. Hence chromatic/achromatic, doubled in LINE STYLE
+% so the distinction survives a grayscale print.
 \definecolor{netchrome}{HTML}{00948B}     % THE NETWORK MODEL (this work): SOLID, filled markers. The
                                           % licensed chrome exception; model-comparison band only.
 \definecolor{dnslate}{HTML}{474E51}       % DIVISIVE NORMALIZATION (rival): DASHED, hollow markers.
@@ -106,9 +106,11 @@
 % dnslate sits dE 0.063 from emergentgray. THEY NEVER APPEAR IN ONE FIGURE -- re-check if either moves.
 
 % ----- convenience aliases ------------------------------------------------------------------------
+% RESERVED, no current call site: `cardshadow' is the neutral cast `cardglow' documents as its
+% alternative to the turquoise glow (parts/macros.tex).
 \colorlet{cardborder}{bordersubtle}
 \colorlet{cardshadow}{black!38}   % grey drop shadow
-\colorlet{cardshadowdk}{black!52} % deeper shadow for the emphasised question / results boxes
+\colorlet{cardshadowdk}{black!52} % deeper shadow for an emphasised box
 % Card chrome = the DEEP rung of each pole (dark enough to carry white text); the bright rungs stay
 % for sketches and thin labels.
 \colorlet{projbanner}{inputbluedk}   % feedforward card: ring, glow, disc, classifier pill

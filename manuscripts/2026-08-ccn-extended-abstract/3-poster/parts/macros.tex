@@ -1,7 +1,7 @@
 % FILE: 3-poster/parts/macros.tex
 % ==================================================================================================
 % Reusable toolkit: type sizes, math macros, layout grid, coordinate helpers,
-% card / heading / icon / citation commands, and TikZ arrow styles.
+% card / heading / icon / citation commands, and TikZ arrow / plane / shadow styles.
 % Requires colors.tex and fonts.tex to be loaded first.
 
 % ===== THE TYPE SYSTEM ============================================================================
@@ -11,12 +11,10 @@
 % The poster is 147.32 x 172.72 cm at TRUE SCALE: 1 pt = 0.351 mm, so a point size IS a physical size
 % (40 pt = a 14.1 mm em; 24 pt = 8.4 mm). Read every number below as a millimetre statement.
 %
-% TWO READABILITY FLOORS. Nothing may be set below its own.
+% TWO READABILITY FLOORS, read at different distances. Nothing may be set below its own.
 %   TEXT   36 pt (12.7 mm em) -- anything read as language: prose, headings, captions, tags, notes,
 %                               references, card content, INCLUDING text drawn inside a TikZ card.
 %   FIGURE 24 pt ( 8.4 mm em) -- annotations inside a diagram: axis ticks, symbol labels, marks.
-% They differ because they are read at different distances: prose across the aisle, a figure
-% annotation while standing at the poster.
 %
 % INSIDE A FIGURE, TWO LEVELS AND ONLY TWO:
 %   \figannotsize (30) -- the OBJECTS the figure is about: vectors, patterns, matrices.
@@ -25,8 +23,7 @@
 % about a figure -- its caption, a shared axis label, a colour key -- never for a symbol inside one.
 %
 % FONT SIZE IS ABSOLUTE INSIDE FIGURES, deliberately. A figure scales its COORDINATES (`scale=1.4')
-% and never its fonts: no `transform shape', no \scalebox around a picture. It can then be resized to
-% fit a column without any label crossing the floor. Two consequences:
+% and never its fonts: no `transform shape', no \scalebox around a picture. Two consequences:
 %   - Reusing a figure at another physical scale means RE-DECLARING these sizes (see supplement.tex).
 %   - A label's CLEARANCE does not scale with it. Enlarging a picture moves a label further out in
 %     coordinates while its glyph stays put, so it buys no room: raise a size and you must re-check
@@ -37,8 +34,8 @@
 %   PROSE   1.40x -- running text that wraps for several lines. Aerated, for reading at distance.
 %   COMPACT 1.15x -- headings, captions, labels, notes: text that wraps to two or three lines and
 %                    must stay a visual unit. A 1.4 leading pulls such a block apart.
-%   FLAT    1.00x -- single-line nodes and icon glyphs, where leading is inert. Set = size, so the
-%                    value is predictable rather than accidental.
+%   FLAT    1.00x -- single-line nodes and icon glyphs, where leading is inert.
+% When a gap is wanted that none of the three gives, ASK FOR THE GAP; do not invent a fourth ratio.
 %
 % Every step that can carry MATH needs a matching \DeclareMathSizes line in fonts.tex, or its math
 % silently drifts out of the system.
@@ -69,7 +66,6 @@
 % Vectors use \vec{} (arrow); bold is reserved for matrices (J, I, Sigma).
 \newcommand{\vk}{\vec{\kappa}}
 \newcommand{\vu}{\vec{u}}
-\newcommand{\vxi}{\vec{\xi}}
 \newcommand{\veta}{\vec{\eta}}
 \newcommand{\vv}{\vec{v}}
 \newcommand{\mI}{\mathbf{I}}
@@ -84,41 +80,31 @@
 % follow the surrounding math size and grow with the formula. Use \brlab under any brace.
 % NOTE: THE GLOSS, NOT THE ALGEBRA, SETS AN \underbracket's WIDTH -- it is the wider of the two.
 \newcommand{\brlab}[1]{\text{{\mathtextfont\notesize #1}}}
-% Inline math in a TikZ node that must read at prose size. A NAME ONLY: it no longer transforms
-% anything, and must not go back to doing so. \DeclareMathSizes reaches inside a TikZ node and works as
-% documented; a \scalebox here would now enlarge a second time on top of it.
+% Inline math in a TikZ node that must read at prose size. A NAME ONLY: it must not transform anything.
+% \DeclareMathSizes already reaches inside a TikZ node, so a \scalebox here would enlarge a second time.
 \newcommand{\tmath}[1]{\ensuremath{#1}}
-\newcommand{\RR}{\mathbb{R}}
 % multi-letter "mix" index set one math style smaller, to read like the 1/2 indices
 \newcommand{\kmix}{\vk_{\scriptscriptstyle\mathrm{mix}}}
 \newcommand{\umix}{\vu_{\scriptscriptstyle\mathrm{mix}}}
-\newcommand{\kref}{\vk_{\scriptscriptstyle\mathrm{ref}}}
-\newcommand{\Reff}{R_{\mathrm{eff}}}
-\newcommand{\Cspan}{\mathcal{C}_{12}}
 
 % ===== Layout grid (cm; origin at the page's south-west corner) ===================================
 % Page (true CCN 2026 portrait size).
 \def\PW{147.32}\def\PH{172.72}
-% Outer margins.
-\def\Mside{5}\def\Mtop{4}\def\Mbot{3}
 % Columns (x). The two content columns stack their blocks INDEPENDENTLY (no rigid 2x2),
 % which lets each side flow to fit its content.
 \def\gXl{5}            % left content edge
-\def\gXr{142.32}       % right content edge (PW - Mside)
-\def\gWl{65}           % left column width. Now used ONLY to build the GLOBAL move boxes at the retired
-                       % Approach card's inner width (block-approach.tex, \sbApprBody \linewidth).
+\def\gXr{142.32}       % right content edge (PW - 5 cm side margin)
+\def\gWl{65}           % the width \sbApprBody builds the GLOBAL move boxes at (block-approach.tex)
 \def\gWfull{137.32}    % full content width (footer / supporting)
 
 % ===== REGION MAP (cm; y = NORTH edge of a block, h = its height) =================================
-% The two-question layout's map -- the motivation band and the two question columns -- lives in
-% mixture-geometry-poster.tex (\yPhen / \hPhen, \yCol / \hCol, \gXcolL / \gXcolR / \gGutC), because it
-% is specific to that layout. The three-section column chains (\yStart / \hStart, \yAppr / \hAppr,
-% \yTake / \hTake, \yConseq / \hConseq, \yModel) that used to live here were retired with the old
-% layout and have been removed. Only the two full-width anchors shared with the block files stay here:
+% The two-question layout's own map (\yPhen / \hPhen, \yCol, \gXcolL / \gXcolR / \gGutC) lives in
+% mixture-geometry-poster.tex, because it is specific to that layout. Only the two full-width anchors
+% shared with the block files stay here:
 \def\yHead{168.72}                           % header banner, full width. Its height is measured, not
                                              % set: read "[layout] header banner height" after any
                                              % header edit and re-derive the column tops.
-\def\yFoot{12}\def\hFoot{9}                  % footer, full width
+\def\yFoot{12}                               % footer, full width
 
 % Coordinate helper: \xy{x}{y} -> point at (x cm, y cm) from the page corner (O).
 \newcommand{\xy}[2]{($(O)+(#1 cm,#2 cm)$)}
@@ -126,11 +112,10 @@
 % ===== Card (panel) styles ========================================================================
 % THE CARD GRAMMAR, and both halves of it are load-bearing:
 %   NO BANNERS. A card's identity rides on a solid accent DISC + an accent-coloured TITLE on the plain
-%   surface. A full-bleed accent band is the loudest device a card has and it would be spent on the
-%   card's NAME, while the payoff below it stays plain text. Do not reintroduce `colbacktitle'.
-%   RADIUS IS A RATIO, NOT A NUMBER: ~4-5% of the card's own width (24 mm at 65 cm here; 14 mm at
-%   30 cm for the nested mechanism / model cards). Below ~3% a poster-scale arc reads as a chamfer.
-%   SCALE THE RADIUS WITH THE CARD; never copy the number across.
+%   surface. A full-bleed accent band is the loudest device a card has, and it would be spent on the
+%   card's NAME while the payoff below stays plain text. Do not reintroduce `colbacktitle'.
+%   RADIUS IS A RATIO, NOT A NUMBER: ~4-5% of the card's own width (24 mm at 65 cm; 14 mm at 30 cm for
+%   a nested card). Below ~3% a poster-scale arc reads as a chamfer. SCALE IT WITH THE CARD.
 \tcbset{
   % shadow-free base: surface, rounded corners, padding.
   cardbase/.style={
@@ -140,59 +125,25 @@
     fontupper=\color{textprimary}\bodysize,
   },
   % ===== ONE SHADOW FOR EVERY CARD ON THE POSTER ==================================================
-  % Every card glows in its identity colour, through the SAME blur, cast and spread. Only the tint
-  % changes. THESE NUMBERS ARE THE ONLY COPY -- figures/results-matrix.tex matches them by hand for its
-  % TikZ nodes, which cannot use a tcolorbox style. Retune here and there, or nowhere.
-  %
-  % TWO TRAPS, BOTH SILENT:
+  % Every card glows in its identity colour through the SAME blur, cast and spread (`posterglow' below
+  % -- the single copy of those numbers). Only the tint changes. TWO TRAPS, BOTH SILENT:
   %   (1) THE PRIMITIVE MATTERS AS MUCH AS THE NUMBERS. tcolorbox's `fuzzy shadow' is a stack of offset
-  %       rounded rectangles; TikZ's `blur shadow' (shadows.blur) is a true gaussian blur. Giving a
-  %       fuzzy shadow these numbers renders a stepped halo, not this. Hence `blur shadow' attached to
-  %       the FRAME PATH -- the outermost path, drawn beneath the interior, so the shadow lands behind
-  %       the whole card.
+  %       rounded rectangles; TikZ's `blur shadow' (shadows.blur) is a true gaussian blur, and giving a
+  %       fuzzy shadow these numbers renders a stepped halo. Hence `blur shadow' on the FRAME PATH --
+  %       the outermost path, drawn beneath the interior, so the shadow lands behind the whole card.
   %   (2) THE TINT MUST GO THROUGH `every shadow'. A `fill=' inside `blur shadow={...}' LEAKS onto the
   %       path it is attached to, and the card comes out flooded with the tint.
   %   #1 = ring colour (the frame path must keep filling itself with it)   #2 = tint of the glow
   cardglow/.style 2 args={
-    frame style={fill=#1,
-      blur shadow={shadow xshift=0pt, shadow yshift=-2.6mm, shadow blur radius=6mm,
-        shadow blur steps=12, shadow opacity=40},
-      every shadow/.style={fill=#2, draw=none}}},
+    frame style={fill=#1, posterglow, every shadow/.style={fill=#2, draw=none}}},
   % Section cards glow TURQUOISE -- their identity (heading, number disc, icon), not their ring, which
   % is a near-white hairline whose glow would be invisible. For a neutral cast: {bordersubtle}{cardshadow}.
   card/.style={cardbase, cardglow={bordersubtle}{accentturq}},
-  % Emphasis (Key results, Open Question) is RELIEF, not tint: a 3 pt ring -- the heaviest on the poster
-  % -- over a white interior, so its text reads exactly like every other card's. Since every card glows,
-  % THE RING WEIGHT is what marks it out; the shadow no longer can.
-  % TO RESTORE THE OLD GRADIENT FILL: both call sites keep it commented -- the Question box in
-  % block-starting.tex (`interior style') and the title band in block-takeaway.tex (`underlay').
-  emphcard/.style={cardbase, colback=surface, colframe=accentturq, boxrule=3pt,
-    cardglow={accentturq}{accentturq}},
-  emphcardglow/.style={emphcard},   % a NAME for the Question's call site; no longer a distinct skin
-  plaincard/.style={
-    enhanced, arc=24mm, outer arc=24mm,
-    colback=posterbg, colframe=posterbg, boxrule=0pt,
-    boxsep=0pt, left=10mm, right=10mm, top=8mm, bottom=8mm,
-    fontupper=\color{textprimary}\bodysize,
-  },
-  % transparent panel: same padding/alignment as a card, but no fill, frame or shadow
-  % (content lies directly over the page background)
-  ghostcard/.style={
-    enhanced, frame hidden, interior hidden,
-    boxsep=0pt, left=12mm, right=12mm, top=11mm, bottom=11mm,
-    fontupper=\color{textprimary}\bodysize,
-  },
-  % dashed outline box (no fill, no shadow): frames the two self-consistent-gain items
-  dashbox/.style={enhanced, interior hidden, frame hidden,
-    arc=5mm, outer arc=5mm, boxsep=0pt, left=4mm, right=4mm, top=5mm, bottom=5mm,
-    borderline={1.1pt}{0pt}{texttertiary!55, dashed}},
 }
 
-% A tcolorbox typeset directly inside a TikZ \node triggers an infinite NFSS
-% font-selection loop under tikzposter + fontspec/LuaLaTeX. The fix is two-step:
-% build the card into a savebox at document top level (OUTSIDE any tikzpicture),
-% then place that box with \node{\usebox} inside the overlay picture.
-%
+% A tcolorbox typeset directly inside a TikZ \node triggers an infinite NFSS font-selection loop under
+% fontspec/LuaLaTeX. The fix is two-step: build the card into a savebox at document top level (OUTSIDE
+% any tikzpicture), then place that box with \node{\usebox} inside the overlay picture.
 % Build card CONTENT into <savebox> (call at document top level):
 %   \buildcard{<\savebox>}{<width cm>}{<height cm>}{<tcb style>}{<content>}
 \newcommand{\buildcard}[5]{%
@@ -201,9 +152,6 @@
 % Build arbitrary (card-free) content into <savebox> at document top level:
 %   \buildbox{<\savebox>}{<content>}
 \newcommand{\buildbox}[2]{\sbox#1{#2}}
-% Build a fixed-width text column (minipage) into <savebox>:
-%   \buildcol{<\savebox>}{<width cm>}{<content>}
-\newcommand{\buildcol}[3]{\sbox#1{\begin{minipage}[t]{#2 cm}#3\end{minipage}}}
 
 % Drop a pre-built box with its NORTH-WEST corner at (x,y) cm (call INSIDE the picture):
 %   \dropbox{<\savebox>}{<x>}{<y>}
@@ -216,83 +164,92 @@
   \node[anchor=#1, inner sep=0pt] at \xy{#3}{#4} {\usebox#2};%
 }
 
-% ===== Icon badge + block heading =================================================================
-% Circular accent badge holding a FontAwesome glyph (or any content).
-%   #1 fill color  #2 glyph color  #3 glyph
-\newcommand{\iconbadge}[3]{%
-  \tikz[baseline=-0.42ex]{%
-    \node[circle, fill=#1, text=#2, minimum size=20mm, inner sep=0pt,
-          font=\iconmd]{#3};}%
-}
-
-% Functional block heading: a soft rounded-square icon (light accent tint, dark accent glyph) wearing
-% its SECTION NUMBER on a small solid disc at the top-right corner, + a MONO accent kicker + a
-% title-font descriptive sentence.
-%   [#1 sentence font, optional]  #2 accent  #3 glyph  #4 SECTION NUMBER  #5 KICKER  #6 sentence
-% The number is a reading ORDER, not a decoration: a poster is read out of order unless it says
-% otherwise. It rides ON the icon's corner (a disc centred on `bh.north east') rather than sitting
-% beside it, so the pair reads as one mark -- and so a card's identity is still one object, not two.
-% Numbering is 1..6 in reading order: objectives, approach, key results, predictions, interpretations,
-% model comparison. Renumbering means editing all six call sites; there is no central list.
-\newcommand{\blockheading}[6][\headingsize]{%
-  \noindent
-  \raisebox{-0.5\height}{%
-    \tikz{%
-      \node[fill=#2!16, rounded corners=9mm, minimum size=37mm, inner sep=0pt, text=#2,
-        font=\iconxxl] (bh) {#3};
-      \node[circle, fill=#2, text=white, minimum size=17mm, inner sep=0pt,
-        font=\headingfont\bfseries\iconmd] at (bh.north east) {#4};}}%
-  \hspace{9mm}%
-  \begin{minipage}[c]{\dimexpr0.9\linewidth-50mm}
-    {\kickerfont\cardtitlesize\color{#2}\MakeUppercase{#5}}\par
-    \vspace{1.5mm}
-    {\headingfont#1\color{textprimary}#6}\par
-  \end{minipage}%
-  \vspace{12mm}\par
-}
-
-% Shared spacing between consecutive bullets (highlights, predictions, interpretations, ...).
-\newcommand{\bulletgap}{18mm}
-
-% Shared white space AFTER a body paragraph, before the figure row it introduces. One convention for
-% every panel: a paragraph must not sit tight against the figure it announces.
-% NOTE: the space after a block heading is NOT set here -- it is \blockheading's own trailing
-% \vspace, and no panel may add to it (that is the convention the Predictions / Interpretations cards
-% set: heading, then content, nothing in between).
+% Shared white space AFTER a body paragraph, before the figure row it introduces: a paragraph must not
+% sit tight against the figure it announces.
+% The space after a block HEADING is NOT set here -- it is \headbodygap (block-columns.tex), and no
+% panel may add to it: heading, then content, nothing in between.
 \newcommand{\paragap}{12mm}
 
 % ===== Inline citation + supporting-detail reference tag ==========================================
-% Literature citation embedded at point of use, small. It takes the CHROME turquoise -- the SAME
-% colour as the \seebottom supporting-detail tags below -- because the two are the same kind of mark:
-% a pointer AWAY from the poster (to the literature, to the supplement). They are deliberately not
-% two colours. The former semantic coral (citecoral) is retired in colors.tex.
+% \litcite and \seebottom share the CHROME turquoise because they are the same kind of mark: a pointer
+% AWAY from the poster (to the literature, to the supplement). Deliberately not two colours.
 \newcommand{\litcite}[1]{{\color{accentturq}\notesize (#1)}}
-% Small numbered badge (turquoise rounded square) matching the numbered points in supplement.tex.
-% The badge is placed
-% with \raisebox (a LaTeX box lift) around a picture whose baseline is pinned to the node CENTRE via
-% a node anchor -- neither depends on the surrounding picture's axes, so the badge aligns identically
-% in ordinary text and inside a flipped-axis timeline node (e.g. the Approach, x=1cm y=-1cm).
+% Small numbered badge matching the numbered points in supplement.tex. It is placed with \raisebox (a
+% LaTeX box lift) around a picture whose baseline is pinned to the node CENTRE via a node anchor --
+% neither depends on the surrounding picture's axes, so the badge aligns identically in ordinary text
+% and inside a flipped-axis node (e.g. x=1cm y=-1cm).
 \newcommand{\refnum}[1]{\raisebox{3.2mm}{\tikz[baseline=(rn.center)]{\node(rn)[fill=accentturq,
   text=white, rounded corners=3mm, minimum size=12mm, inner sep=0pt,
   font=\headingfont\notesize]{#1};}}}
-% Pointer(s) to numbered item(s) in the standalone supplement: a small QR-code glyph + the item
-% number(s), signalling "scan the header QR to reach supplemental item N". The number badges are kept.
-\newcommand{\seebottom}[1]{{\color{accentturq}\notesize \mbox{\icQR\;\refnum{#1}}}}
-\newcommand{\seebottomtwo}[2]{{\color{accentturq}\notesize \mbox{\icQR\;\refnum{#1}\,\refnum{#2}}}}
+% Pointer to numbered item(s) in the standalone supplement: the QR glyph followed by the item numbers,
+% signalling "scan the header QR to reach supplemental item N". A BARE GLYPH SAYS ONLY `there is more
+% somewhere'; the numbers are what make it a pointer, and they are the numbers the supplement's own
+% \suphead badges carry -- keep the two in step when a supplement point is added or renumbered.
+% Takes a COMMA LIST, so one macro serves one, two or three targets: \seebottom{4,5,6}.
+% The glyph is set at \iconlg to match the heading it sits in; the badges bring their own size.
+\newcommand{\seebottom}[1]{{\color{accentturq}%
+  \mbox{{\iconlg\icQR}\;\foreach \sbn [count=\sbi] in {#1}{\ifnum\sbi>1\,\fi\refnum{\sbn}}}}}
 
-% ===== TikZ arrow / connector styles ==============================================================
+% ===== SHARED TikZ STYLES =========================================================================
+% THE ONLY COPY OF EACH OF THESE NUMBERS. A figure that needs one of these devices takes the style and
+% overrides only what is genuinely different (colour, and -- where noted -- weight); it never re-spells
+% the arrow head or the shadow parameters. Retune here, or nowhere.
 \tikzset{
+  % ---- shadows -------------------------------------------------------------------------------------
+  % Deep glow: the poster's card / banner shadow, used by `cardglow' above and by the mechanism tree's
+  % stage banners. The TINT is NOT here: it rides on `every shadow' at the call site (trap note above).
+  posterglow/.style={blur shadow={shadow xshift=0pt, shadow yshift=-2.6mm, shadow blur radius=6mm,
+    shadow blur steps=12, shadow opacity=40}},
+  % Shallow, neutral depth for objects INSIDE a figure (tree strips, option pills, taxonomy cells, leaf
+  % plates). Lighter than `posterglow': they must not read as cards floating over the card holding them.
+  softshadow/.style={blur shadow={shadow xshift=0pt, shadow yshift=-1.8mm, shadow blur radius=3.6mm,
+    shadow blur steps=9, shadow opacity=34}},
+  % ---- arrows / connectors ------------------------------------------------------------------------
   flowarrow/.style={-{Stealth[length=19pt,width=15pt]}, line width=2.2pt,
     rounded corners=8pt},
-  softarrow/.style={-{Stealth[length=15pt,width=11pt]}, line width=1.6pt},
-  thinarrow/.style={-{Stealth[length=11pt,width=8pt]}, line width=1.0pt},
-  guideflow/.style={-{Stealth[length=22pt,width=16pt]}, line width=3pt,
-    accentturq!55, rounded corners=14pt},
-  % A COORDINATE MARK: the point on a vector at which a coefficient is read off (alpha_k u_k, beta_k k_k,
-  % kappa_k m_k). It sits ON the vector's shaft, so a plain \fill of the same colour disappears into it --
-  % the WHITE RING is what makes it a mark rather than a thicker piece of the arrow. The ring's line width
-  % is absolute (TikZ does not scale line widths), so the mark keeps the same rim in every figure; the
-  % RADIUS, however, IS scaled by the picture's `scale', so each figure passes a radius that lands at
-  % ~4.4pt on the page (2.4pt at scale 1.85, 4pt at scale 1.1, ...). Use as: \draw[coordmark, fill=compred].
+  % THE FRAME AXIS -- one weight and one head for every coordinate frame on the poster (the neuron
+  % triples of \inputplane / \responsedecomp / \geometryplot, and the mechanism tree's intrinsic triple).
+  % At 1.1 pt / 8 pt a frame prints as a hairline behind 3.4 pt vectors with invisible heads, so the
+  % axes read as construction lines. The COLOUR is not here: each figure supplies its own `borderfunc' tint.
+  frameaxis/.style={-{Stealth[length=15pt, width=11pt]}, line width=2.2pt},
+  % A NAMED VECTOR -- the objects a figure is about. \geometryplot draws them at the declared 4 pt;
+  % the Approach's two probe plots pass `line width=3.6pt' because they carry more arrows in less room.
+  namedvec/.style={-{Stealth[length=16pt, width=12pt]}, line width=4pt},
+  % THE ORTHOGONAL RESIDUAL (eta_perp): solid brown, one weight across the geometry figures.
+  orthvec/.style={-{Stealth[length=13pt, width=10pt]}, line width=2.8pt, draw=emergentbrown},
+  % THE BIAS ARC -- the in-plane rotation off the linear sum, drawn concentric with it.
+  biasarc/.style={-{Stealth[length=8pt]}, line width=1.4pt, draw=emergentgray},
+  % A COORDINATE MARK: the point on a vector at which a coefficient is read off. It sits ON the shaft,
+  % so a plain \fill of the same colour disappears into it -- the WHITE RING is what makes it a mark
+  % rather than a thicker piece of the arrow. The ring's line width is absolute (TikZ does not scale
+  % line widths), so the rim is the same in every figure; the RADIUS is scaled by the picture's `scale',
+  % so each figure passes a radius landing at ~4.4pt on the page (2.4pt at scale 1.85, 4pt at 1.1).
+  % Use as: \draw[coordmark, fill=compred].
   coordmark/.style={draw=white, line width=1.2pt},
+  % The SMALL rim, for the supplement's page-scale panels: the same device at a size that suits a 2 pt
+  % dot on a 3 cm panel. Do not use the 1.2 pt rim there -- it eats the dot.
+  coordmarksm/.style={draw=white, line width=0.7pt},
+  % THE LINEAR SUM (the proportional reference), one convention document-wide. Every geometry is
+  % measured against it -- bias IS the deviation from it -- so it must be recognisable as the SAME
+  % object in the taxonomy cells and in the tree. Absolute values, so `scale' cannot change its look.
+  refvec/.style={-{Stealth[length=13pt, width=10pt]}, line width=2.8pt, draw=textsecondary,
+    dash pattern=on 6pt off 3pt},
+  % THE DROP LINE from a vector's tip (or its shadow) to the axis a coordinate is read on. ONE dash
+  % geometry across both documents, so a reader crossing from poster to supplement meets the same mark.
+  % Only the WEIGHT differs by figure family (`coorddrop' large, `coorddropsm' page-scale), because line
+  % widths do not scale with a tikz `scale'. Override the colour with draw=.
+  coorddrop/.style={line width=1.5pt, draw=texttertiary, opacity=0.9,
+    dash pattern=on 3pt off 3pt, line cap=round},
+  coorddropsm/.style={line width=0.9pt, draw=texttertiary, opacity=0.9,
+    dash pattern=on 2.4pt off 2.4pt, line cap=round},
+  % ---- the components plane -----------------------------------------------------------------------
+  % THE HOUSE RULE FOR EVERY SPAN PLANE ON THE POSTER, stated once here: the plane IS the parallelogram
+  % of its two generators -- 0 -> a -> a+b -> b -- so each arrow ENDS ON THE CORNER of the edge it
+  % defines, and an inflated copy leaves every arrowhead floating short of its own corner. Anything
+  % drawn inside the patch must keep BOTH coefficients < 1; the one licensed exception is
+  % \geometryplot's unbiased cell, where the mixture IS the exact sum k1+k2 and lands on the far corner.
+  % `spangray' IS "the plane of the components" here; two planes are told apart by ATTITUDE, never by
+  % hue. Weight is overridden where a figure is drawn at a smaller scale.
+  spanfill/.style={spangray, opacity=0.32},
+  spanedge/.style={draw=spangray!75, line width=0.8pt},
 }
