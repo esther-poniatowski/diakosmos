@@ -92,10 +92,13 @@
 \def\PW{147.32}\def\PH{172.72}
 % Columns (x). The two content columns stack their blocks INDEPENDENTLY (no rigid 2x2),
 % which lets each side flow to fit its content.
-\def\gXl{5}            % left content edge
-\def\gXr{142.32}       % right content edge (PW - 5 cm side margin)
+% THE SIDE MARGIN IS THE ONE CHOSEN NUMBER HERE; the right edge and the full content width are
+% ARITHMETIC ON IT AND \PW, not three numbers that have to be kept in step by hand.
+\def\gMarg{5}                          % side margin, both sides
+\edef\gXl{\gMarg}                      % left content edge
+\edef\gXr{\fpeval{\PW-\gMarg}}         % right content edge            (142.32)
 \def\gWl{65}           % the width \sbApprBody builds the GLOBAL move boxes at (block-approach.tex)
-\def\gWfull{137.32}    % full content width (footer / supporting)
+\edef\gWfull{\fpeval{\PW-2*\gMarg}}    % full content width (footer / supporting)   (137.32)
 
 % ===== REGION MAP (cm; y = NORTH edge of a block, h = its height) =================================
 % The two-question layout's own map (\yPhen / \hPhen, \yCol, \gXcolL / \gXcolR / \gGutC) lives in
