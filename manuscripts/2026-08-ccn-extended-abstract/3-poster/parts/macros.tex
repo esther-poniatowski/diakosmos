@@ -26,9 +26,9 @@
 % and never its fonts: no `transform shape', no \scalebox around a picture. Two consequences:
 %   - Reusing a figure at another physical scale means RE-DECLARING these sizes (see supplement.tex).
 %   - A label's CLEARANCE does not scale with it. Enlarging a picture moves a label further out in
-%     coordinates while its glyph stays put, so it buys no room: raise a size and you must re-check
-%     every anchor in the figure, and fix collisions by MOVING THE ANCHOR, never by dropping below
-%     the floor.
+%     coordinates while its glyph stays put, so it buys no room: raising a size forces a re-check of
+%     every anchor in the figure, and collisions are fixed by MOVING THE ANCHOR, never by dropping
+%     below the floor.
 %
 % THREE LEADINGS, NOT ONE:
 %   PROSE   1.40x -- running text that wraps for several lines. Aerated, for reading at distance.
@@ -193,6 +193,23 @@
 \newcommand{\seebottom}[1]{{\color{accentturq}%
   \mbox{{\iconlg\icQR}\;\foreach \sbn [count=\sbi] in {#1}{\ifnum\sbi>1\,\fi\refnum{\sbn}}}}}
 
+% ===== THE SHARED 3-D CAMERA ======================================================================
+% ONE elevation / azimuth for every tikz-3dplot figure that is NOT the mechanism tree or the supplement
+% (those keep their own \mtcamtheta / \spcamtheta because they need a per-mode azimuth). \geometryplot,
+% \inputplane / \responsedecomp and the two activity-space plots all read these, so the whole poster
+% projects one scene from one viewpoint and a camera retune is a ONE-LINE edit here.
+%   theta = ELEVATION (polar angle from the vertical z = n1). At 45 the view is OBLIQUE (the archive's
+%   attitude, matching the mechanism tree): a tilted plane reads as tilted, not as a floor seen from above
+%   (which is what the earlier low 29 gave). The span planes are kept OPEN not by lowering the camera but
+%   by GENTLING the generators (z-share ~0.24): a plane whose normal sits only ~19 deg off vertical is
+%   ~45% open even at this oblique view, while its residual still rises. phi = AZIMUTH, fixed so world-z
+%   projects up, y right, x down-left (n1 up / n2 right / n3 receding), the archive's orientation.
+\def\camtheta{57}\def\camphi{118}
+% The ANSWER FACETS (\geometryplot) view the scene from FURTHER ABOVE (a smaller theta): this droops the
+% floor axes more to the south, so the components plane reads as clearly distinct from the horizontal
+% floor. Its plane is steepened to compensate (geometries.tex) so the plane's projected surface still
+% matches the approach plots' look. phi is shared.
+\def\facetcamtheta{38}
 % ===== SHARED TikZ STYLES =========================================================================
 % THE ONLY COPY OF EACH OF THESE NUMBERS. A figure that needs one of these devices takes the style and
 % overrides only what is genuinely different (colour, and -- where noted -- weight); it never re-spells
@@ -222,16 +239,8 @@
   orthvec/.style={-{Stealth[length=13pt, width=10pt]}, line width=2.8pt, draw=emergentbrown},
   % THE BIAS ARC -- the in-plane rotation off the linear sum, drawn concentric with it.
   biasarc/.style={-{Stealth[length=8pt]}, line width=1.4pt, draw=emergentgray},
-  % A COORDINATE MARK: the point on a vector at which a coefficient is read off. It sits ON the shaft,
-  % so a plain \fill of the same colour disappears into it -- the WHITE RING is what makes it a mark
-  % rather than a thicker piece of the arrow. The ring's line width is absolute (TikZ does not scale
-  % line widths), so the rim is the same in every figure; the RADIUS is scaled by the picture's `scale',
-  % so each figure passes a radius landing at ~4.4pt on the page (2.4pt at scale 1.85, 4pt at 1.1).
-  % Use as: \draw[coordmark, fill=compred].
-  coordmark/.style={draw=white, line width=1.2pt},
-  % The SMALL rim, for the supplement's page-scale panels: the same device at a size that suits a 2 pt
-  % dot on a 3 cm panel. Do not use the 1.2 pt rim there -- it eats the dot.
-  coordmarksm/.style={draw=white, line width=0.7pt},
+  % (The coordinate mark / dot lives further down as \dotonvec / \dotonaxis / \dotonplane, sized as a
+  % fraction of each figure's axis length; see the block below the tikzset.)
   % THE LINEAR SUM (the proportional reference), one convention document-wide. Every geometry is
   % measured against it -- bias IS the deviation from it -- so it must be recognisable as the SAME
   % object in the taxonomy cells and in the tree. Absolute values, so `scale' cannot change its look.
@@ -256,3 +265,64 @@
   spanfill/.style={spangray, opacity=0.32},
   spanedge/.style={draw=spangray!75, line width=0.8pt},
 }
+% THE SHARED COORDINATE DOT -- SIZED FROM THE LINE WIDTH of the line it sits on, in THREE kinds, one per
+% kind of line the project draws:
+%   \dotonvec   -- on a RESPONSE / component vector (the thick rays)
+%   \dotonaxis  -- on a FRAME AXIS or basis vector (incl. eigen-axes and eigenvectors)
+%   \dotonplane -- a foot on a PLANE, marked by the dotted drop lines
+% A dot reads as a bead threaded on its line, so its size follows THAT LINE'S WIDTH: a thick response
+% vector carries a big bead, a hair-thin panel axis a small one. Because a figure drawn small also draws
+% THINNER lines, this tracks figure size for free, with no per-figure scale knob. The law is affine --
+% diameter = \dotbase + \dotgain x width -- not a bare multiple: the small \dotbase keeps a bead on a
+% 0.7pt supplement axis legible instead of shrinking it to a speck, while \dotgain sets how fast the bead
+% grows with the line. (Calibrated so the poster's 3.6pt response vectors carry the archive's ~8pt bead.)
+% Each figure \def's only the widths it uses -- \lwvec / \lwaxis / \lwplane -- to its OWN line weights.
+%   DRAWN AS NODES, not `circle' paths: inside `tdplot_main_coords' a `circle' is projected to an ELLIPSE,
+%   whereas a circle NODE is placed at the projected point and drawn round in the page. No `transform
+%   shape' (the size is absolute pt, like a line width). White halo under a coloured disc; halo/disc =
+%   \dothaloratio, the rim being the gap between the two filled discs.
+\def\dotbase{1.5}\def\dotgain{1.83}\def\dothaloratio{1.32}   % diameter (pt) = base + gain*linewidth
+\def\lwvec{3.6}\def\lwaxis{2.0}\def\lwplane{1.5}             % defaults; each figure sets its actual weights
+\newcommand{\dotcore}[3]{% #1 line width (pt number)  #2 fill colour  #3 (coordinate)
+  \node[circle, fill=white, minimum size=\fpeval{\dothaloratio*(\dotbase+\dotgain*(#1))}pt, inner sep=0pt] at #3 {};%
+  \node[circle, fill=#2,    minimum size=\fpeval{\dotbase+\dotgain*(#1)}pt,                 inner sep=0pt] at #3 {};}
+\newcommand{\dotonvec}[2]{\dotcore{\lwvec}{#1}{#2}}
+\newcommand{\dotonaxis}[2]{\dotcore{\lwaxis}{#1}{#2}}
+\newcommand{\dotonplane}[2]{\dotcore{\lwplane}{#1}{#2}}
+
+% ===== TAPERED / CURVED CONSEQUENCE ARROW =========================================================
+% A FILLED, tapered, curved arrow (a narrow tail swelling to a wide head with a triangular point) --
+% the "swoosh" connector between panels. No standard package draws a tapered CURVED body, so it is a
+% filled bezier ribbon: the spine is a quadratic bend, the two edges are the spine offset by a width
+% that grows from tail to neck, and a triangle caps the head. Widths are ABSOLUTE (pt), so the arrow
+% keeps its weight regardless of the picture `scale' (like a line width or an arrowhead).
+%   \taperarrow[<fill>][<extra path opts>]{<tail>}{<head>}{<bend>}{<tail hw>}{<neck hw>}{<ah len>}{<ah hw>}
+%   bend = signed perpendicular offset of the spine's midpoint (0 = straight; +/- curves the swoosh).
+%   The SECOND optional argument is a raw TikZ option list applied to the ribbon path together with the
+%   fill -- pass `draw=<colour>, line width=<w>' for a border and a shadow key (e.g. `blur shadow={...}')
+%   for a drop shadow. Empty by default, so bare `\taperarrow[<colour>]{...}' calls are unchanged.
+\NewDocumentCommand{\taperarrow}{O{black} O{} m m m m m m m}{%
+\begin{scope}
+  \path
+    let \p1 = ($#4-#3$), \n1 = {veclen(\x1,\y1)},
+        \p2 = (\x1/\n1, \y1/\n1),            % unit direction (tail -> head)
+        \p3 = (-\y1/\n1, \x1/\n1)            % unit perpendicular
+    in
+    coordinate (T@)  at #3
+    coordinate (H@)  at #4
+    coordinate (N@)  at ($#4-#8*(\p2)$)                      % neck (base of the arrowhead)
+    coordinate (Bc@) at ($($#3!0.5!(N@)$)+#5*(\p3)$)         % bent spine mid
+    coordinate (Tt@) at ($#3+#6*(\p3)$)  coordinate (Tb@) at ($#3-#6*(\p3)$)
+    coordinate (Nt@) at ($(N@)+#7*(\p3)$) coordinate (Nb@) at ($(N@)-#7*(\p3)$)
+    % control widths = the MEAN of the tail and neck half-widths, not the neck's: at the mean the four
+    % control points of each edge are collinear when bend=0, so the taper is a straight ramp instead of
+    % a curve that balloons out near the tail (visible only on a long arrow; short ones barely bent).
+    coordinate (Ct@) at ($(Bc@)+0.5*#6*(\p3)+0.5*#7*(\p3)$)
+    coordinate (Cb@) at ($(Bc@)-0.5*#6*(\p3)-0.5*#7*(\p3)$)
+    coordinate (Aw1@) at ($(N@)+#9*(\p3)$) coordinate (Aw2@) at ($(N@)-#9*(\p3)$);
+  \path[fill=#1, #2]
+    (Tt@) .. controls (Ct@) and (Ct@) .. (Nt@) --
+    (Aw1@) -- (H@) -- (Aw2@) --
+    (Nb@) .. controls (Cb@) and (Cb@) .. (Tb@) --
+    cycle;
+\end{scope}}
