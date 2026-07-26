@@ -1,0 +1,114 @@
+% FILE: 3-poster/parts/colors-roles.tex
+% ==================================================================================================
+% LAYER 3 of the colour system: WHERE EACH COLOUR GOES. Loaded LAST by parts/colors.tex, after the
+% scheme has had its say, so every \colorlet below copies the value the scheme actually selected.
+%
+% >>> WHY THIS FILE EXISTS <<< Before it, the accent was named at ~90 call sites across six files. A
+% RE-HUE was one edit (change the value) but a REDISTRIBUTION was ninety (change who wears it), so the
+% two halves of a colour decision cost three orders of magnitude apart. Every chrome and neutral call
+% site now names a ROLE, and both halves cost one line.
+%
+% >>> THE RULE FOR A CALL SITE <<<
+%   CHROME use             -> name a ROLE from this file. Never `chromecore', never `chromedeep',
+%                             anywhere, including inside a figure.
+%   THE CARD SHELL         -> name a role (`cardground', `cardring', `pageground'). These are neutral
+%                             values, but they are what a distribution variant actually moves.
+%   OTHER NEUTRAL use      -> name the neutral token directly. `borderfunc' for a plot axis and
+%                             `textprimary' for body text are already use-named and hold across every
+%                             scheme; wrapping them would be indirection with no variation behind it.
+%   Semantic use (figures) -> name the semantic token directly (parts/colors-values.tex): a semantic
+%                             token IS its own role, one concept to one colour, same reasoning.
+%   A TINT OF A ROLE (`spinefill!45') is allowed and is not a hand-mixed shade: it tracks whatever the
+%   role resolves to. A tint of a VALUE token at a call site is still forbidden.
+%
+% >>> ORDER IS LOAD-BEARING <<< \colorlet copies a value; it does not alias a name. Anything here that
+% ran BEFORE the scheme would keep the base value and repaint nothing, silently.
+
+% ===== The page and the card shell (neutral) ======================================================
+\colorlet{pageground}{posterbg}     % the full-bleed canvas, and the medallion's halo
+\colorlet{cardground}{surface}      % the interior of every card and column box
+\colorlet{cardring}{bordersubtle}   % the hairline frame of a plain card
+\colorlet{cardcast}{chromecore}     % THE GLOW under every card -- the accent's largest surface on the
+                                    % page by area, and the first thing to change when the identity
+                                    % colour changes. For a neutral cast, bind it to `cardshadow'.
+\colorlet{cardshadow}{black!38}     % grey drop shadow -- the documented neutral alternative to a cast
+\colorlet{cardshadowdk}{black!52}   % deeper shadow for an emphasised box
+
+% ===== The boxes that carry the argument ==========================================================
+% The poster's ONE structural distinction in colour: a box on the question -> answer spine wears an
+% accent ring, a supporting box wears the hairline. Rebinding `boxringaccent' to `cardring' collapses
+% that distinction -- which is a legitimate scheme, and is why these are two names and not one.
+\colorlet{boxringaccent}{chromecore}    % question and answer boxes
+\colorlet{boxringplain}{bordersubtle}   % approach boxes, interpretations, predictions
+
+% ===== The heading device =========================================================================
+% One colour drives the whole heading: the icon tile's plate (a tint of it), the tile's glyph, the
+% number badge's disc, and the kicker over the sentence. The sentence itself is `textprimary' and is
+% NOT a role -- it is body text that happens to sit in a heading.
+\colorlet{headaccent}{chromecore}
+
+% ===== THE QUESTION BOXES -- the one element whose TREATMENT a scheme switches ====================
+% The two question boxes are the page's only accent GROUNDS. Whether they stay that way is the
+% \ifquestioninverted switch, declared in parts/colors.tex BEFORE the scheme is read; everything the
+% switch implies is derived here, so a scheme flips one boolean and never has to keep a fill and a
+% ring in step by hand.
+%   inverted  -- accent ground, white heading, white badge carrying accent digits (the base)
+%   outlined  -- the ordinary card ground with an accent ring, i.e. the answer boxes' treatment
+% THE INVERSION IS NOT A COLOUR SWAP. On an accent ground nothing may keep the accent, or it
+% disappears into it: that is why `questionink' exists and why the badge inverts rather than tinting.
+\ifquestioninverted
+  \colorlet{questionfill}{chromecore}
+  \colorlet{questionring}{chromecore}
+\else
+  \colorlet{questionfill}{cardground}
+  \colorlet{questionring}{boxringaccent}
+\fi
+\colorlet{questionink}{white}         % kicker + sentence + tile glyph, on the accent ground
+\colorlet{questionaccent}{chromecore} % the digits and ring of the white number badge
+
+% ===== Marks: the small accent-bearing objects ====================================================
+\colorlet{bulletmark}{chromecore}   % the check ring before every interpretation / prediction bullet
+\colorlet{pointermark}{chromecore}  % EVERY pointer AWAY from the poster: \litcite, \seebottom,
+                                    % \refnum, the header's QR glyph, the supplement's \suptag. One
+                                    % colour, because they are one kind of mark.
+\colorlet{markdeep}{chromedeep}     % chrome that must carry TEXT WEIGHT rather than mark a surface:
+                                    % the header's contact line, the supplement's argument chains.
+                                    % The deep rung, so it holds its own against `textprimary'.
+
+% ===== The connector spine ========================================================================
+% The six arrows (four down the columns, two from the premises to the medallion). Body and outline are
+% two roles because the arrow is a filled shape with a drawn edge, and a scheme that neutralises the
+% body may still want a legible edge.
+\colorlet{spinefill}{chromecore}   % the body (call sites take a tint of it)
+\colorlet{spineedge}{chromedeep}   % the outline
+
+% ===== The medallion ==============================================================================
+\colorlet{medallionring}{chromecore}   % its ring -- the circle's whole identity, since its fill is
+                                       % the ordinary card surface (it is distinguished by SHAPE)
+\colorlet{medallioncast}{chromecore}   % its glow, cast through the poster's shared `posterglow'
+
+% ===== Chrome INSIDE figures ======================================================================
+% Chrome that a figure draws, kept here rather than in the figure so a scheme repaints the whole page
+% at once. A figure with turquoise rings inside a neutralised scheme is the exact failure this
+% prevents, and nothing in the log would report it.
+\colorlet{netbound}{chromecore}     % the "one network" container boundary (medallion, network disk):
+                                    % chrome, NOT a concept -- it says "one network", which is the
+                                    % container the neurons sit in, not a claim about them.
+\colorlet{figcallout}{chromecore}   % chrome annotation inside a plot (the gain-variance insets)
+\colorlet{stepmark}{chromecore}     % the approach block's numbered step markers and their rule
+\colorlet{factoraccent}{chromecore} % the factor panel's ground, ring and disc
+
+% ===== The semantic tokens named by ROLE ==========================================================
+% These are NOT chrome. They live here because they are aliases, and an alias must be re-copied after
+% a scheme override for the same reason everything else in this file is.
+% The gain rides with the recurrence because g parameterises A_k(g): it is part of the actuator, not
+% an exogenous quantity. DEEP, so it stays distinct from A_k's bright where both appear.
+\colorlet{recurgain}{recurdeep}
+% Card chrome = the DEEP rung of each pole (dark enough to carry white text); the bright rungs stay
+% for sketches and thin labels.
+\colorlet{projchrome}{inputdeep}    % feedforward card: ring, glow, disc, classifier pill
+\colorlet{ampchrome}{recurdeep}     % amplification card: ring, glow, disc, classifier pill
+% The transformations named by what they ARE, for call sites that mean "the projection" / "the
+% amplification" rather than a particular rung of the ladder.
+\colorlet{projtransform}{inputbright}
+\colorlet{amptransform}{recurbright}

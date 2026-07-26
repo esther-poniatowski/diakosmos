@@ -135,7 +135,7 @@
   % shadow-free base: surface, rounded corners, padding.
   cardbase/.style={
     enhanced, arc=24mm, outer arc=24mm,
-    colback=surface, colframe=bordersubtle, boxrule=0.8pt,
+    colback=cardground, colframe=cardring, boxrule=0.8pt,
     boxsep=0pt, left=\gPadSideCm cm, right=\gPadSideCm cm,
     top=\gPadBaseCm cm, bottom=\gPadBaseCm cm,
     fontupper=\color{textprimary}\bodysize,
@@ -154,7 +154,7 @@
     frame style={fill=#1, posterglow, every shadow/.style={fill=#2, draw=none}}},
   % Section cards glow TURQUOISE -- their identity (heading, number disc, icon), not their ring, which
   % is a near-white hairline whose glow would be invisible. For a neutral cast: {bordersubtle}{cardshadow}.
-  card/.style={cardbase, cardglow={bordersubtle}{accentturq}},
+  card/.style={cardbase, cardglow={cardring}{cardcast}},
 }
 
 % A tcolorbox typeset directly inside a TikZ \node triggers an infinite NFSS font-selection loop under
@@ -189,12 +189,12 @@
 % ===== Inline citation + supporting-detail reference tag ==========================================
 % \litcite and \seebottom share the CHROME turquoise because they are the same kind of mark: a pointer
 % AWAY from the poster (to the literature, to the supplement). Deliberately not two colours.
-\newcommand{\litcite}[1]{{\color{accentturq}\notesize (#1)}}
+\newcommand{\litcite}[1]{{\color{pointermark}\notesize (#1)}}
 % Small numbered badge matching the numbered points in supplement.tex. It is placed with \raisebox (a
 % LaTeX box lift) around a picture whose baseline is pinned to the node CENTRE via a node anchor --
 % neither depends on the surrounding picture's axes, so the badge aligns identically in ordinary text
 % and inside a flipped-axis node (e.g. x=1cm y=-1cm).
-\newcommand{\refnum}[1]{\raisebox{3.2mm}{\tikz[baseline=(rn.center)]{\node(rn)[fill=accentturq,
+\newcommand{\refnum}[1]{\raisebox{3.2mm}{\tikz[baseline=(rn.center)]{\node(rn)[fill=pointermark,
   text=white, rounded corners=3mm, minimum size=12mm, inner sep=0pt,
   font=\headingfont\notesize]{#1};}}}
 % Pointer to numbered item(s) in the standalone supplement: the QR glyph followed by the item numbers,
@@ -203,7 +203,7 @@
 % \suphead badges carry -- keep the two in step when a supplement point is added or renumbered.
 % Takes a COMMA LIST, so one macro serves one, two or three targets: \seebottom{4,5,6}.
 % The glyph is set at \iconlg to match the heading it sits in; the badges bring their own size.
-\newcommand{\seebottom}[1]{{\color{accentturq}%
+\newcommand{\seebottom}[1]{{\color{pointermark}%
   \mbox{{\iconlg\icQR}\;\foreach \sbn [count=\sbi] in {#1}{\ifnum\sbi>1\,\fi\refnum{\sbn}}}}}
 
 % ===== THE SHARED 3-D CAMERA ======================================================================
@@ -249,9 +249,9 @@
   % the Approach's two probe plots pass `line width=3.6pt' because they carry more arrows in less room.
   namedvec/.style={-{Stealth[length=16pt, width=12pt]}, line width=4pt},
   % THE ORTHOGONAL RESIDUAL (eta_perp): solid brown, one weight across the geometry figures.
-  orthvec/.style={-{Stealth[length=13pt, width=10pt]}, line width=2.8pt, draw=emergentbrown},
+  orthvec/.style={-{Stealth[length=13pt, width=10pt]}, line width=2.8pt, draw=outplane},
   % THE BIAS ARC -- the in-plane rotation off the linear sum, drawn concentric with it.
-  biasarc/.style={-{Stealth[length=8pt]}, line width=1.4pt, draw=emergentgray},
+  biasarc/.style={-{Stealth[length=8pt]}, line width=1.4pt, draw=outplaneannot},
   % (The coordinate mark / dot lives further down as \dotonvec / \dotonaxis / \dotonplane, sized as a
   % fraction of each figure's axis length; see the block below the tikzset.)
   % THE LINEAR SUM (the proportional reference), one convention document-wide. Every geometry is
@@ -273,10 +273,10 @@
   % defines, and an inflated copy leaves every arrowhead floating short of its own corner. Anything
   % drawn inside the patch must keep BOTH coefficients < 1; the one licensed exception is
   % \geometryplot's unbiased cell, where the mixture IS the exact sum k1+k2 and lands on the far corner.
-  % `spangray' IS "the plane of the components" here; two planes are told apart by ATTITUDE, never by
+  % `compplane' IS "the plane of the components" here; two planes are told apart by ATTITUDE, never by
   % hue. Weight is overridden where a figure is drawn at a smaller scale.
-  spanfill/.style={spangray, opacity=0.32},
-  spanedge/.style={draw=spangray!75, line width=0.8pt},
+  spanfill/.style={compplane, opacity=0.32},
+  spanedge/.style={draw=compplane!75, line width=0.8pt},
 }
 % THE SHARED COORDINATE DOT -- SIZED FROM THE LINE WIDTH of the line it sits on, in THREE kinds, one per
 % kind of line the project draws:
@@ -351,7 +351,7 @@
 % The border and shadow options go in \taperarrow's SECOND optional argument, and they are passed
 % LITERALLY rather than through a macro -- pgfkeys must see the commas to split the list.
 \newcommand{\connarrow}[2]{%
-  \taperarrow[accentturq!45][draw=accentturqdk, line width=1.8pt, softshadow]%
+  \taperarrow[spinefill!45][draw=spineedge, line width=1.8pt, softshadow]%
     {#1}{#2}{0pt}{2pt}{18pt}{22pt}{44pt}}
 % How far each end of a connector reaches INTO the two objects it joins, so it reads as one continuous
 % link rather than as a floating glyph in a gap.
