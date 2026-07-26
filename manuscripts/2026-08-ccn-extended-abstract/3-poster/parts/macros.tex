@@ -119,12 +119,25 @@
 %   card's NAME while the payoff below stays plain text. Do not reintroduce `colbacktitle'.
 %   RADIUS IS A RATIO, NOT A NUMBER: ~4-5% of the card's own width (24 mm at 65 cm; 14 mm at 30 cm for
 %   a nested card). Below ~3% a poster-scale arc reads as a chamfer. SCALE IT WITH THE CARD.
+% CARD PADDING, HELD AS PLAIN cm NUMBERS. Two consumers need the same value in two forms: a tcolorbox
+% key wants a dimension (`left=\gPadSideCm cm') and the region map wants a number it can do arithmetic
+% on (the medallion's clearance against a question card's icon tile is derived from \gPadTopCm). One
+% number serving both is what keeps the check measuring the point the layout actually places.
+% TWO VERTICAL CONVENTIONS, deliberately distinct and each named: the plain `cardbase' pads 1.1 top and
+% bottom, while a COLUMN card pads 1.3 / 1.4 because it carries a heading and a figure rather than a
+% figure alone. Every measured box height in the poster is derived from one of these, so they are not
+% interchangeable -- collapsing them means re-deriving \hBand and every row top.
+\def\gPadSideCm{1.2}    % left / right, every card
+\def\gPadBaseCm{1.1}    % top / bottom of a plain `cardbase' card
+\def\gPadTopCm{1.3}     % top of a column card
+\def\gPadBotCm{1.4}     % bottom of a column card
 \tcbset{
   % shadow-free base: surface, rounded corners, padding.
   cardbase/.style={
     enhanced, arc=24mm, outer arc=24mm,
     colback=surface, colframe=bordersubtle, boxrule=0.8pt,
-    boxsep=0pt, left=12mm, right=12mm, top=11mm, bottom=11mm,
+    boxsep=0pt, left=\gPadSideCm cm, right=\gPadSideCm cm,
+    top=\gPadBaseCm cm, bottom=\gPadBaseCm cm,
     fontupper=\color{textprimary}\bodysize,
   },
   % ===== ONE SHADOW FOR EVERY CARD ON THE POSTER ==================================================
@@ -326,3 +339,20 @@
     (Nb@) .. controls (Cb@) and (Cb@) .. (Tb@) --
     cycle;
 \end{scope}}
+
+% ===== THE POSTER'S CONNECTOR =====================================================================
+% \connarrow{<tail>}{<tip>} -- ONE arrow shape for ONE relation ("leads to"), and the only \taperarrow
+% call site the poster has. Every connector on the page runs through it: the two premise arrows into
+% the medallion and the four question -> approach -> answer arrows down the columns. A second styling
+% would assert a second kind of relation, which is exactly what the label system forbids.
+% THE GEOMETRY IS TUNED FOR A SHORT ARROW. These runs are only ~2.6-3.7 cm, so the neck is thick and
+% the head wide; a slender arrow at that length reads as a scratch. Straight (bend 0) because every
+% run is axis-aligned.
+% The border and shadow options go in \taperarrow's SECOND optional argument, and they are passed
+% LITERALLY rather than through a macro -- pgfkeys must see the commas to split the list.
+\newcommand{\connarrow}[2]{%
+  \taperarrow[accentturq!45][draw=accentturqdk, line width=1.8pt, softshadow]%
+    {#1}{#2}{0pt}{2pt}{18pt}{22pt}{44pt}}
+% How far each end of a connector reaches INTO the two objects it joins, so it reads as one continuous
+% link rather than as a floating glyph in a gap.
+\def\connov{0.5}
