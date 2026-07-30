@@ -152,8 +152,9 @@
   %   #1 = ring colour (the frame path must keep filling itself with it)   #2 = tint of the glow
   cardglow/.style 2 args={
     frame style={fill=#1, posterglow, every shadow/.style={fill=#2, draw=none}}},
-  % Section cards glow TURQUOISE -- their identity (heading, number disc, icon), not their ring, which
-  % is a near-white hairline whose glow would be invisible. For a neutral cast: {bordersubtle}{cardshadow}.
+  % Section cards glow in their IDENTITY colour -- the heading, number disc and icon carry it -- and not
+  % in their ring, which is a near-white hairline whose glow would be invisible. For a neutral cast:
+  % {bordersubtle}{cardshadow}. The tint is `cardcast', so it follows whatever the scheme selected.
   card/.style={cardbase, cardglow={cardring}{cardcast}},
 }
 
@@ -187,7 +188,7 @@
 \newcommand{\paragap}{12mm}
 
 % ===== Inline citation + supporting-detail reference tag ==========================================
-% \litcite and \seebottom share the CHROME turquoise because they are the same kind of mark: a pointer
+% \litcite and \seebottom share the CHROME accent because they are the same kind of mark: a pointer
 % AWAY from the poster (to the literature, to the supplement). Deliberately not two colours.
 \newcommand{\litcite}[1]{{\color{pointermark}\notesize (#1)}}
 % Small numbered badge matching the numbered points in supplement.tex. It is placed with \raisebox (a
@@ -227,7 +228,6 @@
 % THE ONLY COPY OF EACH OF THESE NUMBERS. A figure that needs one of these devices takes the style and
 % overrides only what is genuinely different (colour, and -- where noted -- weight); it never re-spells
 % the arrow head or the shadow parameters. Retune here, or nowhere.
-\tikzset{
 % ----- THE CARD GLOW'S THREE NUMBERS, AND WHY A SCHEME MAY PRE-EMPT THEM --------------------------
 % \providecommand, not \def: parts/colors.tex -- and with it schemes/<name>.tex -- is inputted BEFORE
 % this file (parts/preamble.tex, supplement/preamble.tex), so a \def in a scheme wins and these three
@@ -243,6 +243,7 @@
 \providecommand\gGlowDrop{-2.6mm}    % how far the glow falls below the card
 \providecommand\gGlowBlur{6mm}       % its blur radius
 \providecommand\gGlowOpacity{40}     % its strength, 0-100
+\tikzset{
   % ---- shadows -------------------------------------------------------------------------------------
   % Deep glow: the poster's card / banner shadow, used by `cardglow' above and by the mechanism tree's
   % stage banners. The TINT is NOT here: it rides on `every shadow' at the call site (trap note above).
