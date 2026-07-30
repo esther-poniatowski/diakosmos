@@ -28,9 +28,13 @@
 % Keep this list short: a switch is a fork in the presentation code, and every fork is a pair of
 % renders somebody has to check. Everything a colour can express belongs in a value or a role.
 %   \ifquestioninverted -- do the two question boxes wear an accent GROUND (true, the base) or the
-%                          ordinary card ground with an accent ring (false)? Everything the choice
-%                          implies is derived in parts/colors-roles.tex and parts/block-columns.tex.
+%                          question wash behind an accent ring (false)? Everything the choice implies
+%                          is derived in parts/colors-roles.tex and parts/block-columns.tex.
 \newif\ifquestioninverted\questioninvertedtrue
+% ONE MORE THING A SCHEME MAY SET, and it is deliberately NOT a switch: the card glow's three numbers
+% (\gGlowDrop, \gGlowBlur, \gGlowOpacity), \providecommand'd in parts/macros.tex, which is inputted
+% after this file. They are here in spirit and there in ownership -- see that file for why the glow's
+% weight has to move with the identity colour rather than being fixed once.
 
 \input{schemes/\posterscheme}
 

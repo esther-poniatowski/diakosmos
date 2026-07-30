@@ -228,11 +228,26 @@
 % overrides only what is genuinely different (colour, and -- where noted -- weight); it never re-spells
 % the arrow head or the shadow parameters. Retune here, or nowhere.
 \tikzset{
+% ----- THE CARD GLOW'S THREE NUMBERS, AND WHY A SCHEME MAY PRE-EMPT THEM --------------------------
+% \providecommand, not \def: parts/colors.tex -- and with it schemes/<name>.tex -- is inputted BEFORE
+% this file (parts/preamble.tex, supplement/preamble.tex), so a \def in a scheme wins and these three
+% lines then do nothing. This file still OWNS the numbers; a scheme only overrides them.
+% >>> WEIGHT IS NOT EXPRESSIBLE AS A COLOUR, AND IT DOES NOT SURVIVE A RE-HUE <<< The glow is tinted
+% with `cardcast', i.e. with the identity colour, and it is the accent's largest surface on the page.
+% The same 40 % cast that reads as a halo under a PALE accent reads as a bruise under a DEEP one, and
+% every card on the poster carries it. A scheme that darkens `chromecore' therefore has to be able to
+% lighten the glow with it, or it darkens the whole page by accident.
+% NOT a switch: a switch is a fork with two renders to check, and these are three numbers on a
+% continuum. Only `posterglow' reads them -- `softshadow' is depth INSIDE a figure, is neutral, and
+% does not move with the identity colour.
+\providecommand\gGlowDrop{-2.6mm}    % how far the glow falls below the card
+\providecommand\gGlowBlur{6mm}       % its blur radius
+\providecommand\gGlowOpacity{40}     % its strength, 0-100
   % ---- shadows -------------------------------------------------------------------------------------
   % Deep glow: the poster's card / banner shadow, used by `cardglow' above and by the mechanism tree's
   % stage banners. The TINT is NOT here: it rides on `every shadow' at the call site (trap note above).
-  posterglow/.style={blur shadow={shadow xshift=0pt, shadow yshift=-2.6mm, shadow blur radius=6mm,
-    shadow blur steps=12, shadow opacity=40}},
+  posterglow/.style={blur shadow={shadow xshift=0pt, shadow yshift=\gGlowDrop,
+    shadow blur radius=\gGlowBlur, shadow blur steps=12, shadow opacity=\gGlowOpacity}},
   % Shallow, neutral depth for objects INSIDE a figure (tree strips, option pills, taxonomy cells, leaf
   % plates). Lighter than `posterglow': they must not read as cards floating over the card holding them.
   softshadow/.style={blur shadow={shadow xshift=0pt, shadow yshift=-1.8mm, shadow blur radius=3.6mm,

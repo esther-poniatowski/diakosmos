@@ -36,6 +36,13 @@
 % ----- 1. Neutral foundation ----------------------------------------------------------------------
 \definecolor{posterbg}{HTML}{F1F3F3}      % L=0.970  background
 \definecolor{surface}{HTML}{FBFCFC}       % L=0.995  elevated panels (shadow separates from bg)
+% THE TWO QUESTION CARDS' GROUND, read ONLY in the OUTLINED treatment (\questioninvertedfalse); the
+% inverted treatment grounds them in the accent instead. It exists so a scheme can tint the page's two
+% HINGES without tinting every card, which moving `surface' would. A VALUE and not a role, because the
+% role layer loads after the scheme and a scheme may not bind a role.
+% >>> KEEP IT EQUAL TO `surface' UNLESS THE TINT IS THE POINT <<< A scheme that retunes `surface' and
+% leaves this behind grounds the question cards in the OLD surface, and nothing reports it.
+\definecolor{questionwash}{HTML}{FBFCFC}  % L=0.995  == surface, until a scheme tints it
 \definecolor{bordersubtle}{HTML}{DBDFDF}  % L=0.900  decorative outlines, dividers, table lines
 \definecolor{borderfunc}{HTML}{8C9698}    % L<=0.640 focus rings, emphasis boundaries, plot axes
 \definecolor{texttertiary}{HTML}{6E797B}  % L=0.530  captions, minor metadata, faint hints

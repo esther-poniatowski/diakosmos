@@ -53,14 +53,17 @@
 % switch implies is derived here, so a scheme flips one boolean and never has to keep a fill and a
 % ring in step by hand.
 %   inverted  -- accent ground, white heading, white badge carrying accent digits (the base)
-%   outlined  -- the ordinary card ground with an accent ring, i.e. the answer boxes' treatment
+%   outlined  -- the question wash behind an accent ring, i.e. the answer boxes' treatment
 % THE INVERSION IS NOT A COLOUR SWAP. On an accent ground nothing may keep the accent, or it
 % disappears into it: that is why `questionink' exists and why the badge inverts rather than tinting.
+% THE OUTLINED GROUND IS `questionwash', NOT `cardground', and the difference is a whole scheme: the
+% wash equals `surface' unless a scheme moves it, so the outlined treatment can either match every
+% other card (the base value) or mark the two hinges with a tint too faint to outweigh an answer.
 \ifquestioninverted
   \colorlet{questionfill}{chromecore}
   \colorlet{questionring}{chromecore}
 \else
-  \colorlet{questionfill}{cardground}
+  \colorlet{questionfill}{questionwash}
   \colorlet{questionring}{boxringaccent}
 \fi
 \colorlet{questionink}{white}         % kicker + sentence + tile glyph, on the accent ground
