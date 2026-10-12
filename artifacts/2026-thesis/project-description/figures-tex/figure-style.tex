@@ -1,16 +1,16 @@
-% FILE: manuscripts/2026-thesis/project-description/figures-tex/figure-style.tex
+% FILE: artifacts/2026-thesis/project-description/figures-tex/figure-style.tex
 % ==================================================================================================
 % Shared layer of the figures of the thesis proposal: canvas, colours, type scale, TikZ styles and
 % drawing macros. A figure defines \RootPath and \CanvasHeight, then inputs this file.
 %
-% The visual grammar follows the PINTS 2026 graphical abstract (manuscripts/2026-11_pints/figure.tex):
+% The visual grammar follows the PINTS 2026 graphical abstract (artifacts/2026-11_pints/figure.tex):
 % the same poster colour layers, the same camera and the same vector styles, so that a reader of
 % both artefacts meets one code. The PINTS figure declares its styles inside its own document, so
 % the styles below re-declare them at the scale of an A4 page; a style file shared by both
 % artefacts remains to be extracted.
 
 \usepackage{geometry}
-\input{\RootPath/common/preambles/user}
+\input{\RootPath/artifacts/_common/preambles/user}
 \usepackage{tikz-3dplot}
 \usetikzlibrary{calc,arrows.meta,shadows.blur}
 \usepackage[nottdefault]{sourcecodepro}
@@ -34,7 +34,7 @@
 % ---- Colours -------------------------------------------------------------------------------------
 % The poster's colour layers (values, then roles) are the single source of every colour token, read
 % through the poster's entry file; \PosterParts tells it where its two layers live.
-\newcommand{\PosterParts}{\RootPath/manuscripts/2026-08-ccn-extended-abstract/3-poster/parts}
+\newcommand{\PosterParts}{\RootPath/artifacts/2026-08-ccn-extended-abstract/3-poster/parts}
 \input{\PosterParts/colors}
 % The poster's macro layer supplies \taperarrow, the geometry of the connectors.
 \input{\PosterParts/macros}
