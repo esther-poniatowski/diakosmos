@@ -2,18 +2,19 @@
 % ==================================================================================================
 % Typography (LuaLaTeX + fontspec). Two families realise the plan's hierarchy:
 %   - Raleway          : display geometric sans -> title (Black) and headings (SemiBold/Bold)
-%   - Source Sans Pro  : neutral sans          -> body, captions, labels, tables
-% Fonts are resolved by name from the TeX Live tree (raleway, sourcesanspro packages).
+%   - Source Sans 3  : neutral sans          -> body, captions, labels, tables
+% Fonts are resolved by name from the TeX Live tree (raleway, sourcesans packages).
 
 \usepackage{fontspec}
 \defaultfontfeatures{Ligatures=TeX}
 
-% --- Body / default family: Source Sans Pro (sans) ---
+% --- Body / default family: Source Sans 3 (sans) ---
 % The ROMAN font is Latin Modern (serif) so that math alphabets (\mathrm, \mathbf) and the
 % math "operators" font are serif, consistent with the serif math symbols. The document default
-% is still sans (familydefault = sfdefault), so body text is Source Sans Pro.
+% is still sans (familydefault = sfdefault), so body text is Source Sans 3.
 \setmainfont{Latin Modern Roman}
-\setsansfont{Source Sans Pro}
+\setsansfont{SourceSans3-Regular.otf}[BoldFont=SourceSans3-Bold.otf,
+  ItalicFont=SourceSans3-RegularIt.otf, BoldItalicFont=SourceSans3-BoldIt.otf]
 \renewcommand{\familydefault}{\sfdefault}
 
 % --- Display family: Raleway (weights addressed explicitly) ---
@@ -26,7 +27,7 @@
 ]
 
 % --- Supporting body weights ---
-\newfontfamily\bodysemibold{Source Sans Pro Semibold}
+\newfontfamily\bodysemibold{SourceSans3-Semibold.otf}
 
 % --- Mono family for section-heading kickers / metadata (per tests/claude-design-layout.tex) ---
 \newfontfamily\kickerfont{Source Code Pro}
@@ -34,14 +35,14 @@
 % --- Math text font: the body sans, so descriptive WORDS inside a formula (amplification, projection,
 % comp. plane, ...) match the body prose. Symbols, vectors, matrices and the "mix" indices keep the
 % math font. Used via \mlab (macros.tex). ---
-\newfontfamily\mathtextfont{Source Sans Pro}
+\newfontfamily\mathtextfont{SourceSans3-Regular.otf}
 
 % --- MATH SIZES, ONE DECLARATION PER STEP OF THE TYPE SCALE ---------------------------------------
 % \DeclareMathSizes{<text>}{<math>}{<script>}{<scriptscript>} fires when the TEXT size is selected --
 % inside a TikZ node too. EVERY step of the scale in macros.tex that can carry math needs a line here;
 % a step without one falls back to LaTeX's defaults and drifts out of the system SILENTLY.
 %
-% MATH = 1.125 x TEXT. The body is Source Sans Pro, the math Latin Modern (serif): its smaller x-height
+% MATH = 1.125 x TEXT. The body is Source Sans 3, the math Latin Modern (serif): its smaller x-height
 % makes a symbol read small beside the sans at the same nominal size, and the 12.5% bump levels them.
 %
 % SCRIPT / SCRIPTSCRIPT keep the conventional 0.7 / 0.5 -- deliberate, since the floors in macros.tex
