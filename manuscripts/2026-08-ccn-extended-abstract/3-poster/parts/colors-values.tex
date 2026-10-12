@@ -1,12 +1,16 @@
 % FILE: 3-poster/parts/colors-values.tex
 % ==================================================================================================
 % LAYER 1 of the colour system: WHAT EACH TOKEN IS. The only place a colour may be DEFINED.
-% Loaded first by parts/colors.tex, which then applies the scheme's overrides and finally binds the
-% roles. See that file for the layering and for why the order is not interchangeable.
+% Loaded first by parts/colors.tex, which then binds the roles (parts/colors-roles.tex). The order is
+% not interchangeable: \colorlet copies a value at the moment it is read.
+%
+% THE PALETTE IS FINAL. It was selected among several candidate schemes, each injected at build time
+% and measured by the palette tools; the method, and how to reopen the choice, is stated in
+% docs/practice/posters/colour-schemes.md. The palette is the one printed for CCN 2026 and Royaumont,
+% and shared by the PINTS figure and the thesis proposal, which load this file.
 %
 % >>> NO TOKEN HERE MAY BE NAMED FOR ITS HUE <<< A name states a USE (`inputbright', `comp1') or a
-% rung of a ladder, never a colour word. A hue-named token silently becomes a lie the moment a scheme
-% retunes it -- `accentturq' holding a grey is worse than no documentation at all.
+% rung of a ladder, never a colour word, so that a retuned value never contradicts its name.
 %
 % >>> THIS FILE IS NOT WHERE A COLOUR IS ASSIGNED TO AN ELEMENT <<< A call site never names a token
 % from this file for a CHROME or NEUTRAL use; it names a role (parts/colors-roles.tex). Figures still
@@ -14,72 +18,64 @@
 %
 % THREE INDEPENDENT PALETTES. Each token belongs to exactly one, so any palette can be retuned alone:
 %   1. Neutral foundation -- achromatic substrate: background, surfaces, borders, text, plot axes.
-%                            Shared by chrome and figures; never an accent, never a concept.
-%   2. Design chrome      -- the poster's own identity colour (+ a reserved complement): headings,
-%                            boxes, navigation, QR tags, badges, and both kinds of pointer AWAY from
-%                            the poster (\litcite, \seebottom -- one colour, one kind of mark).
+%   2. Design chrome      -- the identity colour (+ a reserved complement): headings, boxes,
+%                            navigation, QR tags, badges, and every pointer AWAY from the page.
 %   3. Semantic grammar   -- one concept, one colour. Figures only.
 % ONE LICENSED EXCEPTION: `modelnet' encodes a concept (the poster's own model) in a colour close to
-% the chrome, in the model comparison only (see 3c). Nowhere else may chrome mean something. It is a
-% SEPARATE token, not an alias, so a scheme that neutralises the chrome leaves the model comparison
-% standing -- which is the point of that scheme.
+% the chrome, in the model comparison only (see 3c).
 %
-% ADDING OR RETUNING A TOKEN -- the acceptance test, in this order:
-%   (a) dE >= 0.15 in OKLab against every token a reader must tell it apart from. Below ~0.15 two
-%       colours are not distinct CATEGORIES, whatever they look like side by side.
-%   (b) >= 3:1 contrast on `posterbg' if it is a graphical mark. Fills and washes are exempt and must
-%       carry a saturated stroke instead.
+% ADDING OR RETUNING A TOKEN -- the acceptance tests, measured rather than judged by eye:
+%   (a) dE >= 0.15 in OKLab against every token a reader must tell it apart from;
+%   (b) >= 3:1 contrast on `posterbg' if it is a graphical mark (fills carry a saturated stroke);
 %   (c) the ladder limit (3a) if it belongs to a pole.
-% Values are sRGB approximations of an OKLCH specification: the lightness ORDER within a hue is what
-% matters, not exact colorimetry.
+% The token sets each test binds are declared in palette.toml; re-measure after any edit, from the
+% workspace root:
+%     conda run -n geonexus python utils/scripts/check_palette.py \
+%       --palette manuscripts/2026-08-ccn-extended-abstract/3-poster/parts/colors-values.tex \
+%       --spec manuscripts/2026-08-ccn-extended-abstract/3-poster/palette.toml
+% Two binding failures are accepted: `inputlight' and `recurlight' sit under the contrast floor (3a).
 
 % ----- 1. Neutral foundation ----------------------------------------------------------------------
-\definecolor{posterbg}{HTML}{F1F3F3}      % L=0.970  background
-\definecolor{surface}{HTML}{FBFCFC}       % L=0.995  elevated panels (shadow separates from bg)
-% THE TWO QUESTION CARDS' GROUND, read ONLY in the OUTLINED treatment (\questioninvertedfalse); the
-% inverted treatment grounds them in the accent instead. It exists so a scheme can tint the page's two
-% HINGES without tinting every card, which moving `surface' would. A VALUE and not a role, because the
-% role layer loads after the scheme and a scheme may not bind a role.
-% >>> KEEP IT EQUAL TO `surface' UNLESS THE TINT IS THE POINT <<< A scheme that retunes `surface' and
-% leaves this behind grounds the question cards in the OLD surface, and nothing reports it.
-\definecolor{questionwash}{HTML}{FBFCFC}  % L=0.995  == surface, until a scheme tints it
-\definecolor{bordersubtle}{HTML}{DBDFDF}  % L=0.900  decorative outlines, dividers, table lines
-\definecolor{borderfunc}{HTML}{8C9698}    % L<=0.640 focus rings, emphasis boundaries, plot axes
-\definecolor{texttertiary}{HTML}{6E797B}  % L=0.530  captions, minor metadata, faint hints
-\definecolor{textsecondary}{HTML}{586366} % L=0.450  subtitles, supporting text
-\definecolor{textprimary}{HTML}{1B2224}   % L=0.150  titles, labels, body, key values
+% Warm off-white ground, pure white cards: a card is separated from the page by temperature as well
+% as by its glow. The text ramp is anthracite, slate, pearl.
+\definecolor{posterbg}{HTML}{F6F3EE}      % L=0.966  off-white page
+\definecolor{surface}{HTML}{FFFFFF}       % L=1.000  every card
+% THE QUESTION CARDS' GROUND (outlined under an accent ring, parts/colors-roles.tex). Pale seafoam,
+% just above the page in lightness: dE 0.020 against the page and 0.023 against the white cards.
+% >>> ONE STEP OFF THE FLOOR <<< Lighter than about L 0.983, the wash becomes closer to white than the
+% page is, and a question card stops being distinguishable from a plain card. Below the page, it reads
+% as a card pressed into it. Either way, drop the wash rather than nudge it.
+\definecolor{questionwash}{HTML}{F2FBF7}  % L=0.980  pale seafoam
+\definecolor{bordersubtle}{HTML}{DDDAD5}  % L=0.890  pearl -- hairlines, dividers
+\definecolor{borderfunc}{HTML}{6F757A}    % L=0.560  focus rings, emphasis boundaries, plot axes (4.21:1)
+\definecolor{texttertiary}{HTML}{585F64}  % L=0.480  captions, minor metadata, faint hints
+\definecolor{textsecondary}{HTML}{464E54} % L=0.420  slate -- subtitles, supporting text
+\definecolor{textprimary}{HTML}{171E23}   % L=0.230  anthracite -- titles, labels, body
 
 % ----- 2. Design chrome ---------------------------------------------------------------------------
-% THE POLE A SCHEME RETUNES. Everything chrome on the page reaches these three through a role, so
-% overriding `chromecore' alone repaints the whole identity layer and nothing else.
-\definecolor{chromecore}{HTML}{12A89E}  % core -- the identity colour (H 187)
-\definecolor{chromedeep}{HTML}{0C7A72}  % deep -- sub-headers, contact line, badges (carries white text)
-\definecolor{chromealt}{HTML}{F26B5B}   % complement -- RESERVED, chrome only (H 12)
-% The medallion network's body wash (figures/network-medallion.tex). CHROME, NOT A CONCEPT: it says
-% "one network", which is the container the neurons sit in, not a claim about it -- so it belongs to
-% this palette and not to the semantic grammar, and it must never be given a meaning. A NAMED token
-% rather than an `chromecore!12' at the call site, because a hand-mixed tint is exactly what this file
-% exists to prevent. NEARLY INVISIBLE BY DESIGN, at L=0.982 -- a hair off the card's `surface' (0.995)
-% and barely tinted: the disk's job is to give the neurons a ground, and a wash strong enough to be
-% noticed competes with the palest neurons, which are themselves within a few percent of white. What
-% marks the network is its BOUNDARY (4.5 pt of accent), not its fill.
-\definecolor{netfill}{HTML}{F7FAFA}       % network body wash -- FILL: carries no meaning
+% DEEP PETROL BLUE. Dark is the point: the accent must hold a numbered badge, a 2 pt ring and a thin
+% connector outline at reading distance, which needs a mark contrast well above 3:1 (9.69:1 here).
+% Everything chrome reaches these tokens through a role, so retuning `chromecore' repaints the whole
+% identity layer and nothing else.
+\definecolor{chromecore}{HTML}{00454D}  % core -- numbers, icons, rings, kickers, the connector spine
+\definecolor{chromedeep}{HTML}{002D32}  % deep -- carries white text (contact line, badges)
+% RESERVED, chrome only, still undrawn: a deep russet that clears both warm semantic tokens (dE 0.192
+% against vermilion, 0.269 against ochre), so spending it needs no re-measurement of the warm half.
+\definecolor{chromealt}{HTML}{6E2B04}   % complement
+% The medallion network's body wash (figures/network-medallion.tex). CHROME, NOT A CONCEPT, and nearly
+% invisible by design: what marks the network is its boundary, not its fill.
+\definecolor{netfill}{HTML}{F7FBFB}     % network body wash -- FILL: carries no meaning
 
 % ==================================================================================================
 % 3. SEMANTIC GRAMMAR -- one concept, one colour. Figures only.
 % ==================================================================================================
 %
-% ----- 3a. The two transformations: a blue pole (H 258) and a magenta pole (H 330) -----------------
-% THE COMPONENTS OWN RED/GREEN; THE TRANSFORMATIONS OWN BLUE/MAGENTA. Keep the two in DISJOINT hue
-% regions: the components name WHAT IS COMBINED, the transformations name HOW THE NETWORK ACTS, and two
-% concepts of different kinds must not sit in adjacent hues. Measured constraint -- an amplification
-% hue near component 2 lands at dE 0.107 from it, i.e. indistinguishable as categories in the figures
-% where both appear. Do not move either pole toward the other.
+% ----- 3a. The two transformations: an azure pole (H 246) and a raspberry pole (H 349) -------------
 % Blue reads exogenous and directional, magenta endogenous and self-reinforcing, which is the model:
 % the input arrives from outside, the recurrence feeds back on itself.
 %
 % ONE LADDER PER POLE: each transformation is a constant-hue tint of its own SOURCE, so the projection
-% is visibly the input's operation and the amplification the recurrence's.
+% is visibly the input's operation and the reweighting the recurrence's.
 %   deep    card chrome (carries white text)   core    the source concept (input I; connectivity J)
 %   bright  the TRANSFORMATION (xi_k ; A_k)    light   a second pattern within the pole
 %   pale    fills and washes
@@ -87,52 +83,47 @@
 % >>> THE LADDER LIMIT -- IT BINDS <<<
 %   (1) Adjacent rungs sit at dE ~0.09: NOT distinct. Within one figure use at most THREE levels of a
 %       hue and SKIP a rung between them (deep, bright, pale). Never two adjacent rungs together.
-%   (2) The two pale fills are dE 0.041 apart, so PALE CANNOT ENCODE THE POLE: always pair a pale fill
-%       with a saturated stroke of its own family.
-%   (3) A fourth distinction goes to a NON-COLOUR channel. A pattern's index (first or second) is an
-%       index, not a concept: it belongs in a subscript or a line style, never a fourth tint.
-% figures/approach-steps.tex is the figure this limit was written for, and it still strains it.
+%   (2) The two pale fills are too close to encode the pole: always pair a pale fill with a saturated
+%       stroke of its own family.
+%   (3) A fourth distinction goes to a NON-COLOUR channel (a subscript, a line style).
+% `inputlight' and `recurlight' reach 2.1 and 2.4:1 on the ground, under the mark floor; they are only
+% drawn inside framed cell grids, and darkening them would push the ladder into component 2's range.
 %
-% --- blue pole: the external input, and what it does ---
-\definecolor{inputdeep}{HTML}{0F4EA3}   % deep   -- input pattern 1 (I^(1)); projection card chrome
-\definecolor{inputcore}{HTML}{2368C9}     % core   -- the external input itself (I, u)
-\definecolor{inputbright}{HTML}{3483F3}      % bright -- THE FEEDFORWARD PROJECTION (xi_k, Sigma^(nI))
-\definecolor{inputlight}{HTML}{74A6EF}   % light  -- input pattern 2 (I^(2))
-\definecolor{inputpale}{HTML}{D7E6FC}    % pale   -- input pooling Sigma^(II)   [FILL: needs a stroke]
-% --- magenta pole: the recurrence, and what it does ---
-\definecolor{recurdeep}{HTML}{7D2A79}    % deep   -- recurrent pattern 1 (m_1); amplification chrome
-\definecolor{recurcore}{HTML}{9E4098}      % core   -- the recurrent connectivity itself (J, Sigma^(nm))
-\definecolor{recurbright}{HTML}{C154BA}        % bright -- THE RECURRENT AMPLIFICATION (A_k)
-\definecolor{recurlight}{HTML}{CF88C8}    % light  -- recurrent pattern 2 (m_2)
-\definecolor{recurpale}{HTML}{F3DDF0}    % pale   -- recurrent pooling Sigma^(mm) [FILL: needs a stroke]
+% >>> THE BLUE REGION HOSTS THREE THINGS <<< Component 2 is a slate blue, so it shares the blue
+% region with the feedforward pole. It clears `inputdeep' (0.162), `inputbright' (0.163) and
+% `inputlight' (0.239), but NOT `inputcore' (0.061). That exemption holds only because NO FIGURE DRAWS
+% A CORE RUNG AND A COMPONENT TOGETHER. Re-check it before giving a component to any figure that draws
+% the input itself.
+% --- azure pole: the external input, and what it does ---
+\definecolor{inputdeep}{HTML}{003A62}   % deep   -- input pattern 1 (I^(1)); projection card chrome
+\definecolor{inputcore}{HTML}{025F99}   % core   -- the external input itself (I, u)
+\definecolor{inputbright}{HTML}{0B90E4} % bright -- THE FEEDFORWARD PROJECTION
+\definecolor{inputlight}{HTML}{6EAEE6}  % light  -- input pattern 2 (I^(2))
+\definecolor{inputpale}{HTML}{D6EBFE}   % pale   -- input pooling            [FILL: needs a stroke]
+% --- raspberry pole: the recurrence, and what it does ---
+\definecolor{recurdeep}{HTML}{79004F}   % deep   -- recurrent pattern 1 (m_1); reweighting chrome
+\definecolor{recurcore}{HTML}{A3136E}   % core   -- the recurrent connectivity itself (J)
+\definecolor{recurbright}{HTML}{CE298E} % bright -- THE RECURRENT REWEIGHTING
+\definecolor{recurlight}{HTML}{E081B1}  % light  -- recurrent pattern 2 (m_2)
+\definecolor{recurpale}{HTML}{FFDBEB}   % pale   -- recurrent pooling        [FILL: needs a stroke]
 
 % ----- 3b. The components, the response, the geometry ----------------------------------------------
-\definecolor{comp1}{HTML}{D6453C}       % component response 1 (kappa_1)   H 28
-\definecolor{comp2}{HTML}{4F9A3F}     % component response 2 (kappa_2)   H 140
-\definecolor{mixresponse}{HTML}{F2A30C}      % THE RESPONSE (H 74) -- mixture kappa_mix, network state x,
-                                          % reduced state kappa: ONE concept, ONE token. Do not split
-                                          % it; a second token for the same object would land between
-                                          % the two poles and read as a blend of them.
-\definecolor{compplane}{HTML}{B7BFC1}      % components plane / proportional reference
-\definecolor{outplaneannot}{HTML}{566063}  % out-of-plane annotations (bias arc, in-plane foot marker)
-\definecolor{outplane}{HTML}{8A5524} % orthogonal component (eta_perp) -- solid brown, all figures
+% VERMILION AND SLATE BLUE for the two components, AMETHYST for their mixture: a violet sits between a
+% red and a blue, so the mixture reads as the blend of the two things it is the blend of.
+\definecolor{comp1}{HTML}{C44214}       % component response 1 (kappa_1) -- vermilion
+\definecolor{comp2}{HTML}{505E96}       % component response 2 (kappa_2) -- slate blue
+\definecolor{mixresponse}{HTML}{9B62DB} % THE RESPONSE -- amethyst. ONE concept, ONE token: the
+                                        % mixture kappa_mix, the network state x, the reduced state.
+\definecolor{compplane}{HTML}{C1BDB5}   % components plane / proportional reference -- pearl wash
+% THE TWO GEOMETRIC PROPERTIES, one axis each: `outplaneannot' is BIAS (the balance axis, its pills,
+% the bias arc) and `outplane' is EMERGENCE (eta_perp, the in-plane / out-of-plane pills). They also
+% differ by line style (solid normal against dashed in-plane reference), which licenses their pair.
+% The gold sits at the sRGB gamut boundary for its lightness, and at 3.11:1 it cannot go lighter.
+\definecolor{outplaneannot}{HTML}{A78700}  % bias -- ochre gold
+\definecolor{outplane}{HTML}{12764B}       % emergence -- deep emerald
 
-% ----- 3c. The two models: chromatic vs achromatic, not a third hue pair ---------------------------
-% THE HUE CIRCLE IS FULL -- do not spend a new semantic hue here. Occupied: H 28 (component 1),
-% 60 (eta_perp), 74 (the response), 140 (component 2), 187 (chrome), 258 (feedforward),
-% 330 (amplification). The widest remaining gap spans 72 deg (+/-36 deg of clearance) against the
-% ~45 deg a categorical hue needs at this chroma, so anything forced in lands ~dE 0.13 from BOTH
-% transformations. An achromatic PAIR fails too: its light member sits dE 0.034 from borderfunc at
-% 2.4:1 on the background, under the 3:1 mark floor. Hence chromatic/achromatic, doubled in LINE STYLE
-% so the distinction survives a grayscale print.
-\definecolor{modelnet}{HTML}{00948B}     % THE NETWORK MODEL (this work): SOLID, filled markers. The
-                                          % licensed chrome exception; model-comparison band only.
-\definecolor{modeldn}{HTML}{474E51}       % DIVISIVE NORMALIZATION (rival): DASHED, hollow markers.
-                                          % A mechanism earns a hue; a descriptive fit does not.
-% modeldn sits dE 0.063 from outplaneannot. THEY NEVER APPEAR IN ONE FIGURE -- re-check if either moves.
-
-% ----- END OF THE VALUE LAYER ---------------------------------------------------------------------
-% Every \colorlet that USED to close this file now lives in parts/colors-roles.tex, and that move is
-% load-bearing rather than cosmetic: \colorlet COPIES A VALUE AT THE MOMENT IT IS READ. An alias left
-% here would snapshot the base value and then survive a scheme override untouched, repainting half the
-% page and leaving the other half in the base's accent, with nothing in the log to say so.
+% ----- 3c. The two models: chromatic vs achromatic, doubled in line style ---------------------------
+% `modelnet' follows the chrome into the blue-green region, as the licensed exception, but sits green
+% of `chromecore' and much lighter, so the model band does not read as two shades of the heading.
+\definecolor{modelnet}{HTML}{308D79}    % THE NETWORK MODEL (this work): solid, filled markers
+\definecolor{modeldn}{HTML}{393E3F}     % DIVISIVE NORMALIZATION (rival): dashed, hollow markers

@@ -1,7 +1,7 @@
 % FILE: 3-poster/parts/colors-roles.tex
 % ==================================================================================================
-% LAYER 3 of the colour system: WHERE EACH COLOUR GOES. Loaded LAST by parts/colors.tex, after the
-% scheme has had its say, so every \colorlet below copies the value the scheme actually selected.
+% LAYER 2 of the colour system: WHERE EACH COLOUR GOES. Loaded LAST by parts/colors.tex, after the
+% values, so every \colorlet below copies a value already defined.
 %
 % >>> WHY THIS FILE EXISTS <<< Before it, the accent was named at ~90 call sites across six files. A
 % RE-HUE was one edit (change the value) but a REDISTRIBUTION was ninety (change who wears it), so the
@@ -14,15 +14,15 @@
 %   THE CARD SHELL         -> name a role (`cardground', `cardring', `pageground'). These are neutral
 %                             values, but they are what a distribution variant actually moves.
 %   OTHER NEUTRAL use      -> name the neutral token directly. `borderfunc' for a plot axis and
-%                             `textprimary' for body text are already use-named and hold across every
-%                             scheme; wrapping them would be indirection with no variation behind it.
+%                             `textprimary' for body text are already use-named; wrapping them would
+%                             be indirection with no variation behind it.
 %   Semantic use (figures) -> name the semantic token directly (parts/colors-values.tex): a semantic
 %                             token IS its own role, one concept to one colour, same reasoning.
 %   A TINT OF A ROLE (`spinefill!45') is allowed and is not a hand-mixed shade: it tracks whatever the
 %   role resolves to. A tint of a VALUE token at a call site is still forbidden.
 %
-% >>> ORDER IS LOAD-BEARING <<< \colorlet copies a value; it does not alias a name. Anything here that
-% ran BEFORE the scheme would keep the base value and repaint nothing, silently.
+% >>> ORDER IS LOAD-BEARING <<< \colorlet copies a value; it does not alias a name. A value retuned
+% after this file is read repaints nothing that a role here already copied, silently.
 
 % ===== The page and the card shell (neutral) ======================================================
 \colorlet{pageground}{posterbg}     % the full-bleed canvas, and the medallion's halo
@@ -37,7 +37,7 @@
 % ===== The boxes that carry the argument ==========================================================
 % The poster's ONE structural distinction in colour: a box on the question -> answer spine wears an
 % accent ring, a supporting box wears the hairline. Rebinding `boxringaccent' to `cardring' collapses
-% that distinction -- which is a legitimate scheme, and is why these are two names and not one.
+% that distinction -- a legitimate design, and the reason these are two names and not one.
 \colorlet{boxringaccent}{chromecore}    % question and answer boxes
 \colorlet{boxringplain}{bordersubtle}   % approach boxes, interpretations, predictions
 
@@ -47,27 +47,12 @@
 % NOT a role -- it is body text that happens to sit in a heading.
 \colorlet{headaccent}{chromecore}
 
-% ===== THE QUESTION BOXES -- the one element whose TREATMENT a scheme switches ====================
-% The two question boxes are the page's only accent GROUNDS. Whether they stay that way is the
-% \ifquestioninverted switch, declared in parts/colors.tex BEFORE the scheme is read; everything the
-% switch implies is derived here, so a scheme flips one boolean and never has to keep a fill and a
-% ring in step by hand.
-%   inverted  -- accent ground, white heading, white badge carrying accent digits (the base)
-%   outlined  -- the question wash behind an accent ring, i.e. the answer boxes' treatment
-% THE INVERSION IS NOT A COLOUR SWAP. On an accent ground nothing may keep the accent, or it
-% disappears into it: that is why `questionink' exists and why the badge inverts rather than tinting.
-% THE OUTLINED GROUND IS `questionwash', NOT `cardground', and the difference is a whole scheme: the
-% wash equals `surface' unless a scheme moves it, so the outlined treatment can either match every
-% other card (the base value) or mark the two hinges with a tint too faint to outweigh an answer.
-\ifquestioninverted
-  \colorlet{questionfill}{chromecore}
-  \colorlet{questionring}{chromecore}
-\else
-  \colorlet{questionfill}{questionwash}
-  \colorlet{questionring}{boxringaccent}
-\fi
-\colorlet{questionink}{white}         % kicker + sentence + tile glyph, on the accent ground
-\colorlet{questionaccent}{chromecore} % the digits and ring of the white number badge
+% ===== THE QUESTION BOXES -- outlined, under an accent ring ======================================
+% The two question boxes are the page's two hinges. They take the answer boxes' accent ring over the
+% question wash (parts/colors-values.tex), a tint too faint to outweigh the answer each introduces.
+% Both roles are bound here, so the box and its heading cannot fall out of step.
+\colorlet{questionfill}{questionwash}
+\colorlet{questionring}{boxringaccent}
 
 % ===== Marks: the small accent-bearing objects ====================================================
 \colorlet{bulletmark}{chromecore}   % the check ring before every interpretation / prediction bullet
@@ -80,8 +65,8 @@
 
 % ===== The connector spine ========================================================================
 % The six arrows (four down the columns, two from the premises to the medallion). Body and outline are
-% two roles because the arrow is a filled shape with a drawn edge, and a scheme that neutralises the
-% body may still want a legible edge.
+% two roles because the arrow is a filled shape with a drawn edge, and a neutral body may still want
+% a legible edge.
 \colorlet{spinefill}{chromecore}   % the body (call sites take a tint of it)
 \colorlet{spineedge}{chromedeep}   % the outline
 
@@ -91,9 +76,8 @@
 \colorlet{medallioncast}{chromecore}   % its glow, cast through the poster's shared `posterglow'
 
 % ===== Chrome INSIDE figures ======================================================================
-% Chrome that a figure draws, kept here rather than in the figure so a scheme repaints the whole page
-% at once. A figure still wearing the base's accent inside a neutralised scheme is the exact failure this
-% prevents, and nothing in the log would report it.
+% Chrome that a figure draws, kept here rather than in the figure so a retuned identity colour
+% repaints the whole page at once; a figure left in an older accent is a failure no log reports.
 \colorlet{netbound}{chromecore}     % the "one network" container boundary (medallion, network disk):
                                     % chrome, NOT a concept -- it says "one network", which is the
                                     % container the neurons sit in, not a claim about them.
@@ -102,8 +86,8 @@
 \colorlet{factoraccent}{chromecore} % the factor panel's ground, ring and disc
 
 % ===== The semantic tokens named by ROLE ==========================================================
-% These are NOT chrome. They live here because they are aliases, and an alias must be re-copied after
-% a scheme override for the same reason everything else in this file is.
+% These are NOT chrome. They live here because they are aliases, and an alias must follow the values
+% for the same reason everything else in this file does.
 % The gain rides with the recurrence because g parameterises A_k(g): it is part of the actuator, not
 % an exogenous quantity. DEEP, so it stays distinct from A_k's bright where both appear.
 \colorlet{recurgain}{recurdeep}

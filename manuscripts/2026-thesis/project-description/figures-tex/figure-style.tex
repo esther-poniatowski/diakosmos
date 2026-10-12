@@ -32,14 +32,10 @@
 \setlength{\parindent}{0pt}
 
 % ---- Colours -------------------------------------------------------------------------------------
-% The poster's value, scheme and role layers are the single source of every colour token. The order
-% follows the poster's parts/colors.tex. That file cannot be loaded from here, because its inputs
-% are relative to the poster folder. The scheme is the petrol-guide variant used by the PINTS figure.
+% The poster's colour layers (values, then roles) are the single source of every colour token, read
+% through the poster's entry file; \PosterParts tells it where its two layers live.
 \newcommand{\PosterParts}{\RootPath/manuscripts/2026-08-ccn-extended-abstract/3-poster/parts}
-\input{\PosterParts/colors-values}
-\newif\ifquestioninverted\questioninvertedtrue
-\input{\PosterParts/../schemes/petrol-guide}
-\input{\PosterParts/colors-roles}
+\input{\PosterParts/colors}
 % The poster's macro layer supplies \taperarrow, the geometry of the connectors.
 \input{\PosterParts/macros}
 

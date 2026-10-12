@@ -1,48 +1,22 @@
 % FILE: 3-poster/parts/colors.tex
 % ==================================================================================================
-% THE COLOUR SYSTEM'S ENTRY POINT, and the only file either document inputs (parts/preamble.tex and
-% supplement/preamble.tex both say `\input{parts/colors}'). It selects a scheme and loads the three
-% layers in the one order that works.
+% THE COLOUR SYSTEM'S ENTRY POINT, and the only file a document inputs for its colours: the poster
+% and the supplement (parts/preamble.tex, supplement/preamble.tex), and every document that shares
+% the palette (the thesis figures and proposal, the PINTS figure, the Royaumont posters).
 %
-% >>> THREE LAYERS, AND THE ORDER IS LOAD-BEARING <<<
+% >>> TWO LAYERS, AND THE ORDER IS LOAD-BEARING <<<
 %   1. VALUES  parts/colors-values.tex  -- what each token IS. Every \definecolor.
-%   2. SCHEME  schemes/<name>.tex       -- the variant's overrides: values, and the switches below.
-%   3. ROLES   parts/colors-roles.tex   -- where each colour GOES. Every \colorlet.
-% \colorlet COPIES A VALUE at the moment it is read. Run the roles before the scheme and every alias
-% keeps its base value: half the page repaints, half does not, and NOTHING IN THE LOG SAYS SO. That
-% failure is the entire reason these are three files instead of one.
+%   2. ROLES   parts/colors-roles.tex   -- where each colour GOES. Every \colorlet.
+% \colorlet COPIES A VALUE at the moment it is read, so the roles must follow the values.
 %
-% >>> SELECTING A SCHEME <<< \posterscheme names a file in schemes/. It is \providecommand'd, so the
-% default survives an ordinary build while a \def injected before the document wins. Ktisma owns that
-% injection: each variant in .ktisma.toml carries the \def as its payload.
-%     ktisma variants --include-default mixture-input-encoding-poster.tex   # base + every variant
-%     ktisma build --variant neutral-chrome mixture-input-encoding-poster.tex
-% The default lives HERE rather than in either driver, so the supplement inherits the same scheme for
-% free and cannot drift out of step with the poster it belongs to.
-\providecommand\posterscheme{base}
-
-\input{parts/colors-values}
-
-% ----- SCHEME SWITCHES: declared before the scheme, so the scheme may set them --------------------
-% A switch is for a variation that is NOT expressible as a colour value -- a change of TREATMENT.
-% Keep this list short: a switch is a fork in the presentation code, and every fork is a pair of
-% renders somebody has to check. Everything a colour can express belongs in a value or a role.
-%   \ifquestioninverted -- do the two question boxes wear an accent GROUND (true, the base) or the
-%                          question wash behind an accent ring (false)? Everything the choice implies
-%                          is derived in parts/colors-roles.tex and parts/block-columns.tex.
-\newif\ifquestioninverted\questioninvertedtrue
-% ONE MORE THING A SCHEME MAY SET, and it is deliberately NOT a switch: the card glow's three numbers
-% (\gGlowDrop, \gGlowBlur, \gGlowOpacity), \providecommand'd in parts/macros.tex, which is inputted
-% after this file. They are here in spirit and there in ownership -- see that file for why the glow's
-% weight has to move with the identity colour rather than being fixed once.
-
-\input{schemes/\posterscheme}
-
-% THE FIFTH MEASUREMENT CHANNEL. The other four report geometry; this one reports WHICH POSTER THIS
-% IS. Without it a dropped -pretex is invisible: every variant builds the base, and a set of
-% identical PDFs is indistinguishable from a set of successful variants until somebody compares two
-% of them by eye. scripts/check-build.sh compares this line against the build directory ktisma named,
-% which is where the REQUESTED scheme is recorded.
-\typeout{[scheme] \posterscheme}
-
-\input{parts/colors-roles}
+% >>> LOADED FROM ANOTHER FOLDER <<< \input resolves paths against the working directory of the
+% build, not against this file. A document outside this folder therefore defines \PosterParts as the
+% path to parts/ before inputting this file; the poster's own documents leave the default.
+%     \newcommand{\PosterParts}{<path to>/3-poster/parts}
+%     \input{\PosterParts/colors}
+%
+% The palette was selected among candidate schemes injected at build time; the method is stated in
+% docs/practice/posters/colour-schemes.md, and reopening the choice starts there.
+\providecommand\PosterParts{parts}
+\input{\PosterParts/colors-values}
+\input{\PosterParts/colors-roles}
