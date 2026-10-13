@@ -8,6 +8,7 @@
 %   1. VALUES  colors-values.tex  -- what each token IS. Every \definecolor.
 %   2. ROLES   colors-roles.tex   -- where each colour GOES. Every \colorlet.
 % \colorlet COPIES A VALUE at the moment it is read, so the roles must follow the values.
+% Both layers are generated from palette.yml, beside this file: edit the palette, never a layer.
 %
 % >>> LOADED THROUGH \RootPath <<< \input resolves paths against the working directory of the build,
 % not against this file. A document therefore defines \RootPath, the path to the workspace root, before
@@ -15,6 +16,7 @@
 %     \input{\RootPath/artifacts/_common/style/colors}
 %
 % The palette was selected among candidate schemes injected at build time; the method is stated in
-% docs/practice/posters/colour-schemes.md, and reopening the choice starts there.
+% docs/practice/posters/colour-schemes.md, and reopening the choice starts there. A candidate scheme
+% loads between the two layers.
 \input{\RootPath/artifacts/_common/style/colors-values}
 \input{\RootPath/artifacts/_common/style/colors-roles}

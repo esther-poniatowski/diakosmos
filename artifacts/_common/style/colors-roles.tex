@@ -1,102 +1,32 @@
 % FILE: artifacts/_common/style/colors-roles.tex
 % ==================================================================================================
-% LAYER 2 of the colour system: WHERE EACH COLOUR GOES. Loaded LAST by colors.tex, after the
-% values, so every \colorlet below copies a value already defined.
-%
-% >>> WHY THIS FILE EXISTS <<< Before it, the accent was named at ~90 call sites across six files. A
-% RE-HUE was one edit (change the value) but a REDISTRIBUTION was ninety (change who wears it), so the
-% two halves of a colour decision cost three orders of magnitude apart. Every chrome and neutral call
-% site now names a ROLE, and both halves cost one line.
-%
-% >>> THE RULE FOR A CALL SITE <<<
-%   CHROME use             -> name a ROLE from this file. Never `chromecore', never `chromedeep',
-%                             anywhere, including inside a figure.
-%   THE CARD SHELL         -> name a role (`cardground', `cardring', `pageground'). These are neutral
-%                             values, but they are what a distribution variant actually moves.
-%   OTHER NEUTRAL use      -> name the neutral token directly. `borderfunc' for a plot axis and
-%                             `textprimary' for body text are already use-named; wrapping them would
-%                             be indirection with no variation behind it.
-%   Semantic use (figures) -> name the semantic token directly (colors-values.tex): a semantic
-%                             token IS its own role, one concept to one colour, same reasoning.
-%   A TINT OF A ROLE (`spinefill!45') is allowed and is not a hand-mixed shade: it tracks whatever the
-%   role resolves to. A tint of a VALUE token at a call site is still forbidden.
-%
-% >>> ORDER IS LOAD-BEARING <<< \colorlet copies a value; it does not alias a name. A value retuned
-% after this file is read repaints nothing that a role here already copied, silently.
+% GENERATED from palette.yml by utils/scripts/build_palette.py: edit the palette, then run the generator.
+% The token bound to each role. Load it after the values: \colorlet copies a value when it is read.
 
-% ===== The page and the card shell (neutral) ======================================================
-\colorlet{pageground}{posterbg}     % the full-bleed canvas, and the medallion's halo
-\colorlet{cardground}{surface}      % the interior of every card and column box
-\colorlet{cardring}{bordersubtle}   % the hairline frame of a plain card
-\colorlet{cardcast}{chromecore}     % THE GLOW under every card -- the accent's largest surface on the
-                                    % page by area, and the first thing to change when the identity
-                                    % colour changes. For a neutral cast, bind it to `cardshadow'.
-\colorlet{cardshadow}{black!38}     % grey drop shadow -- the documented neutral alternative to a cast
-\colorlet{cardshadowdk}{black!52}   % deeper shadow for an emphasised box
-
-% ===== The boxes that carry the argument ==========================================================
-% The poster's ONE structural distinction in colour: a box on the question -> answer spine wears an
-% accent ring, a supporting box wears the hairline. Rebinding `boxringaccent' to `cardring' collapses
-% that distinction -- a legitimate design, and the reason these are two names and not one.
-\colorlet{boxringaccent}{chromecore}    % question and answer boxes
-\colorlet{boxringplain}{bordersubtle}   % approach boxes, interpretations, predictions
-
-% ===== The heading device =========================================================================
-% One colour drives the whole heading: the icon tile's plate (a tint of it), the tile's glyph, the
-% number badge's disc, and the kicker over the sentence. The sentence itself is `textprimary' and is
-% NOT a role -- it is body text that happens to sit in a heading.
-\colorlet{headaccent}{chromecore}
-
-% ===== THE QUESTION BOXES -- outlined, under an accent ring ======================================
-% The two question boxes are the page's two hinges. They take the answer boxes' accent ring over the
-% question wash (colors-values.tex), a tint too faint to outweigh the answer each introduces.
-% Both roles are bound here, so the box and its heading cannot fall out of step.
-\colorlet{questionfill}{questionwash}
-\colorlet{questionring}{boxringaccent}
-
-% ===== Marks: the small accent-bearing objects ====================================================
-\colorlet{bulletmark}{chromecore}   % the check ring before every interpretation / prediction bullet
-\colorlet{pointermark}{chromecore}  % EVERY pointer AWAY from the poster: \litcite, \seebottom,
-                                    % \refnum, the header's QR glyph, the supplement's \suptag. One
-                                    % colour, because they are one kind of mark.
-\colorlet{markdeep}{chromedeep}     % chrome that must carry TEXT WEIGHT rather than mark a surface:
-                                    % the header's contact line, the supplement's argument chains.
-                                    % The deep rung, so it holds its own against `textprimary'.
-
-% ===== The connector spine ========================================================================
-% The six arrows (four down the columns, two from the premises to the medallion). Body and outline are
-% two roles because the arrow is a filled shape with a drawn edge, and a neutral body may still want
-% a legible edge.
-\colorlet{spinefill}{chromecore}   % the body (call sites take a tint of it)
-\colorlet{spineedge}{chromedeep}   % the outline
-
-% ===== The medallion ==============================================================================
-\colorlet{medallionring}{chromecore}   % its ring -- the circle's whole identity, since its fill is
-                                       % the ordinary card surface (it is distinguished by SHAPE)
-\colorlet{medallioncast}{chromecore}   % its glow, cast through the poster's shared `posterglow'
-
-% ===== Chrome INSIDE figures ======================================================================
-% Chrome that a figure draws, kept here rather than in the figure so a retuned identity colour
-% repaints the whole page at once; a figure left in an older accent is a failure no log reports.
-\colorlet{netbound}{chromecore}     % the "one network" container boundary (medallion, network disk):
-                                    % chrome, NOT a concept -- it says "one network", which is the
-                                    % container the neurons sit in, not a claim about them.
-\colorlet{figcallout}{chromecore}   % chrome annotation inside a plot (the gain-variance insets)
-\colorlet{stepmark}{chromecore}     % the approach block's numbered step markers and their rule
-\colorlet{factoraccent}{chromecore} % the factor panel's ground, ring and disc
-
-% ===== The semantic tokens named by ROLE ==========================================================
-% These are NOT chrome. They live here because they are aliases, and an alias must follow the values
-% for the same reason everything else in this file does.
-% The gain rides with the recurrence because g parameterises A_k(g): it is part of the realizing
-% transformation (the recurrent reweighting), not an exogenous quantity. DEEP, so it stays distinct
-% from A_k's bright where both appear.
-\colorlet{recurgain}{recurdeep}
-% Card chrome = the DEEP rung of each pole (dark enough to carry white text); the bright rungs stay
-% for sketches and thin labels.
-\colorlet{projchrome}{inputdeep}    % feedforward card: ring, glow, disc, classifier pill
-\colorlet{ampchrome}{recurdeep}     % amplification card: ring, glow, disc, classifier pill
-% The transformations named by what they ARE, for call sites that mean "the projection" / "the
-% amplification" rather than a particular rung of the ladder.
-\colorlet{projtransform}{inputbright}
-\colorlet{amptransform}{recurbright}
+\colorlet{pageground}{posterbg}        % full-bleed canvas, and the halo of the medallion
+\colorlet{cardground}{surface}         % interior of every card and column box
+\colorlet{cardring}{bordersubtle}      % hairline frame of a plain card
+\colorlet{cardcast}{chromecore}        % glow under every card
+\colorlet{cardshadow}{black!38}        % grey drop shadow, the neutral alternative to a cast
+\colorlet{cardshadowdk}{black!52}      % deeper shadow of an emphasised box
+\colorlet{boxringaccent}{chromecore}   % ring of the question and answer boxes
+\colorlet{boxringplain}{bordersubtle}  % ring of the approach boxes, interpretations and predictions
+\colorlet{headaccent}{chromecore}      % heading device, with its icon tile, glyph, number badge and kicker
+\colorlet{questionfill}{questionwash}  % ground of the two question boxes
+\colorlet{questionring}{boxringaccent} % ring of the two question boxes
+\colorlet{bulletmark}{chromecore}      % check ring before every interpretation and prediction bullet
+\colorlet{pointermark}{chromecore}     % every pointer away from the poster, such as citations, references, the QR glyph and the supplement tags
+\colorlet{markdeep}{chromedeep}        % chrome carrying text weight, such as the contact line and the argument chains of the supplement
+\colorlet{spinefill}{chromecore}       % body of the connector arrows, drawn as a tint
+\colorlet{spineedge}{chromedeep}       % outline of the connector arrows
+\colorlet{medallionring}{chromecore}   % ring of the medallion
+\colorlet{medallioncast}{chromecore}   % glow of the medallion
+\colorlet{netbound}{chromecore}        % boundary of the one-network container
+\colorlet{figcallout}{chromecore}      % chrome annotation inside a plot
+\colorlet{stepmark}{chromecore}        % numbered step markers of the approach block and their rule
+\colorlet{factoraccent}{chromecore}    % ground, ring and disc of the factor panel
+\colorlet{recurgain}{recurdeep}        % the gain
+\colorlet{projchrome}{inputdeep}       % ring, glow, disc and classifier pill of the feedforward card
+\colorlet{ampchrome}{recurdeep}        % ring, glow, disc and classifier pill of the amplification card
+\colorlet{projtransform}{inputbright}  % the projection, where a call site means the transformation
+\colorlet{amptransform}{recurbright}   % the amplification, where a call site means the transformation
