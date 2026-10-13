@@ -200,6 +200,12 @@ modes:
       chromecore: 6CC4CC
       chromedeep: 4FAAB3
       textinverse: 0B1213
+    # contrast floor of body text (WCAG AA): the pages set their text in these tokens
+    tests:
+      ground: posterbg
+      contrast_floor: 4.5
+      pairs:
+        - {mark: textinverse, ground: chromedeep}
 
 css:
   bg: posterbg
@@ -227,6 +233,8 @@ tests:
       channel: the licensed exception, with modelnet drawn as the chrome inside the model band only
     - pair: [outplane, outplaneannot]
       channel: line style, solid for the normal and dashed for the in-plane reference
+  pairs:
+    - {mark: textinverse, ground: chromedeep}
 
 recolour:
   targets: [comp1, comp2]
