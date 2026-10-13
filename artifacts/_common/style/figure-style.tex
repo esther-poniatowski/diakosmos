@@ -1,4 +1,4 @@
-% FILE: artifacts/neural-code-determinants_thesis/project-description/figures-tex/figure-style.tex
+% FILE: artifacts/_common/style/figure-style.tex
 % ==================================================================================================
 % Shared layer of the figures of the thesis proposal: canvas, colours, type scale, TikZ styles and
 % drawing macros. A figure defines \RootPath and \CanvasHeight, then inputs this file.
@@ -32,12 +32,11 @@
 \setlength{\parindent}{0pt}
 
 % ---- Colours -------------------------------------------------------------------------------------
-% The poster's colour layers (values, then roles) are the single source of every colour token, read
-% through the poster's entry file; \PosterParts tells it where its two layers live.
-\newcommand{\PosterParts}{\RootPath/artifacts/mixture-input-encoding_poster_ccn2026/parts}
-\input{\PosterParts/colors}
-% The poster's macro layer supplies \taperarrow, the geometry of the connectors.
-\input{\PosterParts/macros}
+% The colour layers of the house style (values, then roles) are the single source of every colour
+% token, read through their entry file.
+\input{\RootPath/artifacts/_common/style/colors}
+% The figure toolkit supplies \taperarrow, the geometry of the connectors.
+\input{\RootPath/artifacts/_common/style/figure-toolkit}
 
 % Roles of the proposal figures, bound to existing semantic tokens. One concept, one colour, across
 % the three figures:

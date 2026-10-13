@@ -1,7 +1,7 @@
-% FILE: artifacts/mixture-input-encoding_poster_ccn2026/parts/colors-values.tex
+% FILE: artifacts/_common/style/colors-values.tex
 % ==================================================================================================
 % LAYER 1 of the colour system: WHAT EACH TOKEN IS. The only place a colour may be DEFINED.
-% Loaded first by parts/colors.tex, which then binds the roles (parts/colors-roles.tex). The order is
+% Loaded first by colors.tex, which then binds the roles (colors-roles.tex). The order is
 % not interchangeable: \colorlet copies a value at the moment it is read.
 %
 % THE PALETTE IS FINAL. It was selected among several candidate schemes, each injected at build time
@@ -13,7 +13,7 @@
 % rung of a ladder, never a colour word, so that a retuned value never contradicts its name.
 %
 % >>> THIS FILE IS NOT WHERE A COLOUR IS ASSIGNED TO AN ELEMENT <<< A call site never names a token
-% from this file for a CHROME or NEUTRAL use; it names a role (parts/colors-roles.tex). Figures still
+% from this file for a CHROME or NEUTRAL use; it names a role (colors-roles.tex). Figures still
 % name semantic tokens directly, because a semantic token IS its own role: one concept, one colour.
 %
 % THREE INDEPENDENT PALETTES. Each token belongs to exactly one, so any palette can be retuned alone:
@@ -31,8 +31,8 @@
 % The token sets each test binds are declared in palette.toml; re-measure after any edit, from the
 % workspace root:
 %     conda run -n geonexus python utils/scripts/check_palette.py \
-%       --palette artifacts/mixture-input-encoding_poster_ccn2026/parts/colors-values.tex \
-%       --spec artifacts/mixture-input-encoding_poster_ccn2026/palette.toml
+%       --palette artifacts/_common/style/colors-values.tex \
+%       --spec artifacts/_common/style/palette.toml
 % Two marks are accepted under the contrast floor in palette.toml: `inputlight' and `recurlight' (3a).
 
 % ----- 1. Neutral foundation ----------------------------------------------------------------------
@@ -40,7 +40,7 @@
 % as by its glow. The text ramp is anthracite, slate, pearl.
 \definecolor{posterbg}{HTML}{F6F3EE}      % L=0.966  off-white page
 \definecolor{surface}{HTML}{FFFFFF}       % L=1.000  every card
-% THE QUESTION CARDS' GROUND (outlined under an accent ring, parts/colors-roles.tex). Pale seafoam,
+% THE QUESTION CARDS' GROUND (outlined under an accent ring, colors-roles.tex). Pale seafoam,
 % just above the page in lightness: dE 0.020 against the page and 0.023 against the white cards.
 % >>> ONE STEP OFF THE FLOOR <<< Lighter than about L 0.983, the wash becomes closer to white than the
 % page is, and a question card stops being distinguishable from a plain card. Below the page, it reads

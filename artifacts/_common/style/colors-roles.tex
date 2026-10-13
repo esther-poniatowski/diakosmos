@@ -1,6 +1,6 @@
-% FILE: artifacts/mixture-input-encoding_poster_ccn2026/parts/colors-roles.tex
+% FILE: artifacts/_common/style/colors-roles.tex
 % ==================================================================================================
-% LAYER 2 of the colour system: WHERE EACH COLOUR GOES. Loaded LAST by parts/colors.tex, after the
+% LAYER 2 of the colour system: WHERE EACH COLOUR GOES. Loaded LAST by colors.tex, after the
 % values, so every \colorlet below copies a value already defined.
 %
 % >>> WHY THIS FILE EXISTS <<< Before it, the accent was named at ~90 call sites across six files. A
@@ -16,7 +16,7 @@
 %   OTHER NEUTRAL use      -> name the neutral token directly. `borderfunc' for a plot axis and
 %                             `textprimary' for body text are already use-named; wrapping them would
 %                             be indirection with no variation behind it.
-%   Semantic use (figures) -> name the semantic token directly (parts/colors-values.tex): a semantic
+%   Semantic use (figures) -> name the semantic token directly (colors-values.tex): a semantic
 %                             token IS its own role, one concept to one colour, same reasoning.
 %   A TINT OF A ROLE (`spinefill!45') is allowed and is not a hand-mixed shade: it tracks whatever the
 %   role resolves to. A tint of a VALUE token at a call site is still forbidden.
@@ -49,7 +49,7 @@
 
 % ===== THE QUESTION BOXES -- outlined, under an accent ring ======================================
 % The two question boxes are the page's two hinges. They take the answer boxes' accent ring over the
-% question wash (parts/colors-values.tex), a tint too faint to outweigh the answer each introduces.
+% question wash (colors-values.tex), a tint too faint to outweigh the answer each introduces.
 % Both roles are bound here, so the box and its heading cannot fall out of step.
 \colorlet{questionfill}{questionwash}
 \colorlet{questionring}{boxringaccent}

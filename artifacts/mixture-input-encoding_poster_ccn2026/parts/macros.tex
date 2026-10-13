@@ -1,8 +1,9 @@
 % FILE: artifacts/mixture-input-encoding_poster_ccn2026/parts/macros.tex
 % ==================================================================================================
-% Reusable toolkit: type sizes, math macros, layout grid, coordinate helpers,
-% card / heading / icon / citation commands, and TikZ arrow / plane / shadow styles.
-% Requires colors.tex and fonts.tex to be loaded first.
+% The poster's own layer: the type scale and its math sizes at true scale, the layout grid, the
+% full-width region anchors and the helpers that place a built box on the page. The house style
+% supplies the type roles, the figure toolkit and the card grammar, and the mixture-input-encoding
+% project supplies the notation; parts/preamble.tex loads all of them before this file.
 
 % ===== THE TYPE SYSTEM ============================================================================
 % THE ONLY PLACE A POINT SIZE MAY BE CHOSEN. Never write \fontsize elsewhere -- not in a block, not in
@@ -16,29 +17,8 @@
 %                               references, card content, INCLUDING text drawn inside a TikZ card.
 %   FIGURE 24 pt ( 8.4 mm em) -- annotations inside a diagram: axis ticks, symbol labels, marks.
 %
-% INSIDE A FIGURE, TWO LEVELS AND ONLY TWO:
-%   \figannotsize (30) -- the OBJECTS the figure is about: vectors, patterns, matrices.
-%   \figticksize  (24) -- everything SUBORDINATE to them: axis names, coefficients, ticks.
-% 30:24 is a step; 36:24 reads as an accident rather than a hierarchy. \figcapsize (36) is for WORDS
-% about a figure -- its caption, a shared axis label, a colour key -- never for a symbol inside one.
-%
-% FONT SIZE IS ABSOLUTE INSIDE FIGURES, deliberately. A figure scales its COORDINATES (`scale=1.4')
-% and never its fonts: no `transform shape', no \scalebox around a picture. Two consequences:
-%   - Reusing a figure at another physical scale means RE-DECLARING these sizes (see supplement.tex).
-%   - A label's CLEARANCE does not scale with it. Enlarging a picture moves a label further out in
-%     coordinates while its glyph stays put, so it buys no room: raising a size forces a re-check of
-%     every anchor in the figure, and collisions are fixed by MOVING THE ANCHOR, never by dropping
-%     below the floor.
-%
-% THREE LEADINGS, NOT ONE:
-%   PROSE   1.40x -- running text that wraps for several lines. Aerated, for reading at distance.
-%   COMPACT 1.15x -- headings, captions, labels, notes: text that wraps to two or three lines and
-%                    must stay a visual unit. A 1.4 leading pulls such a block apart.
-%   FLAT    1.00x -- single-line nodes and icon glyphs, where leading is inert.
-% When a gap is wanted that none of the three gives, ASK FOR THE GAP; do not invent a fourth ratio.
-%
-% Every step that can carry MATH needs a matching \DeclareMathSizes line in fonts.tex, or its math
-% silently drifts out of the system.
+% The roles that these sizes fill, the two figure levels, the three leadings and the math rule are
+% stated once, in artifacts/_common/style/type-roles.tex.
 %
 % ----- The scale: 8 point sizes ------------------------------------------------------------------
 % TEXT (floor 36)
@@ -49,43 +29,37 @@
 \newcommand{\bodysize}{\fontsize{40}{56}\selectfont}        % prose that wraps            (PROSE 1.40)
 \newcommand{\bodycompact}{\fontsize{40}{46}\selectfont}     % body size, tight            (COMPACT)
 \newcommand{\notesize}{\fontsize{36}{42}\selectfont}        % citations, metadata, tags, notes -- FLOOR
-% FIGURE (floor 24). \figcapsize shares \notesize's point size: a caption inside a figure and a note
-% outside one are the same kind of small text, and one value keeps them from drifting apart.
+% FIGURE (floor 24)
 \newcommand{\figcapsize}{\fontsize{36}{42}\selectfont}      % figure captions, shared axis labels, keys
 \newcommand{\figannotsize}{\fontsize{30}{35}\selectfont}    % the figure's OBJECTS (vectors, matrices)
 \newcommand{\figticksize}{\fontsize{24}{28}\selectfont}     % subordinate marks: ticks, axes -- FLOOR
-% ICON GLYPHS -- FontAwesome in a disc. Not text: not read as language, exempt from both floors, and
-% sized to the disc that holds them, never to the type scale. Named so they cannot drift either.
+% ICON GLYPHS -- sized to the disc that holds them, exempt from both floors.
 \newcommand{\iconsm}{\fontsize{20}{20}\selectfont}          % 11 mm disc  (\checkring)
 \newcommand{\iconmd}{\fontsize{32}{32}\selectfont}          % 28 mm disc  (card banners, bullet marks)
 \newcommand{\iconlg}{\fontsize{40}{40}\selectfont}          % 22-24 mm disc (step numbers, question mark)
 \newcommand{\iconxl}{\fontsize{48}{48}\selectfont}          % QR legend glyph
 \newcommand{\iconxxl}{\fontsize{57}{57}\selectfont}         % block-heading number disc
 
-% ===== Math macros ================================================================================
-% Vectors use \vec{} (arrow); bold is reserved for matrices (J, I, Sigma).
-\newcommand{\vk}{\vec{\kappa}}
-\newcommand{\vu}{\vec{u}}
-\newcommand{\veta}{\vec{\eta}}
-\newcommand{\vv}{\vec{v}}
-\newcommand{\mI}{\mathbf{I}}
-\newcommand{\mJ}{\mathbf{J}}
-\newcommand{\vm}{\vec{m}}
-\newcommand{\vn}{\vec{n}}
-\newcommand{\Sig}{\boldsymbol{\Sigma}}
-% In-math text label rendered in the math (serif) text font, so words match the symbols.
-\newcommand{\mlab}[1]{\text{{\mathtextfont #1}}}
-% An \underbracket's READING, pinned to \notesize INDEPENDENTLY of the formula's size: the gloss is not
-% part of the statement, it is the words that READ the statement, and it must stay quiet. \mlab would
-% follow the surrounding math size and grow with the formula. Use \brlab under any brace.
-% NOTE: THE GLOSS, NOT THE ALGEBRA, SETS AN \underbracket's WIDTH -- it is the wider of the two.
-\newcommand{\brlab}[1]{\text{{\mathtextfont\notesize #1}}}
-% Inline math in a TikZ node that must read at prose size. A NAME ONLY: it must not transform anything.
-% \DeclareMathSizes already reaches inside a TikZ node, so a \scalebox here would enlarge a second time.
-\newcommand{\tmath}[1]{\ensuremath{#1}}
-% multi-letter "mix" index set one math style smaller, to read like the 1/2 indices
-\newcommand{\kmix}{\vk_{\scriptscriptstyle\mathrm{mix}}}
-\newcommand{\umix}{\vu_{\scriptscriptstyle\mathrm{mix}}}
+% --- MATH SIZES, ONE DECLARATION PER STEP OF THE TYPE SCALE ---------------------------------------
+% \DeclareMathSizes{<text>}{<math>}{<script>}{<scriptscript>} fires when the TEXT size is selected --
+% inside a TikZ node too. EVERY step of the scale above that can carry math needs a line here;
+% a step without one falls back to LaTeX's defaults and drifts out of the system SILENTLY.
+%
+% MATH = 1.125 x TEXT. The body is Source Sans 3, the math Latin Modern (serif): its smaller x-height
+% makes a symbol read small beside the sans at the same nominal size, and the 12.5% bump levels them.
+%
+% SCRIPT / SCRIPTSCRIPT keep the conventional 0.7 / 0.5 -- deliberate, since the floors above
+% govern TEXT, not indices. KNOWN CONSEQUENCE: at body size the "mix" index lands at 23 pt, just under
+% the 24 pt figure floor and the smallest mark on the poster. If it fails at viewing distance, raise
+% the last two numbers here; nothing else changes.
+\DeclareMathSizes{24}{27}{19}{14}      % \figticksize  -- figure floor
+\DeclareMathSizes{30}{34}{24}{17}      % \figannotsize
+\DeclareMathSizes{36}{40}{28}{20}      % \notesize / \figcapsize -- text floor
+\DeclareMathSizes{40}{45}{32}{23}      % \bodysize / \bodycompact -- incl. the two move (a) formulae
+\DeclareMathSizes{44}{50}{35}{25}      % \cardtitlesize
+\DeclareMathSizes{52}{58}{41}{29}      % \headingsize
+% The brace readings under the move (a) formulae do NOT follow these sizes -- they are sans, pinned by
+% \brlab (artifacts/_common/style/type-roles.tex), because a gloss is words, not algebra.
 
 % ===== Layout grid (cm; origin at the page's south-west corner) ===================================
 % Page (true CCN 2026 portrait size).
@@ -112,64 +86,6 @@
 % Coordinate helper: \xy{x}{y} -> point at (x cm, y cm) from the page corner (O).
 \newcommand{\xy}[2]{($(O)+(#1 cm,#2 cm)$)}
 
-% ===== Card (panel) styles ========================================================================
-% THE CARD GRAMMAR, and both halves of it are load-bearing:
-%   NO BANNERS. A card's identity rides on a solid accent DISC + an accent-coloured TITLE on the plain
-%   surface. A full-bleed accent band is the loudest device a card has, and it would be spent on the
-%   card's NAME while the payoff below stays plain text. Do not reintroduce `colbacktitle'.
-%   RADIUS IS A RATIO, NOT A NUMBER: ~4-5% of the card's own width (24 mm at 65 cm; 14 mm at 30 cm for
-%   a nested card). Below ~3% a poster-scale arc reads as a chamfer. SCALE IT WITH THE CARD.
-% CARD PADDING, HELD AS PLAIN cm NUMBERS. Two consumers need the same value in two forms: a tcolorbox
-% key wants a dimension (`left=\gPadSideCm cm') and the region map wants a number it can do arithmetic
-% on (the medallion's clearance against a question card's icon tile is derived from \gPadTopCm). One
-% number serving both is what keeps the check measuring the point the layout actually places.
-% TWO VERTICAL CONVENTIONS, deliberately distinct and each named: the plain `cardbase' pads 1.1 top and
-% bottom, while a COLUMN card pads 1.3 / 1.4 because it carries a heading and a figure rather than a
-% figure alone. Every measured box height in the poster is derived from one of these, so they are not
-% interchangeable -- collapsing them means re-deriving \hBand and every row top.
-\def\gPadSideCm{1.2}    % left / right, every card
-\def\gPadBaseCm{1.1}    % top / bottom of a plain `cardbase' card
-\def\gPadTopCm{1.3}     % top of a column card
-\def\gPadBotCm{1.4}     % bottom of a column card
-\tcbset{
-  % shadow-free base: surface, rounded corners, padding.
-  cardbase/.style={
-    enhanced, arc=24mm, outer arc=24mm,
-    colback=cardground, colframe=cardring, boxrule=0.8pt,
-    boxsep=0pt, left=\gPadSideCm cm, right=\gPadSideCm cm,
-    top=\gPadBaseCm cm, bottom=\gPadBaseCm cm,
-    fontupper=\color{textprimary}\bodysize,
-  },
-  % ===== ONE SHADOW FOR EVERY CARD ON THE POSTER ==================================================
-  % Every card glows in its identity colour through the SAME blur, cast and spread (`posterglow' below
-  % -- the single copy of those numbers). Only the tint changes. TWO TRAPS, BOTH SILENT:
-  %   (1) THE PRIMITIVE MATTERS AS MUCH AS THE NUMBERS. tcolorbox's `fuzzy shadow' is a stack of offset
-  %       rounded rectangles; TikZ's `blur shadow' (shadows.blur) is a true gaussian blur, and giving a
-  %       fuzzy shadow these numbers renders a stepped halo. Hence `blur shadow' on the FRAME PATH --
-  %       the outermost path, drawn beneath the interior, so the shadow lands behind the whole card.
-  %   (2) THE TINT MUST GO THROUGH `every shadow'. A `fill=' inside `blur shadow={...}' LEAKS onto the
-  %       path it is attached to, and the card comes out flooded with the tint.
-  %   #1 = ring colour (the frame path must keep filling itself with it)   #2 = tint of the glow
-  cardglow/.style 2 args={
-    frame style={fill=#1, posterglow, every shadow/.style={fill=#2, draw=none}}},
-  % Section cards glow in their IDENTITY colour -- the heading, number disc and icon carry it -- and not
-  % in their ring, which is a near-white hairline whose glow would be invisible. For a neutral cast:
-  % {bordersubtle}{cardshadow}. The tint is `cardcast', so it follows the identity colour.
-  card/.style={cardbase, cardglow={cardring}{cardcast}},
-}
-
-% A tcolorbox typeset directly inside a TikZ \node triggers an infinite NFSS font-selection loop under
-% fontspec/LuaLaTeX. The fix is two-step: build the card into a savebox at document top level (OUTSIDE
-% any tikzpicture), then place that box with \node{\usebox} inside the overlay picture.
-% Build card CONTENT into <savebox> (call at document top level):
-%   \buildcard{<\savebox>}{<width cm>}{<height cm>}{<tcb style>}{<content>}
-\newcommand{\buildcard}[5]{%
-  \sbox#1{\begin{tcolorbox}[#4, width=#2 cm, height=#3 cm]#5\end{tcolorbox}}%
-}
-% Build arbitrary (card-free) content into <savebox> at document top level:
-%   \buildbox{<\savebox>}{<content>}
-\newcommand{\buildbox}[2]{\sbox#1{#2}}
-
 % Drop a pre-built box with its NORTH-WEST corner at (x,y) cm (call INSIDE the picture):
 %   \dropbox{<\savebox>}{<x>}{<y>}
 \newcommand{\dropbox}[3]{%
@@ -186,184 +102,3 @@
 % The space after a block HEADING is NOT set here -- it is \headbodygap (block-columns.tex), and no
 % panel may add to it: heading, then content, nothing in between.
 \newcommand{\paragap}{12mm}
-
-% ===== Inline citation + supporting-detail reference tag ==========================================
-% \litcite and \seebottom share the CHROME accent because they are the same kind of mark: a pointer
-% AWAY from the poster (to the literature, to the supplement). Deliberately not two colours.
-\newcommand{\litcite}[1]{{\color{pointermark}\notesize (#1)}}
-% Small numbered badge matching the numbered points in supplement.tex. It is placed with \raisebox (a
-% LaTeX box lift) around a picture whose baseline is pinned to the node CENTRE via a node anchor --
-% neither depends on the surrounding picture's axes, so the badge aligns identically in ordinary text
-% and inside a flipped-axis node (e.g. x=1cm y=-1cm).
-\newcommand{\refnum}[1]{\raisebox{3.2mm}{\tikz[baseline=(rn.center)]{\node(rn)[fill=pointermark,
-  text=white, rounded corners=3mm, minimum size=12mm, inner sep=0pt,
-  font=\headingfont\notesize]{#1};}}}
-% Pointer to numbered item(s) in the standalone supplement: the QR glyph followed by the item numbers,
-% signalling "scan the header QR to reach supplemental item N". A BARE GLYPH SAYS ONLY `there is more
-% somewhere'; the numbers are what make it a pointer, and they are the numbers the supplement's own
-% \suphead badges carry -- keep the two in step when a supplement point is added or renumbered.
-% Takes a COMMA LIST, so one macro serves one, two or three targets: \seebottom{4,5,6}.
-% The glyph is set at \iconlg to match the heading it sits in; the badges bring their own size.
-\newcommand{\seebottom}[1]{{\color{pointermark}%
-  \mbox{{\iconlg\icQR}\;\foreach \sbn [count=\sbi] in {#1}{\ifnum\sbi>1\,\fi\refnum{\sbn}}}}}
-
-% ===== THE SHARED 3-D CAMERA ======================================================================
-% ONE elevation / azimuth for every tikz-3dplot figure that is NOT the mechanism tree or the supplement
-% (those keep their own \mtcamtheta / \spcamtheta because they need a per-mode azimuth). \geometryplot,
-% \inputplane / \responsedecomp and the two activity-space plots all read these, so the whole poster
-% projects one scene from one viewpoint and a camera retune is a ONE-LINE edit here.
-%   theta = ELEVATION (polar angle from the vertical z = n1). At 45 the view is OBLIQUE (the archive's
-%   attitude, matching the mechanism tree): a tilted plane reads as tilted, not as a floor seen from above
-%   (which is what the earlier low 29 gave). The span planes are kept OPEN not by lowering the camera but
-%   by GENTLING the generators (z-share ~0.24): a plane whose normal sits only ~19 deg off vertical is
-%   ~45% open even at this oblique view, while its residual still rises. phi = AZIMUTH, fixed so world-z
-%   projects up, y right, x down-left (n1 up / n2 right / n3 receding), the archive's orientation.
-\def\camtheta{57}\def\camphi{118}
-% The ANSWER FACETS (\geometryplot) view the scene from FURTHER ABOVE (a smaller theta): this droops the
-% floor axes more to the south, so the components plane reads as clearly distinct from the horizontal
-% floor. Its plane is steepened to compensate (geometries.tex) so the plane's projected surface still
-% matches the approach plots' look. phi is shared.
-\def\facetcamtheta{38}
-% ===== SHARED TikZ STYLES =========================================================================
-% THE ONLY COPY OF EACH OF THESE NUMBERS. A figure that needs one of these devices takes the style and
-% overrides only what is genuinely different (colour, and -- where noted -- weight); it never re-spells
-% the arrow head or the shadow parameters. Retune here, or nowhere.
-% ----- THE CARD GLOW'S THREE NUMBERS ---------------------------------------------------------------
-% \providecommand, not \def, so that a document loading the colours first may pre-empt them.
-% >>> WEIGHT MOVES WITH THE IDENTITY COLOUR <<< The glow is tinted with `cardcast', i.e. with the
-% identity colour, and it is the accent's largest surface on the page. Under the deep petrol accent a
-% strong cast reads as a bruise rather than a halo, so the glow is light and short: it reads as CONTACT
-% rather than elevation. Retune these three with `chromecore'. Only `posterglow' reads them --
-% `softshadow' is neutral depth INSIDE a figure.
-\providecommand\gGlowDrop{-1.8mm}    % how far the glow falls below the card
-\providecommand\gGlowBlur{4.5mm}     % its blur radius
-\providecommand\gGlowOpacity{15}     % its strength, 0-100
-\tikzset{
-  % ---- shadows -------------------------------------------------------------------------------------
-  % Deep glow: the poster's card / banner shadow, used by `cardglow' above and by the mechanism tree's
-  % stage banners. The TINT is NOT here: it rides on `every shadow' at the call site (trap note above).
-  posterglow/.style={blur shadow={shadow xshift=0pt, shadow yshift=\gGlowDrop,
-    shadow blur radius=\gGlowBlur, shadow blur steps=12, shadow opacity=\gGlowOpacity}},
-  % Shallow, neutral depth for objects INSIDE a figure (tree strips, option pills, taxonomy cells, leaf
-  % plates). Lighter than `posterglow': they must not read as cards floating over the card holding them.
-  softshadow/.style={blur shadow={shadow xshift=0pt, shadow yshift=-1.8mm, shadow blur radius=3.6mm,
-    shadow blur steps=9, shadow opacity=34}},
-  % ---- arrows / connectors ------------------------------------------------------------------------
-  flowarrow/.style={-{Stealth[length=19pt,width=15pt]}, line width=2.2pt,
-    rounded corners=8pt},
-  % THE FRAME AXIS -- one weight and one head for every coordinate frame on the poster (the neuron
-  % triples of \inputplane / \responsedecomp / \geometryplot, and the mechanism tree's intrinsic triple).
-  % At 1.1 pt / 8 pt a frame prints as a hairline behind 3.4 pt vectors with invisible heads, so the
-  % axes read as construction lines. The COLOUR is not here: each figure supplies its own `borderfunc' tint.
-  frameaxis/.style={-{Stealth[length=15pt, width=11pt]}, line width=2.2pt},
-  % A NAMED VECTOR -- the objects a figure is about. \geometryplot draws them at the declared 4 pt;
-  % the Approach's two probe plots pass `line width=3.6pt' because they carry more arrows in less room.
-  namedvec/.style={-{Stealth[length=16pt, width=12pt]}, line width=4pt},
-  % THE ORTHOGONAL RESIDUAL (eta_perp): solid brown, one weight across the geometry figures.
-  orthvec/.style={-{Stealth[length=13pt, width=10pt]}, line width=2.8pt, draw=outplane},
-  % THE BIAS ARC -- the in-plane rotation off the linear sum, drawn concentric with it.
-  biasarc/.style={-{Stealth[length=8pt]}, line width=1.4pt, draw=outplaneannot},
-  % (The coordinate mark / dot lives further down as \dotonvec / \dotonaxis / \dotonplane, sized as a
-  % fraction of each figure's axis length; see the block below the tikzset.)
-  % THE LINEAR SUM (the proportional reference), one convention document-wide. Every geometry is
-  % measured against it -- bias IS the deviation from it -- so it must be recognisable as the SAME
-  % object in the taxonomy cells and in the tree. Absolute values, so `scale' cannot change its look.
-  refvec/.style={-{Stealth[length=13pt, width=10pt]}, line width=2.8pt, draw=textsecondary,
-    dash pattern=on 6pt off 3pt},
-  % THE DROP LINE from a vector's tip (or its shadow) to the axis a coordinate is read on. ONE dash
-  % geometry across both documents, so a reader crossing from poster to supplement meets the same mark.
-  % Only the WEIGHT differs by figure family (`coorddrop' large, `coorddropsm' page-scale), because line
-  % widths do not scale with a tikz `scale'. Override the colour with draw=.
-  coorddrop/.style={line width=1.5pt, draw=texttertiary, opacity=0.9,
-    dash pattern=on 3pt off 3pt, line cap=round},
-  coorddropsm/.style={line width=0.9pt, draw=texttertiary, opacity=0.9,
-    dash pattern=on 2.4pt off 2.4pt, line cap=round},
-  % ---- the components plane -----------------------------------------------------------------------
-  % THE HOUSE RULE FOR EVERY SPAN PLANE ON THE POSTER, stated once here: the plane IS the parallelogram
-  % of its two generators -- 0 -> a -> a+b -> b -- so each arrow ENDS ON THE CORNER of the edge it
-  % defines, and an inflated copy leaves every arrowhead floating short of its own corner. Anything
-  % drawn inside the patch must keep BOTH coefficients < 1; the one licensed exception is
-  % \geometryplot's unbiased cell, where the mixture IS the exact sum k1+k2 and lands on the far corner.
-  % `compplane' IS "the plane of the components" here; two planes are told apart by ATTITUDE, never by
-  % hue. Weight is overridden where a figure is drawn at a smaller scale.
-  spanfill/.style={compplane, opacity=0.32},
-  spanedge/.style={draw=compplane!75, line width=0.8pt},
-}
-% THE SHARED COORDINATE DOT -- SIZED FROM THE LINE WIDTH of the line it sits on, in THREE kinds, one per
-% kind of line the project draws:
-%   \dotonvec   -- on a RESPONSE / component vector (the thick rays)
-%   \dotonaxis  -- on a FRAME AXIS or basis vector (incl. eigen-axes and eigenvectors)
-%   \dotonplane -- a foot on a PLANE, marked by the dotted drop lines
-% A dot reads as a bead threaded on its line, so its size follows THAT LINE'S WIDTH: a thick response
-% vector carries a big bead, a hair-thin panel axis a small one. Because a figure drawn small also draws
-% THINNER lines, this tracks figure size for free, with no per-figure scale knob. The law is affine --
-% diameter = \dotbase + \dotgain x width -- not a bare multiple: the small \dotbase keeps a bead on a
-% 0.7pt supplement axis legible instead of shrinking it to a speck, while \dotgain sets how fast the bead
-% grows with the line. (Calibrated so the poster's 3.6pt response vectors carry the archive's ~8pt bead.)
-% Each figure \def's only the widths it uses -- \lwvec / \lwaxis / \lwplane -- to its OWN line weights.
-%   DRAWN AS NODES, not `circle' paths: inside `tdplot_main_coords' a `circle' is projected to an ELLIPSE,
-%   whereas a circle NODE is placed at the projected point and drawn round in the page. No `transform
-%   shape' (the size is absolute pt, like a line width). White halo under a coloured disc; halo/disc =
-%   \dothaloratio, the rim being the gap between the two filled discs.
-\def\dotbase{1.5}\def\dotgain{1.83}\def\dothaloratio{1.32}   % diameter (pt) = base + gain*linewidth
-\def\lwvec{3.6}\def\lwaxis{2.0}\def\lwplane{1.5}             % defaults; each figure sets its actual weights
-\newcommand{\dotcore}[3]{% #1 line width (pt number)  #2 fill colour  #3 (coordinate)
-  \node[circle, fill=white, minimum size=\fpeval{\dothaloratio*(\dotbase+\dotgain*(#1))}pt, inner sep=0pt] at #3 {};%
-  \node[circle, fill=#2,    minimum size=\fpeval{\dotbase+\dotgain*(#1)}pt,                 inner sep=0pt] at #3 {};}
-\newcommand{\dotonvec}[2]{\dotcore{\lwvec}{#1}{#2}}
-\newcommand{\dotonaxis}[2]{\dotcore{\lwaxis}{#1}{#2}}
-\newcommand{\dotonplane}[2]{\dotcore{\lwplane}{#1}{#2}}
-
-% ===== TAPERED / CURVED CONSEQUENCE ARROW =========================================================
-% A FILLED, tapered, curved arrow (a narrow tail swelling to a wide head with a triangular point) --
-% the "swoosh" connector between panels. No standard package draws a tapered CURVED body, so it is a
-% filled bezier ribbon: the spine is a quadratic bend, the two edges are the spine offset by a width
-% that grows from tail to neck, and a triangle caps the head. Widths are ABSOLUTE (pt), so the arrow
-% keeps its weight regardless of the picture `scale' (like a line width or an arrowhead).
-%   \taperarrow[<fill>][<extra path opts>]{<tail>}{<head>}{<bend>}{<tail hw>}{<neck hw>}{<ah len>}{<ah hw>}
-%   bend = signed perpendicular offset of the spine's midpoint (0 = straight; +/- curves the swoosh).
-%   The SECOND optional argument is a raw TikZ option list applied to the ribbon path together with the
-%   fill -- pass `draw=<colour>, line width=<w>' for a border and a shadow key (e.g. `blur shadow={...}')
-%   for a drop shadow. Empty by default, so bare `\taperarrow[<colour>]{...}' calls are unchanged.
-\NewDocumentCommand{\taperarrow}{O{black} O{} m m m m m m m}{%
-\begin{scope}
-  \path
-    let \p1 = ($#4-#3$), \n1 = {veclen(\x1,\y1)},
-        \p2 = (\x1/\n1, \y1/\n1),            % unit direction (tail -> head)
-        \p3 = (-\y1/\n1, \x1/\n1)            % unit perpendicular
-    in
-    coordinate (T@)  at #3
-    coordinate (H@)  at #4
-    coordinate (N@)  at ($#4-#8*(\p2)$)                      % neck (base of the arrowhead)
-    coordinate (Bc@) at ($($#3!0.5!(N@)$)+#5*(\p3)$)         % bent spine mid
-    coordinate (Tt@) at ($#3+#6*(\p3)$)  coordinate (Tb@) at ($#3-#6*(\p3)$)
-    coordinate (Nt@) at ($(N@)+#7*(\p3)$) coordinate (Nb@) at ($(N@)-#7*(\p3)$)
-    % control widths = the MEAN of the tail and neck half-widths, not the neck's: at the mean the four
-    % control points of each edge are collinear when bend=0, so the taper is a straight ramp instead of
-    % a curve that balloons out near the tail (visible only on a long arrow; short ones barely bent).
-    coordinate (Ct@) at ($(Bc@)+0.5*#6*(\p3)+0.5*#7*(\p3)$)
-    coordinate (Cb@) at ($(Bc@)-0.5*#6*(\p3)-0.5*#7*(\p3)$)
-    coordinate (Aw1@) at ($(N@)+#9*(\p3)$) coordinate (Aw2@) at ($(N@)-#9*(\p3)$);
-  \path[fill=#1, #2]
-    (Tt@) .. controls (Ct@) and (Ct@) .. (Nt@) --
-    (Aw1@) -- (H@) -- (Aw2@) --
-    (Nb@) .. controls (Cb@) and (Cb@) .. (Tb@) --
-    cycle;
-\end{scope}}
-
-% ===== THE POSTER'S CONNECTOR =====================================================================
-% \connarrow{<tail>}{<tip>} -- ONE arrow shape for ONE relation ("leads to"), and the only \taperarrow
-% call site the poster has. Every connector on the page runs through it: the two premise arrows into
-% the medallion and the four question -> approach -> answer arrows down the columns. A second styling
-% would assert a second kind of relation, which is exactly what the label system forbids.
-% THE GEOMETRY IS TUNED FOR A SHORT ARROW. These runs are only ~2.6-3.7 cm, so the neck is thick and
-% the head wide; a slender arrow at that length reads as a scratch. Straight (bend 0) because every
-% run is axis-aligned.
-% The border and shadow options go in \taperarrow's SECOND optional argument, and they are passed
-% LITERALLY rather than through a macro -- pgfkeys must see the commas to split the list.
-\newcommand{\connarrow}[2]{%
-  \taperarrow[spinefill!45][draw=spineedge, line width=1.8pt, softshadow]%
-    {#1}{#2}{0pt}{2pt}{18pt}{22pt}{44pt}}
-% How far each end of a connector reaches INTO the two objects it joins, so it reads as one continuous
-% link rather than as a floating glyph in a gap.
-\def\connov{0.5}
