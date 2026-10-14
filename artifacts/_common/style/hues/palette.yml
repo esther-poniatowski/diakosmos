@@ -1,0 +1,95 @@
+# hue library of the artifacts: every colour value, named after its hue
+# generates colors-values.tex beside this file; the house style and the concept bindings bind their roles to these hues
+# a hue is retuned within its family, so its name stays true; a use never names a hue here
+schema_version: 1
+level: hues
+
+layers:
+  sama:
+    gloss: hues recommended by Krees Sama for the poster series
+    note: >-
+      The hues follow the advice of Krees Sama, recorded in
+      artifacts/mixture-input-encoding_poster_ccn2026/reviews/advice-sama-krees.md. The azure and
+      raspberry ladders tint one hue at constant hue, from the deep rung to the pale rung, and two
+      adjacent rungs are not distinct.
+    tokens:
+      azuredeep: {value: "003A62", use: "azure, deep rung", pole: azure, rung: deep}
+      azure: {value: "025F99", use: "azure, core rung", pole: azure, rung: core}
+      azurebright: {value: "0B90E4", use: "azure, bright rung", pole: azure, rung: bright}
+      azurelight: {value: "6EAEE6", use: "azure, light rung", pole: azure, rung: light}
+      azurepale: {value: "D6EBFE", use: "azure, pale rung", pole: azure, rung: pale}
+      raspberrydeep: {value: "79004F", use: "raspberry, deep rung", pole: raspberry, rung: deep}
+      raspberry: {value: "A3136E", use: "raspberry, core rung", pole: raspberry, rung: core}
+      raspberrybright: {value: "CE298E", use: "raspberry, bright rung", pole: raspberry, rung: bright}
+      raspberrylight: {value: "E081B1", use: "raspberry, light rung", pole: raspberry, rung: light}
+      raspberrypale: {value: "FFDBEB", use: "raspberry, pale rung", pole: raspberry, rung: pale}
+      petroldeep: {value: "002D32", use: "deep petrol blue, dark enough to carry white text"}
+      petrol: {value: "00454D", use: "petrol blue"}
+      petrolwash: {value: "F7FBFB", use: "near-white wash of petrol"}
+      vermilion: {value: "C44214", use: "vermilion"}
+      slate: {value: "505E96", use: "slate blue"}
+      amethyst: {value: "9B62DB", use: "amethyst violet"}
+      ochre: {value: "A78700", use: "golden ochre"}
+      emerald: {value: "12764B", use: "deep emerald"}
+      jade: {value: "308D79", use: "jade green, lighter than petrol"}
+      charcoal: {value: "393E3F", use: "charcoal grey"}
+      russet: {value: "6E2B04", use: "deep russet, the complement of petrol"}
+      anthracite: {value: "171E23", use: "anthracite"}
+      slategrey: {value: "464E54", use: "slate grey"}
+      ash: {value: "585F64", use: "ash grey"}
+      pewter: {value: "6F757A", use: "pewter grey"}
+      stone: {value: "C1BDB5", use: "warm stone grey"}
+      pearl: {value: "DDDAD5", use: "pearl grey"}
+      seafoam: {value: "F2FBF7", use: "pale seafoam"}
+      ivory: {value: "F6F3EE", use: "warm off-white"}
+      paperwhite: {value: "FFFFFF", use: "pure white"}
+  tab:
+    gloss: the tab10 colours of Matplotlib, used by the decks
+    tokens:
+      tabblue: {value: "1F77B4", use: "tab10 blue"}
+      taborange: {value: "FF7F0E", use: "tab10 orange"}
+      tabgreen: {value: "2CA02C", use: "tab10 green"}
+      tabred: {value: "D62728", use: "tab10 red"}
+      tabpurple: {value: "9467BD", use: "tab10 purple"}
+      tabbrown: {value: "8C564B", use: "tab10 brown"}
+      tabgray: {value: "7F7F7F", use: "tab10 grey"}
+      tabcyan: {value: "17BECF", use: "tab10 cyan"}
+  accent:
+    gloss: hues introduced by single artifacts
+    tokens:
+      cobalt: {value: "2864C8", use: "cobalt blue"}
+      sapphire: {value: "3250B4", use: "sapphire blue"}
+      royalblue: {value: "325AB4", use: "royal blue"}
+      cornflower: {value: "3282C8", use: "cornflower blue"}
+      cerulean: {value: "1E8CC8", use: "cerulean"}
+      pacific: {value: "1EA0BE", use: "pacific blue"}
+      indigo: {value: "463CB4", use: "indigo"}
+      forest: {value: "00805A", use: "forest green"}
+      seagreen: {value: "288C46", use: "sea green"}
+      jungle: {value: "228C69", use: "jungle green"}
+      peacock: {value: "008C82", use: "peacock teal"}
+      turquoise: {value: "009E96", use: "turquoise"}
+      mint: {value: "37B4A0", use: "mint green"}
+      chartreuse: {value: "78B932", use: "chartreuse green"}
+      royalpurple: {value: "643CAA", use: "royal purple"}
+      iris: {value: "7E5BB5", use: "iris violet"}
+      fuchsia: {value: "B42882", use: "fuchsia"}
+      mulberry: {value: "B43264", use: "mulberry"}
+      burgundy: {value: "8C2837", use: "burgundy"}
+      firebrick: {value: "BE3232", use: "firebrick red"}
+      brick: {value: "B43228", use: "brick red"}
+      coral: {value: "D24B4B", use: "coral red"}
+      rose: {value: "DC5F73", use: "rose"}
+      terracotta: {value: "B45032", use: "terracotta"}
+      rust: {value: "823214", use: "rust"}
+      flame: {value: "E65A14", use: "flame orange"}
+      salmon: {value: "FFB7AB", use: "salmon"}
+      amber: {value: "C8961E", use: "amber"}
+      goldenrod: {value: "D29628", use: "goldenrod"}
+      saffron: {value: "DCAA28", use: "saffron"}
+      mustard: {value: "C8AA1E", use: "mustard"}
+      marigold: {value: "D9940E", use: "marigold"}
+      cream: {value: "F5E6A3", use: "pastel cream yellow"}
+      grey: {value: "828282", use: "neutral grey"}
+      gunmetal: {value: "55636A", use: "gunmetal grey"}
+      sienna: {value: "8A5524", use: "sienna brown"}
