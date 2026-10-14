@@ -93,3 +93,6 @@ layers:
       grey: {value: "828282", use: "neutral grey"}
       gunmetal: {value: "55636A", use: "gunmetal grey"}
       sienna: {value: "8A5524", use: "sienna brown"}
+      orchid: {value: "DC5A8C", use: "orchid pink"}
+      tomato: {value: "DC503C", use: "tomato red"}
+      grape: {value: "783CAA", use: "grape purple"}
