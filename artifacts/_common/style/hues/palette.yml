@@ -9,7 +9,7 @@ layers:
     gloss: hues recommended by Krees Sama for the poster series
     note: >-
       The hues follow the advice of Krees Sama, recorded in
-      artifacts/mixture-input-encoding_poster_ccn2026/reviews/sama-krees.md. The azure and
+      artifacts/mixture-input-encoding_poster_ccn2026/_reviews/sama-krees.md. The azure and
       raspberry ladders tint one hue at constant hue, from the deep rung to the pale rung, and two
       adjacent rungs are not distinct.
     tokens:
