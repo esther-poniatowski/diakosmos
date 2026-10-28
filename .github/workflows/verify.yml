@@ -8,6 +8,54 @@ permissions:
   contents: read
 
 jobs:
+  palette-drift:
+    name: palette drift
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Create the lock bootstrap environment
+        uses: conda-incubator/setup-miniconda@be893c923ea9cf1cf7cd510fbdde27c7e18cbdcb # v4.1.0
+        with:
+          activate-environment: lock-bootstrap
+          auto-activate-base: false
+          channels: conda-forge
+          python-version: '3.12'
+      - name: Install the lock bootstrap tool
+        shell: bash -el {0}
+        run: conda install --name lock-bootstrap --yes conda-forge::conda-lock=4.0.3
+      - name: Create a read-only Chromata token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.TOOL_SOURCE_READER_APP_ID }}
+          private-key: ${{ secrets.TOOL_SOURCE_READER_PRIVATE_KEY }}
+          owner: esther-poniatowski
+          repositories: chromata
+          permission-contents: read
+      - name: Install the locked palette tool
+        shell: bash -el {0}
+        env:
+          APP_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          credential_key="url.https://x-access-token:${APP_TOKEN}@github.com/.insteadOf"
+          cleanup() {
+            git config --global --unset-all "$credential_key" || true
+          }
+          trap cleanup EXIT
+          git config --global "$credential_key" https://github.com/
+          conda run -n lock-bootstrap conda-lock install \
+            --name diakosmos-tools conda-lock.yml
+      - name: Reject stale palette layers
+        shell: bash -el {0}
+        run: conda run -n diakosmos-tools scripts/build-palettes.sh check
+      - name: Test the palette adapter
+        shell: bash -el {0}
+        run: conda run -n diakosmos-tools tests/check-palette-adapter.sh
+
   package:
     name: ${{ matrix.unicode-engine }}
     runs-on: ubuntu-24.04
@@ -41,4 +89,4 @@ jobs:
       - name: Verify the package
         env:
           DIAKOSMOS_UNICODE_ENGINE: ${{ matrix.unicode-engine }}
-        run: scripts/check.sh
+        run: scripts/check-package.sh

@@ -1,0 +1,12 @@
+# Locked build-tool environment for the Diakosmos palette projections.
+
+name: diakosmos-tools
+
+channels:
+  - defaults
+
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - chromata @ git+https://github.com/esther-poniatowski/chromata.git@2c91c692b0fe6ce6b33d7d2de9c943185ea884e7

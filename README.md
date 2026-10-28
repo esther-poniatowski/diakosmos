@@ -35,13 +35,38 @@ The font, type and card modules require LuaLaTeX or XeLaTeX. The color and TikZ 
 
 ## Verification
 
-Run the source-boundary scan, direct compile fixtures and isolated installed-use fixtures. XeLaTeX is the default Unicode engine. Set `DIAKOSMOS_UNICODE_ENGINE=lualatex` to exercise LuaLaTeX.
+Install the exact palette tool selected by the derived lock:
+
+```sh
+conda-lock install --name diakosmos-tools conda-lock.yml
+```
+
+The palette check compares both committed TeX layers with the authoritative records:
+
+```sh
+conda run -n diakosmos-tools scripts/build-palettes.sh check
+```
+
+The package check runs the source-boundary scan, direct compile fixtures and isolated installed-use fixtures. XeLaTeX is the default Unicode engine. Set `DIAKOSMOS_UNICODE_ENGINE=lualatex` to exercise LuaLaTeX.
+
+```sh
+scripts/check-package.sh
+```
+
+The combined check requires the locked Chromata prefix and an independent TeX distribution. A second Conda prefix can mix runtime libraries with the first.
 
 ```sh
 scripts/check.sh
 ```
 
-The [source boundary](docs/architecture/source-boundary.md) records the former Geonexus inputs admitted to the package. Separately, the palette tool will generate palettes and detect drift.
+After editing a palette record, regenerate and recheck the committed layers:
+
+```sh
+conda run -n diakosmos-tools scripts/build-palettes.sh write
+conda run -n diakosmos-tools scripts/build-palettes.sh check
+```
+
+The adapter owns every output path, namespace and public role-name mapping. The [source boundary](docs/architecture/source-boundary.md) records the former Geonexus inputs admitted to the package.
 
 ## Distribution state
 
