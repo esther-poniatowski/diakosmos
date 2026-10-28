@@ -20,9 +20,12 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install source checker
+        run: sudo apt-get update && sudo apt-get install --yes ripgrep
       - name: Install TeX Live
         uses: zauguin/install-texlive@f5e7d0b117035fff797d4392ea94131747e03d60 # v4
         with:
+          texlive_version: 2025
           packages: >-
             scheme-basic
             collection-fontsrecommended
