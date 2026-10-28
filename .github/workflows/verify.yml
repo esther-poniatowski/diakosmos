@@ -13,6 +13,8 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      CONDA_PLUGINS_CONDA_PYPI_PIP_WARNING: 'false'
     steps:
       - name: Check out the repository
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
@@ -22,7 +24,6 @@ jobs:
           activate-environment: lock-bootstrap
           auto-activate: false
           channels: conda-forge
-          condarc-file: .condarc
           python-version: '3.12'
       - name: Install the lock bootstrap tool
         shell: bash -el {0}
