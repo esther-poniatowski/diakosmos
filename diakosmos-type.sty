@@ -1,0 +1,14 @@
+% Semantic type helpers without document-specific point sizes.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{diakosmos-type}[2026/10/28 v0.1.0 Diakosmos type roles]
+
+\RequirePackage{amsmath}
+\RequirePackage{diakosmos-fonts}
+
+\newcommand{\diakosmosMathLabel}[1]{\text{{\diakosmosMathTextFont #1}}}
+\newcommand{\diakosmosBracketLabel}[1]{%
+  \text{{\diakosmosMathTextFont #1}}%
+}
+\newcommand{\diakosmosTextMath}[1]{\ensuremath{#1}}
+
+\endinput

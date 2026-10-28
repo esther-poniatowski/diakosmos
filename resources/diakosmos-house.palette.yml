@@ -1,0 +1,47 @@
+# medium-independent house style bound to the Diakosmos hue library
+# generates diakosmos-color-roles.tex
+schema_version: 1
+level: style
+extends: diakosmos-hues.palette.yml
+
+roles:
+  pageground:
+    of: ivory
+    use: "warm canvas behind the primary surface"
+    note: >-
+      The warm canvas distinguishes pure white surfaces by temperature and by their glow.
+  surface: {of: paperwhite, use: "primary raised surface", contrast: fill}
+  bordersubtle: {of: pearl, use: "hairlines and dividers", contrast: fill}
+  borderfunc: {of: pewter, use: "focus rings, emphasis boundaries and plot axes", contrast: mark}
+  texttertiary: {of: ash, use: "captions, minor metadata and faint hints", contrast: mark}
+  textsecondary: {of: slategrey, use: "subtitles and supporting text", contrast: mark}
+  textprimary: {of: anthracite, use: "titles, labels and body text", contrast: mark}
+  textinverse: {of: paperwhite, use: "text set on the deep chrome"}
+  chromecore:
+    of: petrol
+    use: "numbers, icons, rings and kickers"
+    contrast: mark
+    note: >-
+      Every identity use reaches this token through a role. The core remains dark enough
+      to carry a numbered badge or a thin ring at reading distance.
+  chromedeep: {of: petroldeep, use: "identity surface carrying inverse text", contrast: mark}
+  chromealt:
+    of: russet
+    use: "reserved complement"
+    contrast: mark
+  cardground: {of: surface, use: "interior of a card"}
+  cardring: {of: bordersubtle, use: "hairline frame of a plain card"}
+  cardcast:
+    of: chromecore
+    use: "identity-coloured glow under a card"
+    note: >-
+      A neutral card can bind this role to cardshadow instead.
+  cardshadow: {of: black, tint: 38, use: "grey drop shadow, the neutral alternative to a cast"}
+  cardshadowdk: {of: black, tint: 52, use: "deeper shadow of an emphasised box"}
+
+tests:
+  ground: pageground
+  de_floor: 0.15
+  contrast_floor: 3.0
+  pairs:
+    - {mark: textinverse, ground: chromedeep}

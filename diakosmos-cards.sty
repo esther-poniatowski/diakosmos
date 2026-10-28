@@ -1,0 +1,62 @@
+% Card grammar for the Diakosmos house style.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{diakosmos-cards}[2026/10/28 v0.1.0 Diakosmos card grammar]
+
+\RequirePackage{diakosmos-colors}
+\RequirePackage{diakosmos-type}
+\RequirePackage{diakosmos-tikz}
+\RequirePackage[skins]{tcolorbox}
+
+\newcommand{\diakosmosCardSidePadding}{1.2}
+\newcommand{\diakosmosCardBasePadding}{1.1}
+\newcommand{\diakosmosGlowDrop}{-1.8mm}
+\newcommand{\diakosmosGlowBlur}{4.5mm}
+\newcommand{\diakosmosGlowOpacity}{15}
+
+\tikzset{
+  diakosmos/card shadow/.style={
+    blur shadow={shadow xshift=0pt,
+      shadow yshift=\diakosmosGlowDrop,
+      shadow blur radius=\diakosmosGlowBlur,
+      shadow blur steps=12,
+      shadow opacity=\diakosmosGlowOpacity
+    }
+  }
+}
+
+\tcbset{
+  diakosmos/card base/.style={
+    enhanced,
+    arc=24mm,
+    outer arc=24mm,
+    colback=diakosmos-card-ground,
+    colframe=diakosmos-card-ring,
+    boxrule=0.8pt,
+    boxsep=0pt,
+    left=\diakosmosCardSidePadding cm,
+    right=\diakosmosCardSidePadding cm,
+    top=\diakosmosCardBasePadding cm,
+    bottom=\diakosmosCardBasePadding cm,
+    fontupper=\color{diakosmos-text-primary}
+  },
+  diakosmos/card glow/.style 2 args={
+    frame style={
+      fill=#1,
+      diakosmos/card shadow,
+      every shadow/.style={fill=#2,draw=none}
+    }
+  },
+  diakosmos/card/.style={
+    diakosmos/card base,
+    diakosmos/card glow={diakosmos-card-ring}{diakosmos-card-cast}
+  }
+}
+
+% Build a card outside a TikZ picture to avoid the font-selection loop caused
+% by placing a live tcolorbox inside a node under LuaLaTeX.
+\newcommand{\diakosmosBuildCard}[5]{%
+  \sbox#1{%
+    \begin{tcolorbox}[#4,width=#2 cm,height=#3 cm]#5\end{tcolorbox}%
+  }%
+}
+\endinput

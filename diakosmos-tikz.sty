@@ -1,0 +1,60 @@
+% Generic TikZ primitives used by the Diakosmos house style.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{diakosmos-tikz}[2026/10/28 v0.1.0 Diakosmos TikZ primitives]
+
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,calc,shadows.blur}
+
+\tikzset{
+  diakosmos/soft shadow/.style={
+    blur shadow={
+      shadow xshift=0pt,
+      shadow yshift=-1.8mm,
+      shadow blur radius=3.6mm,
+      shadow blur steps=9,
+      shadow opacity=34
+    }
+  },
+  diakosmos/flow arrow/.style={
+    -{Stealth[length=19pt,width=15pt]},
+    line width=2.2pt,
+    rounded corners=8pt
+  }
+}
+
+% Draw a filled tapered arrow along a quadratic Bézier spine.
+% Arguments: fill, path options, tail, head, bend, tail half-width,
+% neck half-width, arrowhead length, arrowhead half-width.
+\NewDocumentCommand{\diakosmosTaperArrow}{O{black} O{} m m m m m m m}{%
+  \begin{scope}
+    \path
+      let \p1 = ($#4-#3$), \n1 = {veclen(\x1,\y1)},
+          \p2 = (\x1/\n1, \y1/\n1),
+          \p3 = (-\y1/\n1, \x1/\n1)
+      in
+      coordinate (diakosmos-tail) at #3
+      coordinate (diakosmos-head) at #4
+      coordinate (diakosmos-neck) at ($#4-#8*(\p2)$)
+      coordinate (diakosmos-bend) at ($($#3!0.5!(diakosmos-neck)$)+#5*(\p3)$)
+      coordinate (diakosmos-tail-top) at ($#3+#6*(\p3)$)
+      coordinate (diakosmos-tail-bottom) at ($#3-#6*(\p3)$)
+      coordinate (diakosmos-neck-top) at ($(diakosmos-neck)+#7*(\p3)$)
+      coordinate (diakosmos-neck-bottom) at ($(diakosmos-neck)-#7*(\p3)$)
+      coordinate (diakosmos-control-top) at
+        ($(diakosmos-bend)+0.5*#6*(\p3)+0.5*#7*(\p3)$)
+      coordinate (diakosmos-control-bottom) at
+        ($(diakosmos-bend)-0.5*#6*(\p3)-0.5*#7*(\p3)$)
+      coordinate (diakosmos-wing-top) at ($(diakosmos-neck)+#9*(\p3)$)
+      coordinate (diakosmos-wing-bottom) at ($(diakosmos-neck)-#9*(\p3)$);
+    \path[fill=#1,#2]
+      (diakosmos-tail-top)
+      .. controls (diakosmos-control-top) and (diakosmos-control-top)
+      .. (diakosmos-neck-top)
+      -- (diakosmos-wing-top) -- (diakosmos-head) -- (diakosmos-wing-bottom)
+      -- (diakosmos-neck-bottom)
+      .. controls (diakosmos-control-bottom) and (diakosmos-control-bottom)
+      .. (diakosmos-tail-bottom) -- cycle;
+  \end{scope}%
+}
+
+\endinput

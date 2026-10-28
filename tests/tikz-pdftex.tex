@@ -1,0 +1,10 @@
+\documentclass{article}
+\usepackage{diakosmos-tikz}
+\pagestyle{empty}
+\begin{document}
+\begin{tikzpicture}
+  \node[draw,diakosmos/soft shadow] at (0,1) {Shadow};
+  \draw[diakosmos/flow arrow] (1,1) -- (4,1);
+  \diakosmosTaperArrow[blue]{(0,0)}{(4,0)}{4pt}{1pt}{3pt}{8pt}{5pt}
+\end{tikzpicture}
+\end{document}

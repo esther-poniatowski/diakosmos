@@ -1,17 +1,16 @@
-# hue library of the artifacts: every colour value, named after its hue
-# generates colors-values.tex beside this file; the house style and the concept bindings bind their roles to these hues
+# Diakosmos hue library: every colour value is named after its hue
+# generates diakosmos-color-values.tex; house and project roles bind to these hues
 # a hue is retuned within its family, so its name stays true; a use never names a hue here
 schema_version: 1
 level: hues
 
 layers:
   sama:
-    gloss: hues recommended by Krees Sama for the poster series
+    gloss: azure and raspberry ladders recommended by Krees Sama
     note: >-
-      The hues follow the advice of Krees Sama, recorded in
-      artifacts/mixture-input-encoding_poster_ccn2026/_reviews/sama-krees.md. The azure and
-      raspberry ladders tint one hue at constant hue, from the deep rung to the pale rung, and two
-      adjacent rungs are not distinct.
+      The azure and raspberry ladders follow the retained review evidence cited in
+      docs/architecture/palette-provenance.md. Each ladder tints one hue from the deep rung to the
+      pale rung; adjacent rungs are not intended to encode distinct categories.
     tokens:
       azuredeep: {value: "003A62", use: "azure, deep rung", pole: azure, rung: deep}
       azure: {value: "025F99", use: "azure, core rung", pole: azure, rung: core}
@@ -44,7 +43,7 @@ layers:
       ivory: {value: "F6F3EE", use: "warm off-white"}
       paperwhite: {value: "FFFFFF", use: "pure white"}
   tab:
-    gloss: the tab10 colours of Matplotlib, used by the decks
+    gloss: the tab10 colours of Matplotlib
     tokens:
       tabblue: {value: "1F77B4", use: "tab10 blue"}
       taborange: {value: "FF7F0E", use: "tab10 orange"}
@@ -55,7 +54,7 @@ layers:
       tabgray: {value: "7F7F7F", use: "tab10 grey"}
       tabcyan: {value: "17BECF", use: "tab10 cyan"}
   accent:
-    gloss: hues introduced by single artifacts
+    gloss: additional reusable hues
     tokens:
       cobalt: {value: "2864C8", use: "cobalt blue"}
       sapphire: {value: "3250B4", use: "sapphire blue"}

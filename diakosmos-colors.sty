@@ -1,0 +1,18 @@
+% Modular colour policy for scientific documents.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{diakosmos-colors}[2026/10/28 v0.1.0 Diakosmos colour policy]
+
+\RequirePackage{xcolor}
+
+\InputIfFileExists{diakosmos-color-values.tex}{}{%
+  \PackageError{diakosmos-colors}
+    {The generated colour-value file is unavailable}
+    {Install the complete Diakosmos package before loading this module.}%
+}
+\InputIfFileExists{diakosmos-color-roles.tex}{}{%
+  \PackageError{diakosmos-colors}
+    {The generated colour-role file is unavailable}
+    {Install the complete Diakosmos package before loading this module.}%
+}
+
+\endinput

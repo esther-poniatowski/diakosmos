@@ -1,0 +1,55 @@
+% Modular font policy for scientific documents.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{diakosmos-fonts}[2026/10/28 v0.1.0 Diakosmos font policy]
+
+\RequirePackage{iftex}
+\ifPDFTeX
+  \PackageError{diakosmos-fonts}
+    {This module requires a Unicode TeX engine}
+    {Compile with LuaLaTeX or XeLaTeX, or omit diakosmos-fonts.}
+\fi
+
+\newif\ifdiakosmos@raleway
+\DeclareOption{default}{\diakosmos@ralewayfalse}
+\DeclareOption{raleway}{\diakosmos@ralewaytrue}
+\ExecuteOptions{default}
+\ProcessOptions\relax
+
+\RequirePackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+
+\setmainfont{lmroman10-regular.otf}[
+  BoldFont=lmroman10-bold.otf,
+  ItalicFont=lmroman10-italic.otf,
+  BoldItalicFont=lmroman10-bolditalic.otf
+]
+\renewcommand{\familydefault}{\sfdefault}
+
+\ifdiakosmos@raleway
+  \setsansfont{SourceSans3-Regular.otf}[
+    BoldFont=SourceSans3-Bold.otf,
+    ItalicFont=SourceSans3-RegularIt.otf,
+    BoldItalicFont=SourceSans3-BoldIt.otf
+  ]
+  \newfontfamily\diakosmosTitleFont{Raleway-Medium.otf}
+  \newfontfamily\diakosmosHeadingFont{Raleway-SemiBold.otf}[
+    BoldFont=Raleway-Bold.otf,
+    ItalicFont=Raleway-SemiBoldItalic.otf,
+    BoldItalicFont=Raleway-BoldItalic.otf
+  ]
+\else
+  \setsansfont{SourceSans3-Regular.otf}[
+    BoldFont=SourceSans3-Semibold.otf,
+    ItalicFont=SourceSans3-RegularIt.otf,
+    BoldItalicFont=SourceSans3-SemiboldIt.otf
+  ]
+  \newcommand{\diakosmosTitleFont}{\sffamily}
+  \newcommand{\diakosmosHeadingFont}{\sffamily}
+\fi
+
+\newfontfamily\diakosmosBodySemibold{SourceSans3-Semibold.otf}
+\newfontfamily\diakosmosKickerFont{SourceCodePro-Regular.otf}
+\newfontfamily\diakosmosKickerBold{SourceCodePro-Semibold.otf}
+\newfontfamily\diakosmosMathTextFont{SourceSans3-Regular.otf}
+
+\endinput
