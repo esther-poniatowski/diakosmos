@@ -36,8 +36,16 @@ compile_direct() {
   fixture=$2
   output="$direct_root/${fixture%.tex}"
   mkdir -p "$output"
+  set --
+  if test "$engine" = -lualatex
+  then
+    # TeX Live 2026 rejects the isolated Lua font cache in restricted mode
+    # before it reads a document. Keep this workaround local to Lua fixtures.
+    set -- -shell-escape
+  fi
   TEXINPUTS="$repository_root:" latexmk \
-    -silent "$engine" -interaction=nonstopmode -halt-on-error -file-line-error \
+    -silent "$engine" "$@" \
+    -interaction=nonstopmode -halt-on-error -file-line-error \
     -outdir="$output" "$repository_root/tests/$fixture"
   test -f "$output/${fixture%.tex}.pdf"
 }
@@ -63,10 +71,16 @@ compile_installed() {
   fixture=$2
   output_directory="$installed_root/${fixture%.tex}"
   mkdir -p "$output_directory"
+  set --
+  if test "$engine" = -lualatex
+  then
+    set -- -shell-escape
+  fi
   (
     cd "$output_directory"
     TEXMFHOME="$texmf_root" latexmk \
-      -silent "$engine" -interaction=nonstopmode -halt-on-error -file-line-error \
+      -silent "$engine" "$@" \
+      -interaction=nonstopmode -halt-on-error -file-line-error \
       "$repository_root/tests/$fixture"
   )
   test -f "$output_directory/${fixture%.tex}.pdf"
