@@ -39,9 +39,9 @@ jobs:
         shell: bash -el {0}
         env:
           APP_TOKEN: ${{ steps.app-token.outputs.token }}
-          CONDA_PLUGINS_CONDA_PYPI_PIP_WARNING: 'false'
         run: |
           set -euo pipefail
+          conda config --set plugins.conda_pypi_pip_warning false
           credential_key="url.https://x-access-token:${APP_TOKEN}@github.com/.insteadOf"
           cleanup() {
             git config --global --unset-all "$credential_key" || true
