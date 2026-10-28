@@ -20,7 +20,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@be893c923ea9cf1cf7cd510fbdde27c7e18cbdcb # v4.1.0
         with:
           activate-environment: lock-bootstrap
-          auto-activate-base: false
+          auto-activate: false
           channels: conda-forge
           python-version: '3.12'
       - name: Install the lock bootstrap tool
@@ -30,7 +30,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
-          app-id: ${{ secrets.TOOL_SOURCE_READER_APP_ID }}
+          client-id: ${{ secrets.TOOL_SOURCE_READER_CLIENT_ID }}
           private-key: ${{ secrets.TOOL_SOURCE_READER_PRIVATE_KEY }}
           owner: esther-poniatowski
           repositories: chromata
@@ -39,6 +39,7 @@ jobs:
         shell: bash -el {0}
         env:
           APP_TOKEN: ${{ steps.app-token.outputs.token }}
+          CONDA_PLUGINS_CONDA_PYPI_PIP_WARNING: 'false'
         run: |
           set -euo pipefail
           credential_key="url.https://x-access-token:${APP_TOKEN}@github.com/.insteadOf"
