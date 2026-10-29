@@ -68,6 +68,6 @@ conda run -n diakosmos-tools scripts/build-palettes.sh check
 
 The adapter owns every output path, namespace and public role-name mapping. The [source boundary](docs/architecture/source-boundary.md) records the former Geonexus inputs admitted to the package.
 
-## Distribution state
+## License
 
-Only authorized collaborators may access the private repository. Publishing through a public TeX archive requires explicit terms. Those terms must let others copy the package. The terms must also let others share the package.
+The [license terms](LICENSE) apply under the General Public License, release 3 or any subsequent release.
