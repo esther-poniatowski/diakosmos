@@ -12,7 +12,8 @@ Each module supplies one visual concern.
 | `diakosmos-fonts` | select the Unicode-engine font policy, with an optional `raleway` variant |
 | `diakosmos-type` | write semantic text labels inside mathematics |
 | `diakosmos-cards` | build the house-style card grammar |
-| `diakosmos-tikz` | draw namespaced shadows, flow arrows and tapered arrows |
+| `diakosmos-panels` | build lettered figure panels whose colours and fonts the consumer binds |
+| `diakosmos-tikz` | draw namespaced shadows, flow arrows, tapered arrows, page canvases and three-dimensional axes |
 
 Consumers define project palettes, point sizes and preambles. Consumers also own icons and logos.
 
@@ -31,7 +32,7 @@ Ktisma invokes the same command for an exact dependency commit. Each TeX source 
 \usepackage{diakosmos-tikz}
 ```
 
-The font, type and card modules require LuaLaTeX or XeLaTeX. The color and TikZ modules also support pdfLaTeX.
+The font, type and card modules require LuaLaTeX or XeLaTeX. The color, TikZ and panel modules also support pdfLaTeX.
 
 ## Verification
 

@@ -7,7 +7,7 @@ This note assigns reusable visual policy to Diakosmos. Consumers define each res
 | hue values and house-style roles | `diakosmos-colors.sty` and the two generated color files |
 | Unicode-engine font policy | `diakosmos-fonts.sty` |
 | semantic text inside mathematics | `diakosmos-type.sty` |
-| card grammar | `diakosmos-cards.sty` |
+| card grammar | `diakosmos-cards.sty` for posters; `diakosmos-panels.sty` for figure panels |
 | generic TikZ primitives | `diakosmos-tikz.sty` |
 | authoritative palette specifications | `resources/` |
 

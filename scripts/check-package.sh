@@ -52,6 +52,7 @@ compile_direct() {
 
 compile_direct -pdf colors-pdftex.tex
 compile_direct -pdf tikz-pdftex.tex
+compile_direct -pdf panels-pdftex.tex
 compile_direct "-$unicode_engine" fonts-default-unicode.tex
 compile_direct "-$unicode_engine" fonts-raleway-unicode.tex
 compile_direct "-$unicode_engine" type-unicode.tex
@@ -100,6 +101,7 @@ compile_installed() {
 
 compile_installed -pdf colors-pdftex.tex
 compile_installed -pdf tikz-pdftex.tex
+compile_installed -pdf panels-pdftex.tex
 compile_installed "-$unicode_engine" fonts-default-unicode.tex
 compile_installed "-$unicode_engine" fonts-raleway-unicode.tex
 compile_installed "-$unicode_engine" type-unicode.tex

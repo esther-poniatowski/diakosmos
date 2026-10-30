@@ -1,0 +1,110 @@
+% Panel grammar of figures: lettered panels with a heading, an optional status and a soft shadow.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{diakosmos-panels}[2026/10/30 v0.1.0 Diakosmos panel grammar]
+
+\RequirePackage{diakosmos-colors}
+\RequirePackage{diakosmos-tikz}
+
+% Each panel colour is a hook bound to a house role: a consumer rebinds it with \colorlet after
+% loading this module.
+\colorlet{diakosmos-panel-ground}{diakosmos-surface}
+\colorlet{diakosmos-panel-ring}{diakosmos-border-subtle}
+\colorlet{diakosmos-panel-open-ring}{diakosmos-border-functional}
+\colorlet{diakosmos-panel-legend-ground}{diakosmos-pageground}
+\colorlet{diakosmos-panel-chrome}{diakosmos-chrome-core}
+\colorlet{diakosmos-panel-heading}{diakosmos-text-primary}
+\colorlet{diakosmos-panel-subheading}{diakosmos-text-secondary}
+\colorlet{diakosmos-panel-status}{diakosmos-text-tertiary}
+
+% Font hooks without point sizes: a consumer redefines them with its own type scale.
+\newcommand{\diakosmosPanelHeadingFont}{\sffamily\bfseries}
+\newcommand{\diakosmosPanelBodyFont}{\sffamily}
+
+\tikzset{
+  % An established panel has a solid rim; an open panel, whose claim is a hypothesis or prospective,
+  % has a dashed rim; a legend panel applies to every panel and casts no shadow.
+  diakosmos/panel/.style={
+    fill=diakosmos-panel-ground,
+    draw=diakosmos-panel-ring,
+    line width=0.8pt,
+    rounded corners=6pt
+  },
+  diakosmos/open panel/.style={
+    fill=diakosmos-panel-ground,
+    draw=diakosmos-panel-open-ring,
+    line width=0.8pt,
+    rounded corners=6pt,
+    dash pattern=on 3pt off 2pt
+  },
+  diakosmos/legend panel/.style={
+    fill=diakosmos-panel-legend-ground,
+    draw=diakosmos-panel-open-ring,
+    line width=0.6pt,
+    rounded corners=6pt
+  },
+  diakosmos/panel letter/.style={
+    circle,
+    fill=diakosmos-panel-chrome,
+    text=white,
+    inner sep=0pt,
+    minimum size=0.40cm,
+    font=\diakosmosPanelHeadingFont
+  },
+  diakosmos/panel heading/.style={
+    anchor=base west,
+    inner sep=0pt,
+    font=\diakosmosPanelHeadingFont,
+    text=diakosmos-panel-heading
+  },
+  diakosmos/panel subheading/.style={
+    anchor=base west,
+    inner sep=0pt,
+    font=\diakosmosPanelBodyFont,
+    text=diakosmos-panel-subheading
+  },
+  diakosmos/panel status/.style={
+    anchor=north east,
+    font=\diakosmosPanelBodyFont,
+    text=diakosmos-panel-status,
+    draw=diakosmos-panel-open-ring,
+    rounded corners=2pt,
+    inner xsep=2.5pt,
+    inner ysep=1.5pt,
+    dash pattern=on 1.5pt off 1pt
+  }
+}
+
+% Offsets of the panel header from the top-left corner of the panel (cm): the letter disc, then the
+% baselines of the heading and of the subheading. Every panel reads them, so all headers align.
+\newcommand{\diakosmosPanelLetterX}{0.34}
+\newcommand{\diakosmosPanelLetterY}{0.34}
+\newcommand{\diakosmosPanelTextX}{0.66}
+\newcommand{\diakosmosPanelHeadY}{0.45}
+\newcommand{\diakosmosPanelSubY}{0.80}
+
+% Draw the header of a panel. Arguments: left x, top y, letter, heading, subheading.
+\NewDocumentCommand{\diakosmosPanelHeader}{m m m m m}{%
+  \node[diakosmos/panel letter] at ({#1+\diakosmosPanelLetterX},{#2-\diakosmosPanelLetterY}) {#3};
+  \node[diakosmos/panel heading] at ({#1+\diakosmosPanelTextX},{#2-\diakosmosPanelHeadY}) {#4};
+  \node[diakosmos/panel subheading] at ({#1+\diakosmosPanelTextX},{#2-\diakosmosPanelSubY}) {#5};
+}
+
+% Draw an established panel with its shadow and header.
+% Arguments: x1, y1, x2, y2, letter, heading, subheading.
+\NewDocumentCommand{\diakosmosPanel}{m m m m m m m}{%
+  \diakosmosLayeredShadow{#1}{#2}{#3}{#4}
+  \fill[diakosmos/panel] (#1,#2) rectangle (#3,#4);
+  \draw[diakosmos/panel] (#1,#2) rectangle (#3,#4);
+  \diakosmosPanelHeader{#1}{#4}{#5}{#6}{#7}
+}
+
+% Draw an open panel with its header and its status in the top-right corner.
+% Arguments: x1, y1, x2, y2, letter, heading, subheading, status.
+\NewDocumentCommand{\diakosmosOpenPanel}{m m m m m m m m}{%
+  \fill[diakosmos/panel] (#1,#2) rectangle (#3,#4);
+  \draw[diakosmos/open panel] (#1,#2) rectangle (#3,#4);
+  \diakosmosPanelHeader{#1}{#4}{#5}{#6}{#7}
+  \node[diakosmos/panel status] at ({#3-0.15},{#4-0.15}) {#8};
+}
+
+\endinput
