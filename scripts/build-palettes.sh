@@ -26,7 +26,7 @@ fi
 chromata-build \
   --root "$resource_root" \
   --spec "$resource_root/diakosmos-hues.palette.yml" \
-  --values-out "$repository_root/diakosmos-color-values.tex" \
+  --values-output "$repository_root/diakosmos-color-values.tex" \
   --source-label resources/diakosmos-hues.palette.yml \
   --values-prefix diakosmos-hue- \
   "$@"
@@ -34,7 +34,7 @@ chromata-build \
 chromata-build \
   --root "$resource_root" \
   --spec "$resource_root/diakosmos-house.palette.yml" \
-  --roles-out "$repository_root/diakosmos-color-roles.tex" \
+  --roles-output "$repository_root/diakosmos-color-roles.tex" \
   --source-label resources/diakosmos-house.palette.yml \
   --values-prefix diakosmos-hue- \
   --roles-prefix diakosmos- \

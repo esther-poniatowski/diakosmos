@@ -3,7 +3,7 @@ set -eu
 
 repository_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 test_root=$(mktemp -d "${TMPDIR:-/tmp}/diakosmos-palette-adapter.XXXXXX")
-test_root=$(CDPATH= cd -- "$test_root" && pwd)
+test_root=$(CDPATH= cd -- "$test_root" && pwd -P)
 trap 'rm -rf "$test_root"' EXIT HUP INT TERM
 
 mkdir -p "$test_root/scripts" "$test_root/resources"

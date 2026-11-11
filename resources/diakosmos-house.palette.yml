@@ -1,6 +1,6 @@
 # medium-independent house style bound to the Diakosmos hue library
 # generates diakosmos-color-roles.tex
-schema_version: 1
+_schema: chromata:palette@1
 level: style
 extends: diakosmos-hues.palette.yml
 

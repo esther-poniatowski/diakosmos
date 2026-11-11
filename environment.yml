@@ -9,4 +9,4 @@ dependencies:
   - python=3.12
   - pip
   - pip:
-      - chromata @ git+https://github.com/esther-poniatowski/chromata.git@2c91c692b0fe6ce6b33d7d2de9c943185ea884e7
+      - chromata @ git+https://github.com/esther-poniatowski/chromata.git@40069e34e0180458d5a627c43d5fef0bfa3c39e5

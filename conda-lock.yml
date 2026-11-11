@@ -13,14 +13,14 @@
 version: 1
 metadata:
   content_hash:
-    osx-arm64: a6da1e76b85fe8a663e969487257251f03a50a55228b1e628d30fd1263def213
+    osx-arm64: 9c7bee410d32d5598f5e1da85a0ba21ce9ac3cd4c21f62407909b815e5c710bc
     linux-64: 003147ecc077c2dc0c7c68ef386ff433a67dbdc247d07f2a8ecaf434626592d0
   channels:
   - url: defaults
     used_env_vars: []
   platforms:
-  - osx-arm64
   - linux-64
+  - osx-arm64
   sources:
   - environment.yml
 package:
@@ -81,14 +81,15 @@ package:
   category: main
   optional: false
 - name: ca-certificates
-  version: 2026.10.20
+  version: 2026.11.5
   manager: conda
   platform: osx-arm64
-  dependencies: {}
-  url: https://repo.anaconda.com/pkgs/main/osx-arm64/ca-certificates-2026.10.20-hca03da5_0.conda
+  dependencies:
+    __unix: ''
+  url: https://repo.anaconda.com/pkgs/main/noarch/ca-certificates-2026.11.5-h59cdc77_0.conda
   hash:
-    md5: db477bd13ab050ac74aeece122351285
-    sha256: 93b695e040bdf55d1758adaf73a81e114217a1355e4c165fada2a0aea63d6586
+    md5: 96a88c504da0ec1460d1a162e2476d91
+    sha256: 9ef98b182fb749f7f7682758c0f361a35a3e733a559006b0ddb7dafb82a0e233
   category: main
   optional: false
 - name: expat
@@ -446,15 +447,15 @@ package:
   category: main
   optional: false
 - name: setuptools
-  version: 84.0.0
+  version: 84.2.1
   manager: conda
   platform: osx-arm64
   dependencies:
     python: '>=3.12,<3.13.0a0'
-  url: https://repo.anaconda.com/pkgs/main/osx-arm64/setuptools-84.0.0-py312hca03da5_0.conda
+  url: https://repo.anaconda.com/pkgs/main/osx-arm64/setuptools-84.2.1-py312hca03da5_0.conda
   hash:
-    md5: 2a25c7b2d2f72bfcf69944f4dfdd123f
-    sha256: c78bdfd6c991f94c6c3467b24fff83a74c29dadf3a5e0f8ba77d463fb716d3ef
+    md5: 2c98d36596fcbe36b067d0e3aae31d3d
+    sha256: 7ffb7c53ceb0f2dc4f87acab6871a9b15369ab12666b69ed4a89e00bf4b39fc5
   category: main
   optional: false
 - name: sqlite
@@ -706,12 +707,12 @@ package:
   dependencies:
     jsonschema: '>=4.23'
     pyyaml: '>=6.0'
-  url: git+https://github.com/esther-poniatowski/chromata.git@2c91c692b0fe6ce6b33d7d2de9c943185ea884e7
+  url: git+https://github.com/esther-poniatowski/chromata.git@40069e34e0180458d5a627c43d5fef0bfa3c39e5
   hash:
-    sha256: 2c91c692b0fe6ce6b33d7d2de9c943185ea884e7
+    sha256: 40069e34e0180458d5a627c43d5fef0bfa3c39e5
   source:
     type: url
-    url: git+https://github.com/esther-poniatowski/chromata.git@2c91c692b0fe6ce6b33d7d2de9c943185ea884e7
+    url: git+https://github.com/esther-poniatowski/chromata.git@40069e34e0180458d5a627c43d5fef0bfa3c39e5
   category: main
   optional: false
 - name: jsonschema

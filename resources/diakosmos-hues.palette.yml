@@ -1,7 +1,7 @@
 # Diakosmos hue library: every colour value is named after its hue
 # generates diakosmos-color-values.tex; house and project roles bind to these hues
 # a hue is retuned within its family, so its name stays true; a use never names a hue here
-schema_version: 1
+_schema: chromata:palette@1
 level: hues
 
 layers:
